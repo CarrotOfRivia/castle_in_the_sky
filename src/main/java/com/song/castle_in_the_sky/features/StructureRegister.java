@@ -35,8 +35,8 @@ public class StructureRegister {
     public static void setupStructures() {
         setupMapSpacingAndLand(
                 CASTLE_IN_THE_SKY.get(), /* The instance of the structure */
-                new StructureSeparationSettings(10 /* average distance apart in chunks between spawn attempts */,
-                        5 /* minimum distance apart in chunks between spawn attempts. MUST BE LESS THAN ABOVE VALUE*/,
+                new StructureSeparationSettings(200 /* average distance apart in chunks between spawn attempts */,
+                        100 /* minimum distance apart in chunks between spawn attempts. MUST BE LESS THAN ABOVE VALUE*/,
                         1234567890 /* this modifies the seed of the structure so no two structures always spawn over each-other. Make this large and unique. */),
                 true);
     }

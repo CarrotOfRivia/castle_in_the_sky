@@ -5,7 +5,7 @@
     {
       "weight": 1,
       "element": {
-        "location": "castle_in_the_sky:laputa000",
+        "location": "castle_in_the_sky:laputa100",
         "processors": "minecraft:empty",
         "projection": "rigid",
         "element_type": "minecraft:single_pool_element"
