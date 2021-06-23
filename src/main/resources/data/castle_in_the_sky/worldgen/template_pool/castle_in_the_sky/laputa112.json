@@ -1,11 +1,11 @@
 {
-  "name": "castle_in_the_sky:castle_in_the_sky/laputa200",
+  "name": "castle_in_the_sky:castle_in_the_sky/laputa112",
   "fallback": "minecraft:empty",
   "elements": [
     {
       "weight": 1,
       "element": {
-        "location": "castle_in_the_sky:laputa200",
+        "location": "castle_in_the_sky:laputa112",
         "processors": "minecraft:empty",
         "projection": "rigid",
         "element_type": "minecraft:single_pool_element"
