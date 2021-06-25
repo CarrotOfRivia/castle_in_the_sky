@@ -50,7 +50,7 @@ public class CastleStructure extends Structure<NoFeatureConfig> {
             int i = chunkX * 16;
             int j = chunkZ * 16;
 
-            if(i*i+j*j < ConfigServer.CASTLE_SPAWN_PROOF.get()*ConfigServer.CASTLE_SPAWN_PROOF.get()){
+            if(i*i+j*j < ConfigCommon.CASTLE_SPAWN_PROOF.get()*ConfigCommon.CASTLE_SPAWN_PROOF.get()){
                 return;
             }
 
