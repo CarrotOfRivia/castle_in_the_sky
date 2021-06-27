@@ -1,0 +1,33 @@
+{
+  "parent": "castle_in_the_sky:get_levitation_stone",
+  "display": {
+    "icon": {
+      "item": "minecraft:mossy_cobblestone"
+    },
+    "title": {
+      "translate": "advancements.castle_in_the_sky.find_castle.title"
+    },
+    "description": {
+      "translate": "advancements.castle_in_the_sky.find_castle.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "in_city": {
+      "trigger": "minecraft:location",
+      "conditions": {
+        "location": {
+          "feature": "castle_in_the_sky:castle_in_the_sky"
+        }
+      }
+    }
+  },
+  "requirements": [
+    [
+      "in_city"
+    ]
+  ]
+}
