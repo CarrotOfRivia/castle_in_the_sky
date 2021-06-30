@@ -14,17 +14,15 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.World;
 
 public abstract class LockedDoor extends DoorBlock {
-    protected final Item KEY_ITEM;
 
-    protected LockedDoor(AbstractBlock.Properties properties, Item key_item) {
+    protected LockedDoor(AbstractBlock.Properties properties) {
         super(properties);
-        KEY_ITEM = key_item;
     }
 
     @Override
     public ActionResultType use(BlockState blockState, World world, BlockPos blockPos, PlayerEntity playerEntity, Hand hand, BlockRayTraceResult blockRayTraceResult) {
         Item item = playerEntity.getItemInHand(hand).getItem();
-        if (item == KEY_ITEM){
+        if (isKeyItem(item)){
             blockState = blockState.cycle(OPEN);
             world.setBlock(blockPos, blockState, 10);
             world.levelEvent(playerEntity, blockState.getValue(OPEN) ? this.getOpenSound() : this.getCloseSound(), blockPos, 0);
@@ -37,6 +35,8 @@ public abstract class LockedDoor extends DoorBlock {
             return ActionResultType.PASS;
         }
     }
+
+    protected abstract boolean isKeyItem(Item item);
 
     private int getCloseSound() {
         return this.material == Material.METAL ? 1011 : 1012;

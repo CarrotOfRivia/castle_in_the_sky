@@ -17,4 +17,8 @@ public class ItemsRegister {
     public static final RegistryObject<Item> BLUE_DOOR = ITEMS.register("blue_door", ()->new BlockItem(BlockRegister.BLUE_DOOR.get(), new Item.Properties().tab(CastleInTheSky.ITEM_GROUP)));
     public static final RegistryObject<Item> YELLOW_DOOR = ITEMS.register("yellow_door", ()->new BlockItem(BlockRegister.YELLOW_DOOR.get(), new Item.Properties().tab(CastleInTheSky.ITEM_GROUP)));
 
+    public static final RegistryObject<Item> RED_KEY = ITEMS.register("red_key", ()->new Item(new Item.Properties().tab(CastleInTheSky.ITEM_GROUP)));
+    public static final RegistryObject<Item> BLUE_KEY = ITEMS.register("blue_key", ()->new Item(new Item.Properties().tab(CastleInTheSky.ITEM_GROUP)));
+    public static final RegistryObject<Item> YELLOW_KEY = ITEMS.register("yellow_key", ()->new Item(new Item.Properties().tab(CastleInTheSky.ITEM_GROUP)));
+
 }
