@@ -10,6 +10,8 @@ import com.song.castle_in_the_sky.items.ItemsRegister;
 import com.song.castle_in_the_sky.loot.LootModifierRegister;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
@@ -82,6 +84,10 @@ public class CastleInTheSky
     private void doClientStuff(final FMLClientSetupEvent event) {
         // do something that can only be done on the client
         LOGGER.info("Got game settings {}", event.getMinecraftSupplier().get().options);
+
+        RenderTypeLookup.setRenderLayer(BlockRegister.RED_DOOR.get(), RenderType.cutoutMipped());
+        RenderTypeLookup.setRenderLayer(BlockRegister.BLUE_DOOR.get(), RenderType.cutoutMipped());
+        RenderTypeLookup.setRenderLayer(BlockRegister.YELLOW_DOOR.get(), RenderType.cutoutMipped());
     }
 
     private void enqueueIMC(final InterModEnqueueEvent event)
