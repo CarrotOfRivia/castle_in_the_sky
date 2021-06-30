@@ -25,6 +25,7 @@ import net.minecraft.world.gen.feature.structure.VillageConfig;
 import net.minecraft.world.gen.feature.template.TemplateManager;
 import org.apache.logging.log4j.Level;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
@@ -36,6 +37,11 @@ public class CastleStructure extends Structure<NoFeatureConfig> {
     @Override
     public GenerationStage.Decoration step() {
         return GenerationStage.Decoration.SURFACE_STRUCTURES;
+    }
+
+    @Override
+    public List<MobSpawnInfo.Spawners> getDefaultSpawnList() {
+        return Collections.singletonList(new MobSpawnInfo.Spawners(EntityType.ZOMBIE, 1, 1, 1));
     }
 
     @Override

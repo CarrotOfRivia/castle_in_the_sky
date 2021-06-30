@@ -13,6 +13,7 @@ import net.minecraftforge.event.LootTableLoadEvent;
 import net.minecraftforge.event.village.VillagerTradesEvent;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.event.world.StructureSpawnListGatherEvent;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 import java.util.ArrayList;
@@ -40,16 +41,16 @@ public class ServerEvents {
         }
     }
 
-    @SubscribeEvent
+    @SubscribeEvent(priority = EventPriority.NORMAL)
     public void modifyStructureSpawnList(StructureSpawnListGatherEvent event){
-        if(event.getStructure() == StructureRegister.CASTLE_IN_THE_SKY.get()){
-            // No mob should spawn here
-            // TODO: add misc spawn like fish, iron golems, etc..
-            List<MobSpawnInfo.Spawners> spawners = event.getEntitySpawns(EntityClassification.MONSTER);
-            for(MobSpawnInfo.Spawners spawner: spawners){
-                event.removeEntitySpawn(EntityClassification.MONSTER, spawner);
-            }
-        }
+//        if(event.getStructure() == StructureRegister.CASTLE_IN_THE_SKY.get()){
+//            // No mob should spawn here
+//            // TODO: add misc spawn like fish, iron golems, etc..
+//            List<MobSpawnInfo.Spawners> spawners = event.getEntitySpawns(EntityClassification.MONSTER);
+//            for(MobSpawnInfo.Spawners spawner: spawners){
+//                event.removeEntitySpawn(EntityClassification.MONSTER, spawner);
+//            }
+//        }
 
     }
 
