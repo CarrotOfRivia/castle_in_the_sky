@@ -15,6 +15,6 @@ public class RedDoor extends LockedDoor {
 
     @Override
     protected boolean isKeyItem(Item item) {
-        return item==ItemsRegister.BLUE_KEY.get();
+        return item==ItemsRegister.RED_KEY.get();
     }
 }
