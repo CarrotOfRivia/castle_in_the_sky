@@ -39,15 +39,6 @@ public class LevitationStone extends Item {
     public void inventoryTick(ItemStack itemStack, World world, Entity entity, int itemSlot, boolean isSelected) {
         if(isSelected && isActive(itemStack)){
             if(!world.isClientSide() && world instanceof ServerWorld){
-                if(world.getGameTime() % 40 == 0){
-                    BlockPos blockpos = ((ServerWorld) world).findNearestMapFeature(StructureRegister.CASTLE_IN_THE_SKY.get(), entity.blockPosition(), 100, false);
-                    if(blockpos!=null){
-                        CompoundNBT nbt = itemStack.getOrCreateTagElement("targetLaputa");
-                        nbt.putInt("posX", blockpos.getX()+72);
-                        nbt.putInt("posY", ConfigCommon.CASTLE_HEIGHT.get()+72);
-                        nbt.putInt("posZ", blockpos.getZ()+72);
-                    }
-                }
                 if(entity instanceof LivingEntity){
                     ((LivingEntity) entity).addEffect(new EffectInstance(Effects.SLOW_FALLING, 20));
                 }
@@ -79,6 +70,16 @@ public class LevitationStone extends Item {
             ItemStack itemStack = playerEntity.getItemInHand(hand);
             CompoundNBT nbt = itemStack.getOrCreateTagElement("castle_in_the_sky");
             nbt.putBoolean("active", !nbt.getBoolean("active"));
+
+            if(isActive(itemStack)){
+                BlockPos blockpos = ((ServerWorld) world).findNearestMapFeature(StructureRegister.CASTLE_IN_THE_SKY.get(), playerEntity.blockPosition(), 100, false);
+                if(blockpos!=null){
+                    CompoundNBT nbt1 = itemStack.getOrCreateTagElement("targetLaputa");
+                    nbt1.putInt("posX", blockpos.getX()+72);
+                    nbt1.putInt("posY", ConfigCommon.CASTLE_HEIGHT.get()+72);
+                    nbt1.putInt("posZ", blockpos.getZ()+72);
+                }
+            }
         }
         return super.use(world, playerEntity, hand);
     }
