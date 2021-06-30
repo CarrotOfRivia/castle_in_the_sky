@@ -1,5 +1,6 @@
 package com.song.castle_in_the_sky;
 
+import com.song.castle_in_the_sky.blocks.BlockRegister;
 import com.song.castle_in_the_sky.config.ConfigCommon;
 import com.song.castle_in_the_sky.config.ConfigServer;
 import com.song.castle_in_the_sky.events.ServerEvents;
@@ -59,6 +60,7 @@ public class CastleInTheSky
 
         ItemsRegister.ITEMS.register(FMLJavaModLoadingContext.get().getModEventBus());
         LootModifierRegister.GLM.register(FMLJavaModLoadingContext.get().getModEventBus());
+        BlockRegister.BLOCKS.register(FMLJavaModLoadingContext.get().getModEventBus());
 
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, ConfigCommon.COMMON);
         ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, ConfigServer.SERVER);

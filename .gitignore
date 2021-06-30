@@ -21,6 +21,7 @@ build
 eclipse
 run
 ./libs
+./TODO.txt
 
 # Files from Forge MDK
 forge*changelog.txt

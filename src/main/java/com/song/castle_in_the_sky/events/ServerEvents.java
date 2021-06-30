@@ -1,14 +1,18 @@
 package com.song.castle_in_the_sky.events;
 
 import com.song.castle_in_the_sky.features.StructureFeatureRegister;
+import com.song.castle_in_the_sky.features.StructureRegister;
 import com.song.castle_in_the_sky.items.ItemsRegister;
 import com.song.castle_in_the_sky.utils.RandomTradeBuilder;
+import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.merchant.villager.VillagerProfession;
 import net.minecraft.item.Items;
 import net.minecraft.world.biome.Biome;
+import net.minecraft.world.biome.MobSpawnInfo;
 import net.minecraftforge.event.LootTableLoadEvent;
 import net.minecraftforge.event.village.VillagerTradesEvent;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
+import net.minecraftforge.event.world.StructureSpawnListGatherEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 import java.util.ArrayList;
@@ -37,7 +41,17 @@ public class ServerEvents {
     }
 
     @SubscribeEvent
-    public void addLootTable(LootTableLoadEvent event){
+    public void modifyStructureSpawnList(StructureSpawnListGatherEvent event){
+        if(event.getStructure() == StructureRegister.CASTLE_IN_THE_SKY.get()){
+            // No mob should spawn here
+            // TODO: add misc spawn like fish, iron golems, etc..
+            List<MobSpawnInfo.Spawners> spawners = event.getEntitySpawns(EntityClassification.MONSTER);
+            for(MobSpawnInfo.Spawners spawner: spawners){
+                event.removeEntitySpawn(EntityClassification.MONSTER, spawner);
+            }
+        }
 
     }
+
+
 }

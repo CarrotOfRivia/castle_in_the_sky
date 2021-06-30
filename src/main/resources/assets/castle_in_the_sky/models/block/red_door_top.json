@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/door_top",
+  "textures": {
+    "top": "castle_in_the_sky:block/red_door_top",
+    "bottom": "castle_in_the_sky:block/red_door_bottom"
+  }
+}
