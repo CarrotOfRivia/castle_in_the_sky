@@ -10,6 +10,8 @@ import com.song.castle_in_the_sky.features.StructureFeatureRegister;
 import com.song.castle_in_the_sky.features.StructureRegister;
 import com.song.castle_in_the_sky.items.ItemsRegister;
 import com.song.castle_in_the_sky.loot.LootModifierRegister;
+import com.song.castle_in_the_sky.network.Channel;
+import com.song.castle_in_the_sky.network.LaputaTESynPkt;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.renderer.RenderType;
@@ -83,6 +85,9 @@ public class CastleInTheSky
             StructureRegister.setupStructures();
             StructureFeatureRegister.registerConfiguredStructures();
         });
+
+        int id = 0;
+        Channel.INSTANCE.registerMessage(id++, LaputaTESynPkt.class, LaputaTESynPkt::encode, LaputaTESynPkt::decode, LaputaTESynPkt::handle);
     }
 
     private void doClientStuff(final FMLClientSetupEvent event) {

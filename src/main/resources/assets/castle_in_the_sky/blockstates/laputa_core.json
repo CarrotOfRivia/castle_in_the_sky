@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "powered=true": {
+      "model": "castle_in_the_sky:block/laputa_core_active"
+    },
+    "powered=false": {
+      "model": "castle_in_the_sky:block/laputa_core"
+    }
+  }
+}

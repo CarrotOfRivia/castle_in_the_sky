@@ -24,13 +24,15 @@ public class LaputaCoreTER extends TileEntityRenderer<LaputaCoreTE> {
 
     @Override
     public void render(LaputaCoreTE tileEntityIn, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int combinedLightIn, int combinedOverlayIn) {
-        matrixStackIn.pushPose();
-        matrixStackIn.translate(0.5D, 1.5D, 0.5D);
-        float currentTime = Objects.requireNonNull(tileEntityIn.getLevel()).getGameTime() + partialTicks;
-        matrixStackIn.translate(0D, (Math.sin(Math.PI * currentTime / 16) / 4) + 0.1D, 0D);
-        matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(degrees++ / 2));
-        renderItem(new ItemStack(ItemsRegister.LAPUTA_CORE_ORB.get()), partialTicks, matrixStackIn, bufferIn, combinedLightIn);
-        matrixStackIn.popPose();
+        if(tileEntityIn.isActive()){
+            matrixStackIn.pushPose();
+            matrixStackIn.translate(0.5D, 1.5D, 0.5D);
+            float currentTime = Objects.requireNonNull(tileEntityIn.getLevel()).getGameTime() + partialTicks;
+            matrixStackIn.translate(0D, (Math.sin(Math.PI * currentTime / 16) / 4) + 0.1D, 0D);
+            matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(degrees++ / 2));
+            renderItem(new ItemStack(ItemsRegister.LAPUTA_CORE_ORB.get()), partialTicks, matrixStackIn, bufferIn, combinedLightIn);
+            matrixStackIn.popPose();
+        }
     }
 
     private void renderItem(ItemStack stack, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int combinedLightIn) {
