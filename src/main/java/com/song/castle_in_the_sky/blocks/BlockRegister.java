@@ -12,4 +12,7 @@ public class BlockRegister {
     public static final RegistryObject<LockedDoor> RED_DOOR = BLOCKS.register("red_door", RedDoor::new);
     public static final RegistryObject<LockedDoor> BLUE_DOOR = BLOCKS.register("blue_door", BlueDoor::new);
     public static final RegistryObject<LockedDoor> YELLOW_DOOR = BLOCKS.register("yellow_door", YellowDoor::new);
+
+    public static final RegistryObject<LaputaCore> LAPUTA_CORE = BLOCKS.register("laputa_core", LaputaCore::new);
+
 }

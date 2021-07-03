@@ -1,6 +1,8 @@
 package com.song.castle_in_the_sky;
 
 import com.song.castle_in_the_sky.blocks.BlockRegister;
+import com.song.castle_in_the_sky.blocks.tile_entities.LaputaCoreTER;
+import com.song.castle_in_the_sky.blocks.tile_entities.TERegister;
 import com.song.castle_in_the_sky.config.ConfigCommon;
 import com.song.castle_in_the_sky.config.ConfigServer;
 import com.song.castle_in_the_sky.events.ServerEvents;
@@ -19,6 +21,7 @@ import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.InterModComms;
 import net.minecraftforge.fml.ModLoadingContext;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
@@ -63,6 +66,7 @@ public class CastleInTheSky
         ItemsRegister.ITEMS.register(FMLJavaModLoadingContext.get().getModEventBus());
         LootModifierRegister.GLM.register(FMLJavaModLoadingContext.get().getModEventBus());
         BlockRegister.BLOCKS.register(FMLJavaModLoadingContext.get().getModEventBus());
+        TERegister.TILE_ENTITIES.register(FMLJavaModLoadingContext.get().getModEventBus());
 
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, ConfigCommon.COMMON);
         ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, ConfigServer.SERVER);
@@ -88,6 +92,8 @@ public class CastleInTheSky
         RenderTypeLookup.setRenderLayer(BlockRegister.RED_DOOR.get(), RenderType.cutoutMipped());
         RenderTypeLookup.setRenderLayer(BlockRegister.BLUE_DOOR.get(), RenderType.cutoutMipped());
         RenderTypeLookup.setRenderLayer(BlockRegister.YELLOW_DOOR.get(), RenderType.cutoutMipped());
+
+        ClientRegistry.bindTileEntityRenderer(TERegister.LAPUTA_CORE_TE_TYPE.get(), LaputaCoreTER::new);
     }
 
     private void enqueueIMC(final InterModEnqueueEvent event)

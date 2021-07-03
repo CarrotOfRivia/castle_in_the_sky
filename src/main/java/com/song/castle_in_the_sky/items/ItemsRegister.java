@@ -21,4 +21,7 @@ public class ItemsRegister {
     public static final RegistryObject<Item> BLUE_KEY = ITEMS.register("blue_key", ()->new Item(new Item.Properties().tab(CastleInTheSky.ITEM_GROUP)));
     public static final RegistryObject<Item> YELLOW_KEY = ITEMS.register("yellow_key", ()->new Item(new Item.Properties().tab(CastleInTheSky.ITEM_GROUP)));
 
+    public static final RegistryObject<Item> LAPUTA_CORE = ITEMS.register("laputa_core", ()->new BlockItem(BlockRegister.LAPUTA_CORE.get(), new Item.Properties().tab(CastleInTheSky.ITEM_GROUP)));
+    public static final RegistryObject<Item> LAPUTA_CORE_ORB = ITEMS.register("laputa_core_orb", ()->new Item(new Item.Properties()));
+
 }

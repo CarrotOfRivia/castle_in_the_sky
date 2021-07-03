@@ -4,3 +4,7 @@ Yellow door / blue door / red door
 
 2.
 Banner Pattern
+
+3. Player kill drop keys one effected by Laputa
+
+4. Ultra loot: a bedrock
