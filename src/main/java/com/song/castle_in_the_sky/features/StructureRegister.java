@@ -3,6 +3,7 @@ package com.song.castle_in_the_sky.features;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.song.castle_in_the_sky.CastleInTheSky;
+import com.song.castle_in_the_sky.config.ConfigCommon;
 import net.minecraft.util.registry.WorldGenRegistries;
 import net.minecraft.world.gen.feature.NoFeatureConfig;
 import net.minecraft.world.gen.feature.structure.Structure;
@@ -35,8 +36,8 @@ public class StructureRegister {
     public static void setupStructures() {
         setupMapSpacingAndLand(
                 CASTLE_IN_THE_SKY.get(), /* The instance of the structure */
-                new StructureSeparationSettings(500 /* average distance apart in chunks between spawn attempts */,
-                        300 /* minimum distance apart in chunks between spawn attempts. MUST BE LESS THAN ABOVE VALUE*/,
+                new StructureSeparationSettings(ConfigCommon.CASTLE_AVG_DIST_CHUNK.get() /* average distance apart in chunks between spawn attempts */,
+                        ConfigCommon.CASTLE_MIN_DIST_CHUNK.get() /* minimum distance apart in chunks between spawn attempts. MUST BE LESS THAN ABOVE VALUE*/,
                         1234567890 /* this modifies the seed of the structure so no two structures always spawn over each-other. Make this large and unique. */),
                 false);
     }

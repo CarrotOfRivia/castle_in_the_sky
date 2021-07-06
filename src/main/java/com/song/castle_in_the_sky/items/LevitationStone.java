@@ -43,7 +43,7 @@ public class LevitationStone extends Item {
                     ((LivingEntity) entity).addEffect(new EffectInstance(Effects.SLOW_FALLING, 20));
                 }
             }
-            if(world.isClientSide()){
+            if(world.isClientSide() && world.dimension().location().toString().equals("minecraft:overworld")){
                 CompoundNBT nbt = itemStack.getTagElement("targetLaputa");
                 if(nbt!=null){
                     int posX = nbt.getInt("posX");
