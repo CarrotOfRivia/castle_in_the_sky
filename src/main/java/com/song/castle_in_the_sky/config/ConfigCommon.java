@@ -8,6 +8,7 @@ public class ConfigCommon {
     public static ForgeConfigSpec.IntValue CASTLE_SPAWN_PROOF;
     public static ForgeConfigSpec.IntValue CASTLE_AVG_DIST_CHUNK;
     public static ForgeConfigSpec.IntValue CASTLE_MIN_DIST_CHUNK;
+    public static ForgeConfigSpec.IntValue LAPUTA_CORE_EFFECT_RANGE;
 
     static {
         ForgeConfigSpec.Builder CONFIG_BUILDER = new ForgeConfigSpec.Builder();
@@ -16,6 +17,8 @@ public class ConfigCommon {
 
         CASTLE_AVG_DIST_CHUNK = CONFIG_BUILDER.comment("average distance apart in chunks between spawn attempts").defineInRange("castle_avg_dist_chunk", 500, 0, 99999999);
         CASTLE_MIN_DIST_CHUNK = CONFIG_BUILDER.comment("minimum distance apart in chunks between spawn attempts").defineInRange("castle_min_dist_chunk", 300, 0, 99999999);
+
+        LAPUTA_CORE_EFFECT_RANGE = CONFIG_BUILDER.comment("Effect Range of Laputa Core").defineInRange("laputa_core_effect_range", 100, 0, 99999999);
         COMMON = CONFIG_BUILDER.build();
     }
 }

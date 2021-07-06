@@ -5,6 +5,7 @@ import com.song.castle_in_the_sky.network.Channel;
 import com.song.castle_in_the_sky.network.LaputaTESynPkt;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
+import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.state.properties.BlockStateProperties;
@@ -60,18 +61,24 @@ public class LaputaCore extends Block {
                 world.setBlock(pos, state.setValue(POWERED, true), 3);
                 if(tileEntity instanceof LaputaCoreTE){
                     ((LaputaCoreTE) tileEntity).setActive(true);
-//                    tileEntity.setChanged();
+                    tileEntity.setChanged();
                 }
             }
             else {
                 world.setBlock(pos, state.setValue(POWERED, false), 3);
                 if(tileEntity instanceof LaputaCoreTE){
                     ((LaputaCoreTE) tileEntity).setActive(false);
-//                    tileEntity.setChanged();
+                    tileEntity.setChanged();
                 }
             }
             Channel.INSTANCE.send(PacketDistributor.ALL.noArg(), new LaputaTESynPkt(hasSignal, pos));
         }
+    }
+
+    @Nullable
+    @Override
+    public BlockState getStateForPlacement(BlockItemUseContext blockItemUseContext) {
+        return this.defaultBlockState().setValue(POWERED, false);
     }
 
     @Override
