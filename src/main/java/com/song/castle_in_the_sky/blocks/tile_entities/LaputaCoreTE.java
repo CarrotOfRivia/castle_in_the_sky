@@ -28,7 +28,7 @@ public class LaputaCoreTE extends TileEntity implements net.minecraft.tileentity
             if(serverWorld.getGameTime() % 40 == 0){
                 for (PlayerEntity playerEntity: serverWorld.players()){
                     if(playerEntity.blockPosition().closerThan(this.getBlockPos(), 100)){
-                        playerEntity.addEffect(new EffectInstance(EffectRegister.SACRED_CASTLE_EFFECT.get(), 40));
+                        playerEntity.addEffect(new EffectInstance(EffectRegister.SACRED_CASTLE_EFFECT.get(), 100));
                     }
                 }
             }
