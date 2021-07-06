@@ -42,7 +42,7 @@ public class LaputaTESynPkt {
     public static void handle(LaputaTESynPkt pkt, Supplier<NetworkEvent.Context> ctx){
         ctx.get().enqueueWork(() -> {
             // Make sure it's only executed on the physical client
-            DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> ClientPacketHandlerClass.handleCoreSynPacket(pkt, ctx));
+            DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> ClientHandlerClass.handleCoreSynPacket(pkt, ctx));
         });
         ctx.get().setPacketHandled(true);
     }
