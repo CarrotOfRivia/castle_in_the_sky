@@ -1,0 +1,31 @@
+{
+  "parent": "castle_in_the_sky:find_castle",
+  "display": {
+    "icon": {
+      "item": "castle_in_the_sky:laputa_core"
+    },
+    "title": {
+      "translate": "advancements.castle_in_the_sky.conquer_castle.title"
+    },
+    "description": {
+      "translate": "advancements.castle_in_the_sky.conquer_castle.description"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "conquer_castle": {
+      "trigger": "minecraft:enter_block",
+      "conditions": {
+        "block": "castle_in_the_sky:laputa_core"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "conquer_castle"
+    ]
+  ]
+}

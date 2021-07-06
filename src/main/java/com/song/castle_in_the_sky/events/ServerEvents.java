@@ -22,6 +22,7 @@ import net.minecraft.world.GameType;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.MobSpawnInfo;
 import net.minecraftforge.event.LootTableLoadEvent;
+import net.minecraftforge.event.entity.player.AdvancementEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.village.VillagerTradesEvent;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
@@ -90,5 +91,10 @@ public class ServerEvents {
                         new ServerToClientInfoPacket(new TranslationTextComponent(String.format("info.%s.sacred_castle_effect.place", CastleInTheSky.MOD_ID)).withStyle(TextFormatting.RED).withStyle(TextFormatting.BOLD)));
             }
         }
+    }
+
+    @SubscribeEvent
+    public void setupAdvancements(AdvancementEvent event){
+
     }
 }

@@ -46,7 +46,7 @@ public class CastleInTheSky
     // Directly reference a log4j logger.
     public static final Logger LOGGER = LogManager.getLogger();
     public static final String MOD_ID = "castle_in_the_sky";
-    public static final ItemGroup ITEM_GROUP = new ItemGroup("all") {
+    public static final ItemGroup ITEM_GROUP = new ItemGroup(MOD_ID+".all") {
         @Override
         public ItemStack makeIcon() {
             return new ItemStack(ItemsRegister.LEVITATION_STONE.get());

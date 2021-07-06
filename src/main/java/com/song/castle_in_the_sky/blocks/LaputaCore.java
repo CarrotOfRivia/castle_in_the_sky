@@ -31,8 +31,8 @@ public class LaputaCore extends Block {
         super(AbstractBlock.Properties.of(Material.STONE).strength(-1.0F, 3600000.0F).lightLevel(litBlockEmission(15)).noDrops());
     }
 
-    private static ToIntFunction<BlockState> litBlockEmission(int p_235420_0_) {
-        return (p_235421_1_) -> p_235421_1_.getValue(BlockStateProperties.POWERED) ? p_235420_0_ : 0;
+    private static ToIntFunction<BlockState> litBlockEmission(int light) {
+        return (p_235421_1_) -> p_235421_1_.getValue(BlockStateProperties.POWERED) ? light : 0;
     }
 
     @Override
