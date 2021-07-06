@@ -104,8 +104,8 @@ public class ServerEvents {
     public void onMobDrop(LivingDropsEvent event){
         DamageSource damageSource = event.getSource();
         if(damageSource instanceof EntityDamageSource){
-            Entity entity = damageSource.getEntity();
-            if(entity instanceof LivingEntity && ((LivingEntity) entity).hasEffect(EffectRegister.SACRED_CASTLE_EFFECT.get())){
+            Entity killer = damageSource.getEntity();
+            if(killer instanceof LivingEntity && ((LivingEntity) killer).hasEffect(EffectRegister.SACRED_CASTLE_EFFECT.get())){
                 LivingEntity dropper = event.getEntityLiving();
                 if(dropper.getRandom().nextDouble()< ConfigCommon.YELLOW_KEY_DROP_RATE.get()){
                     event.getDrops().add(new ItemEntity(dropper.level, dropper.position().x, dropper.position().y, dropper.position().z, new ItemStack(ItemsRegister.YELLOW_KEY.get())));
