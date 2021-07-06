@@ -292,7 +292,7 @@
 			"scale": [0.3, 0.3, 0.3]
 		},
 		"ground": {
-			"translation": [0, -0.5, 0],
+			"translation": [0, 5.5, 0],
 			"scale": [0.3, 0.3, 0.3]
 		},
 		"gui": {

@@ -1,6 +1,7 @@
 package com.song.castle_in_the_sky.events;
 
 import com.song.castle_in_the_sky.CastleInTheSky;
+import com.song.castle_in_the_sky.config.ConfigCommon;
 import com.song.castle_in_the_sky.effects.EffectRegister;
 import com.song.castle_in_the_sky.features.StructureFeatureRegister;
 import com.song.castle_in_the_sky.features.StructureRegister;
@@ -11,17 +12,23 @@ import com.song.castle_in_the_sky.network.ServerToClientInfoPacket;
 import com.song.castle_in_the_sky.utils.RandomTradeBuilder;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityClassification;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.merchant.villager.VillagerProfession;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.network.NetworkManager;
+import net.minecraft.util.DamageSource;
+import net.minecraft.util.EntityDamageSource;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.GameType;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.MobSpawnInfo;
 import net.minecraftforge.event.LootTableLoadEvent;
+import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.event.entity.player.AdvancementEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.village.VillagerTradesEvent;
@@ -94,7 +101,22 @@ public class ServerEvents {
     }
 
     @SubscribeEvent
-    public void setupAdvancements(AdvancementEvent event){
-
+    public void onMobDrop(LivingDropsEvent event){
+        DamageSource damageSource = event.getSource();
+        if(damageSource instanceof EntityDamageSource){
+            Entity entity = damageSource.getEntity();
+            if(entity instanceof LivingEntity && ((LivingEntity) entity).hasEffect(EffectRegister.SACRED_CASTLE_EFFECT.get())){
+                LivingEntity dropper = event.getEntityLiving();
+                if(dropper.getRandom().nextDouble()< ConfigCommon.YELLOW_KEY_DROP_RATE.get()){
+                    event.getDrops().add(new ItemEntity(dropper.level, dropper.position().x, dropper.position().y, dropper.position().z, new ItemStack(ItemsRegister.YELLOW_KEY.get())));
+                }
+                if(dropper.getRandom().nextDouble()<ConfigCommon.BLUE_KEY_DROP_RATE.get()){
+                    event.getDrops().add(new ItemEntity(dropper.level, dropper.position().x, dropper.position().y, dropper.position().z, new ItemStack(ItemsRegister.BLUE_KEY.get())));
+                }
+                if(dropper.getRandom().nextDouble()<ConfigCommon.RED_KEY_DROP_RATE.get()){
+                    event.getDrops().add(new ItemEntity(dropper.level, dropper.position().x, dropper.position().y, dropper.position().z, new ItemStack(ItemsRegister.RED_KEY.get())));
+                }
+            }
+        }
     }
 }
