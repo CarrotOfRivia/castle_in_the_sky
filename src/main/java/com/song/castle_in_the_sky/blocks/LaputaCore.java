@@ -60,12 +60,14 @@ public class LaputaCore extends Block {
                 world.setBlock(pos, state.setValue(POWERED, true), 3);
                 if(tileEntity instanceof LaputaCoreTE){
                     ((LaputaCoreTE) tileEntity).setActive(true);
+//                    tileEntity.setChanged();
                 }
             }
             else {
                 world.setBlock(pos, state.setValue(POWERED, false), 3);
                 if(tileEntity instanceof LaputaCoreTE){
                     ((LaputaCoreTE) tileEntity).setActive(false);
+//                    tileEntity.setChanged();
                 }
             }
             Channel.INSTANCE.send(PacketDistributor.ALL.noArg(), new LaputaTESynPkt(hasSignal, pos));

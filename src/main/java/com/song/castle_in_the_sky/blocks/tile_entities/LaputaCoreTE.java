@@ -1,5 +1,6 @@
 package com.song.castle_in_the_sky.blocks.tile_entities;
 
+import com.song.castle_in_the_sky.effects.EffectRegister;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
@@ -24,10 +25,10 @@ public class LaputaCoreTE extends TileEntity implements net.minecraft.tileentity
     public void tick() {
         if(isActive() && !Objects.requireNonNull(getLevel()).isClientSide() && getLevel() instanceof ServerWorld){
             ServerWorld serverWorld = (ServerWorld) getLevel();
-            if(serverWorld.getGameTime() % 20 == 0){
+            if(serverWorld.getGameTime() % 40 == 0){
                 for (PlayerEntity playerEntity: serverWorld.players()){
                     if(playerEntity.blockPosition().closerThan(this.getBlockPos(), 100)){
-                        playerEntity.addEffect(new EffectInstance(Effects.GLOWING, 40));
+                        playerEntity.addEffect(new EffectInstance(EffectRegister.SACRED_CASTLE_EFFECT.get(), 40));
                     }
                 }
             }

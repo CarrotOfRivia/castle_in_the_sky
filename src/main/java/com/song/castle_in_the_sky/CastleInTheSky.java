@@ -5,6 +5,7 @@ import com.song.castle_in_the_sky.blocks.tile_entities.LaputaCoreTER;
 import com.song.castle_in_the_sky.blocks.tile_entities.TERegister;
 import com.song.castle_in_the_sky.config.ConfigCommon;
 import com.song.castle_in_the_sky.config.ConfigServer;
+import com.song.castle_in_the_sky.effects.EffectRegister;
 import com.song.castle_in_the_sky.events.ServerEvents;
 import com.song.castle_in_the_sky.features.StructureFeatureRegister;
 import com.song.castle_in_the_sky.features.StructureRegister;
@@ -69,6 +70,7 @@ public class CastleInTheSky
         LootModifierRegister.GLM.register(FMLJavaModLoadingContext.get().getModEventBus());
         BlockRegister.BLOCKS.register(FMLJavaModLoadingContext.get().getModEventBus());
         TERegister.TILE_ENTITIES.register(FMLJavaModLoadingContext.get().getModEventBus());
+        EffectRegister.EFFECT.register(FMLJavaModLoadingContext.get().getModEventBus());
 
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, ConfigCommon.COMMON);
         ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, ConfigServer.SERVER);
