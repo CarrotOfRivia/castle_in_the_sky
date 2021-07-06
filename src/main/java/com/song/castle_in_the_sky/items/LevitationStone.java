@@ -2,6 +2,7 @@ package com.song.castle_in_the_sky.items;
 
 import com.song.castle_in_the_sky.CastleInTheSky;
 import com.song.castle_in_the_sky.config.ConfigCommon;
+import com.song.castle_in_the_sky.effects.EffectRegister;
 import com.song.castle_in_the_sky.features.CastleStructure;
 import com.song.castle_in_the_sky.features.StructureRegister;
 import net.minecraft.block.BeaconBlock;
@@ -38,9 +39,14 @@ public class LevitationStone extends Item {
     @Override
     public void inventoryTick(ItemStack itemStack, World world, Entity entity, int itemSlot, boolean isSelected) {
         if(isSelected && isActive(itemStack)){
-            if(!world.isClientSide() && world instanceof ServerWorld){
+            if(!world.isClientSide() && world instanceof ServerWorld && world.getGameTime() % 40 == 0){
                 if(entity instanceof LivingEntity){
-                    ((LivingEntity) entity).addEffect(new EffectInstance(Effects.SLOW_FALLING, 20));
+                    if(((LivingEntity) entity).hasEffect(EffectRegister.SACRED_CASTLE_EFFECT.get())){
+                        ((LivingEntity) entity).addEffect(new EffectInstance(Effects.LEVITATION, 100));
+                    }
+                    else {
+                        ((LivingEntity) entity).addEffect(new EffectInstance(Effects.SLOW_FALLING, 100));
+                    }
                 }
             }
             if(world.isClientSide() && world.dimension().location().toString().equals("minecraft:overworld")){
