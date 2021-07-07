@@ -27,7 +27,7 @@
 
   "info.castle_in_the_sky.sacred_castle_effect.place": "You need to conquer the castle first.",
   "info.castle_in_the_sky.sacred_castle_effect.break": "You need to conquer the castle first.",
-  "info.castle_in_the_sky.locked_doors": "Unlocked by keys with corresponding color.",
+  "info.castle_in_the_sky.locked_doors": "Unlocked by keys with corresponding color. Kill mobs or loot chests to obtain them.",
 
   "itemGroup.castle_in_the_sky.all": "Castle in the Sky"
 }
