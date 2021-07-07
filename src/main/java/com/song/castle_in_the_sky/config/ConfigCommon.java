@@ -13,6 +13,7 @@ public class ConfigCommon {
     public static ForgeConfigSpec.DoubleValue YELLOW_KEY_DROP_RATE;
     public static ForgeConfigSpec.DoubleValue BLUE_KEY_DROP_RATE;
     public static ForgeConfigSpec.DoubleValue RED_KEY_DROP_RATE;
+    public static ForgeConfigSpec.BooleanValue NO_GRIEF_IN_CASTLE;
 
     static {
         ForgeConfigSpec.Builder CONFIG_BUILDER = new ForgeConfigSpec.Builder();
@@ -27,6 +28,8 @@ public class ConfigCommon {
         YELLOW_KEY_DROP_RATE = CONFIG_BUILDER.defineInRange("yellow_key_dro_rate", 0.3, 0, 1.);
         BLUE_KEY_DROP_RATE = CONFIG_BUILDER.defineInRange("blue_key_dro_rate", 0.1, 0, 1.);
         RED_KEY_DROP_RATE = CONFIG_BUILDER.defineInRange("red_key_dro_rate", 0.02, 0, 1.);
+
+        NO_GRIEF_IN_CASTLE = CONFIG_BUILDER.comment("Player cannot place or destroy blocks in the castle").define("no_grief_in_castle", true);
         COMMON = CONFIG_BUILDER.build();
     }
 }

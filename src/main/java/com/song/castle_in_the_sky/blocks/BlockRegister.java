@@ -14,5 +14,6 @@ public class BlockRegister {
     public static final RegistryObject<LockedDoor> YELLOW_DOOR = BLOCKS.register("yellow_door", YellowDoor::new);
 
     public static final RegistryObject<LaputaCore> LAPUTA_CORE = BLOCKS.register("laputa_core", LaputaCore::new);
+    public static final RegistryObject<FakeBeacon> FAKE_BEACON = BLOCKS.register("fake_beacon", FakeBeacon::new);
 
 }

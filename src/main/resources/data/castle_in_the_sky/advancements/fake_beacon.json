@@ -1,0 +1,35 @@
+{
+  "parent": "castle_in_the_sky:conquer_castle",
+  "display": {
+    "icon": {
+      "item": "castle_in_the_sky:fake_beacon"
+    },
+    "title": {
+      "translate": "advancements.castle_in_the_sky.fake_beacon.title"
+    },
+    "description": {
+      "translate": "advancements.castle_in_the_sky.fake_beacon.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "fake_beacon": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "castle_in_the_sky:fake_beacon"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "fake_beacon"
+    ]
+  ]
+}

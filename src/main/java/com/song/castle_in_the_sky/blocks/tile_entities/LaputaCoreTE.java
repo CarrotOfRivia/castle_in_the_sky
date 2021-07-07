@@ -30,7 +30,7 @@ public class LaputaCoreTE extends TileEntity implements net.minecraft.tileentity
     public void tick() {
         if(isActive() && !Objects.requireNonNull(getLevel()).isClientSide() && getLevel() instanceof ServerWorld){
             ServerWorld serverWorld = (ServerWorld) getLevel();
-            if(serverWorld.getGameTime() % 40 == 0){
+            if(ConfigCommon.NO_GRIEF_IN_CASTLE.get() && serverWorld.getGameTime() % 40 == 0){
                 for (PlayerEntity playerEntity: serverWorld.players()){
                     if(playerEntity.level.dimension().location().toString().equals("minecraft:overworld") && playerEntity.blockPosition().closerThan(this.getBlockPos(), ConfigCommon.LAPUTA_CORE_EFFECT_RANGE.get())){
                         playerEntity.addEffect(new EffectInstance(EffectRegister.SACRED_CASTLE_EFFECT.get(), 100));

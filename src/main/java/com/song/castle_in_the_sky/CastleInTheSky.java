@@ -102,6 +102,7 @@ public class CastleInTheSky
         RenderTypeLookup.setRenderLayer(BlockRegister.RED_DOOR.get(), RenderType.cutoutMipped());
         RenderTypeLookup.setRenderLayer(BlockRegister.BLUE_DOOR.get(), RenderType.cutoutMipped());
         RenderTypeLookup.setRenderLayer(BlockRegister.YELLOW_DOOR.get(), RenderType.cutoutMipped());
+        RenderTypeLookup.setRenderLayer(BlockRegister.FAKE_BEACON.get(), RenderType.cutout());
 
         ClientRegistry.bindTileEntityRenderer(TERegister.LAPUTA_CORE_TE_TYPE.get(), LaputaCoreTER::new);
     }
