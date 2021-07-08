@@ -9,6 +9,7 @@ import com.song.castle_in_the_sky.items.ItemsRegister;
 import com.song.castle_in_the_sky.network.Channel;
 import com.song.castle_in_the_sky.network.ClientHandlerClass;
 import com.song.castle_in_the_sky.network.ServerToClientInfoPacket;
+import com.song.castle_in_the_sky.utils.MyTradingRecipe;
 import com.song.castle_in_the_sky.utils.RandomTradeBuilder;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityClassification;
@@ -42,6 +43,7 @@ import net.minecraftforge.fml.network.PacketDistributor;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Supplier;
 
 public class ServerEvents {
@@ -55,13 +57,15 @@ public class ServerEvents {
 
     @SubscribeEvent
     public void onVillageTradeRegister(VillagerTradesEvent event){
-        if(event.getType() == VillagerProfession.CARTOGRAPHER){
-            event.getTrades().get(5).add(
-                    new RandomTradeBuilder(64, 25, 0.05f)
-                            .setPrice(Items.EMERALD, 40, 64)
-                            .setPrice2(Items.COMPASS, 1, 1)
-                            .setForSale(ItemsRegister.LEVITATION_STONE.get(), 1, 1)
-                            .build());
+        for (MyTradingRecipe recipe: ConfigCommon.MY_TRADING_RECIPES){
+            if(recipe.getItem1()!=null || recipe.getItem2() != null && Objects.requireNonNull(event.getType().getRegistryName()).toString().equals(recipe.getStringProfession())){
+                event.getTrades().get((int)(recipe.level.get())).add(
+                        new RandomTradeBuilder(64, 25, 0.05f)
+                                .setPrice(recipe.getItem1(), recipe.price1Min.get(), recipe.price1Max.get())
+                                .setPrice2(recipe.getItem2(), recipe.price2Min.get(), recipe.price2Max.get())
+                                .setForSale(recipe.getOutput(), recipe.outputMin.get(), recipe.outputMax.get())
+                                .build());
+            }
         }
     }
 

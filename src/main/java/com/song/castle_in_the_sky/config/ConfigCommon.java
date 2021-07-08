@@ -1,6 +1,9 @@
 package com.song.castle_in_the_sky.config;
 
+import com.song.castle_in_the_sky.utils.MyTradingRecipe;
 import net.minecraftforge.common.ForgeConfigSpec;
+
+import java.util.ArrayList;
 
 public class ConfigCommon {
     public static ForgeConfigSpec COMMON;
@@ -14,6 +17,8 @@ public class ConfigCommon {
     public static ForgeConfigSpec.DoubleValue BLUE_KEY_DROP_RATE;
     public static ForgeConfigSpec.DoubleValue RED_KEY_DROP_RATE;
     public static ForgeConfigSpec.BooleanValue NO_GRIEF_IN_CASTLE;
+
+    public static final ArrayList<MyTradingRecipe> MY_TRADING_RECIPES = new ArrayList<>();
 
     static {
         ForgeConfigSpec.Builder CONFIG_BUILDER = new ForgeConfigSpec.Builder();
@@ -30,6 +35,28 @@ public class ConfigCommon {
         RED_KEY_DROP_RATE = CONFIG_BUILDER.defineInRange("red_key_dro_rate", 0.02, 0, 1.);
 
         NO_GRIEF_IN_CASTLE = CONFIG_BUILDER.comment("Player cannot place or destroy blocks in the castle").define("no_grief_in_castle", true);
+
+        CONFIG_BUILDER.comment("Trading configuration: use the correct item id by pressing F3+H in game. Set 'null' to disable this slot, set both price1 and price2 to 'null' to disable the trading").push("tradings");
+        addTrader("minecraft:cartographer", "castle_in_the_sky:levitation_stone", 5, "minecraft:emerald", 50, 64, "minecraft:compass", 1, 1, 1, 1, CONFIG_BUILDER);
+        CONFIG_BUILDER.pop();
+
         COMMON = CONFIG_BUILDER.build();
+    }
+
+    private static void addTrader(String profession, String output, int level, String price1, int price1Min, int price1Max, String price2, int price2Min, int price2Max, int outputMin, int outputMax, ForgeConfigSpec.Builder builder){
+        builder.push(output);
+        MY_TRADING_RECIPES.add(new MyTradingRecipe(
+                builder.define(output+"_price1", price1),
+                builder.define(output+"_price2", price2),
+                builder.define(output+"_output", output),
+                builder.define(output+"_profession", profession),
+                builder.defineInRange(output+"_price1_min", price1Min, 1, 64),
+                builder.defineInRange(output+"_price1_max", price1Max, 1, 64),
+                builder.defineInRange(output+"_price2_min", price2Min, 1, 64),
+                builder.defineInRange(output+"_price2_max", price2Max, 1, 64),
+                builder.defineInRange(output+"_output_min", outputMin, 1, 64),
+                builder.defineInRange(output+"_output_max", outputMax, 1, 64),
+                builder.defineInRange(output+"_level", level, 1, 64)));
+        builder.pop();
     }
 }
