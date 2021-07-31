@@ -2,10 +2,10 @@ package com.song.castle_in_the_sky.items;
 
 import com.song.castle_in_the_sky.CastleInTheSky;
 import com.song.castle_in_the_sky.blocks.BlockRegister;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.Rarity;
-import net.minecraftforge.fml.RegistryObject;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Rarity;
+import net.minecraftforge.fmllegacy.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 

@@ -1,15 +1,16 @@
 package com.song.castle_in_the_sky.utils;
+
+import net.minecraft.world.entity.npc.VillagerTrades;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.trading.MerchantOffer;
+
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
-
-import net.minecraft.entity.merchant.villager.VillagerTrades.ITrade;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.item.MerchantOffer;
 
 /*
  * Adapted from https://github.com/Wimpingego/nnow/blob/master/NNOW_1.16.3/src/main/java/com/github/wimpingego/nnow/villagers/RandomTradeBuilder.java
@@ -173,7 +174,7 @@ public class RandomTradeBuilder {
         return this.price != null && this.forSale != null;
     }
 
-    public ITrade build()
+    public VillagerTrades.ItemListing build()
     {
         return (entity, random) -> !this.canBuild() ? null : new MerchantOffer(this.price.apply(random), this.price2.apply(random), this.forSale.apply(random), this.maxTrades, this.xp, this.priceMult);
     }

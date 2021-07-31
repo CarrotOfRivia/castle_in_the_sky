@@ -2,35 +2,35 @@ package com.song.castle_in_the_sky.blocks;
 
 import com.song.castle_in_the_sky.CastleInTheSky;
 import com.song.castle_in_the_sky.network.ClientHandlerClass;
-import net.minecraft.block.AbstractBlock;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.DoorBlock;
-import net.minecraft.block.material.Material;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
+import net.minecraft.ChatFormatting;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.DoorBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.phys.BlockHitResult;
 
 import javax.annotation.Nullable;
 import java.util.List;
 
 public abstract class LockedDoor extends DoorBlock {
 
-    protected LockedDoor(AbstractBlock.Properties properties) {
+    protected LockedDoor(Properties properties) {
         super(properties);
     }
 
+
     @Override
-    public ActionResultType use(BlockState blockState, World world, BlockPos blockPos, PlayerEntity playerEntity, Hand hand, BlockRayTraceResult blockRayTraceResult) {
+    public InteractionResult use(BlockState blockState, Level world, BlockPos blockPos, Player playerEntity, InteractionHand hand, BlockHitResult blockRayTraceResult) {
         Item item = playerEntity.getItemInHand(hand).getItem();
         if (isKeyItem(item)){
             blockState = blockState.cycle(OPEN);
@@ -39,13 +39,13 @@ public abstract class LockedDoor extends DoorBlock {
 
             ItemStack itemStack = playerEntity.getItemInHand(hand);
             itemStack.shrink(1);
-            return ActionResultType.sidedSuccess(world.isClientSide());
+            return InteractionResult.sidedSuccess(world.isClientSide());
         }
         else {
             if(world.isClientSide()){
-                ClientHandlerClass.showInfo(new TranslationTextComponent("info."+ CastleInTheSky.MOD_ID+".locked_doors"));
+                ClientHandlerClass.showInfo(new TranslatableComponent("info."+ CastleInTheSky.MOD_ID+".locked_doors"));
             }
-            return ActionResultType.PASS;
+            return InteractionResult.PASS;
         }
     }
 
@@ -60,8 +60,8 @@ public abstract class LockedDoor extends DoorBlock {
     }
 
     @Override
-    public void appendHoverText(ItemStack itemStack, @Nullable IBlockReader blockReader, List<ITextComponent> iTextComponents, ITooltipFlag tooltipFlag) {
+    public void appendHoverText(ItemStack itemStack, @Nullable BlockGetter blockReader, List<Component> iTextComponents, TooltipFlag tooltipFlag) {
         super.appendHoverText(itemStack, blockReader, iTextComponents, tooltipFlag);
-        iTextComponents.add(new TranslationTextComponent("info."+ CastleInTheSky.MOD_ID+".locked_doors").withStyle(TextFormatting.GRAY));
+        iTextComponents.add(new TranslatableComponent("info."+ CastleInTheSky.MOD_ID+".locked_doors").withStyle(ChatFormatting.GRAY));
     }
 }

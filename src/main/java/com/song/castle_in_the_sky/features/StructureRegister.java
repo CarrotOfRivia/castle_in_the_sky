@@ -4,28 +4,28 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.song.castle_in_the_sky.CastleInTheSky;
 import com.song.castle_in_the_sky.config.ConfigCommon;
-import net.minecraft.util.registry.WorldGenRegistries;
-import net.minecraft.world.gen.feature.NoFeatureConfig;
-import net.minecraft.world.gen.feature.structure.Structure;
-import net.minecraft.world.gen.settings.DimensionStructuresSettings;
-import net.minecraft.world.gen.settings.StructureSeparationSettings;
-import net.minecraftforge.fml.RegistryObject;
+import net.minecraft.data.BuiltinRegistries;
+import net.minecraft.world.level.levelgen.StructureSettings;
+import net.minecraft.world.level.levelgen.feature.StructureFeature;
+import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
+import net.minecraft.world.level.levelgen.feature.configurations.StructureFeatureConfiguration;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
+import net.minecraftforge.fmllegacy.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 
 public class StructureRegister {
-    public static final DeferredRegister<Structure<?>> STRUCTURES = DeferredRegister.create(ForgeRegistries.STRUCTURE_FEATURES, CastleInTheSky.MOD_ID);
-    public static final CastleStructure CASTLE_IN_THE_SKY_RAW = new CastleStructure(NoFeatureConfig.CODEC);
+    public static final DeferredRegister<StructureFeature<?>> STRUCTURES = DeferredRegister.create(ForgeRegistries.STRUCTURE_FEATURES, CastleInTheSky.MOD_ID);
+    public static final CastleStructure CASTLE_IN_THE_SKY_RAW = new CastleStructure(NoneFeatureConfiguration.CODEC);
 
-    public static final RegistryObject<Structure<NoFeatureConfig>> CASTLE_IN_THE_SKY = STRUCTURES.register("castle_in_the_sky", ()-> CASTLE_IN_THE_SKY_RAW);
+    public static final RegistryObject<StructureFeature<NoneFeatureConfiguration>> CASTLE_IN_THE_SKY = STRUCTURES.register("castle_in_the_sky", ()-> CASTLE_IN_THE_SKY_RAW);
 
 
     static {
-        Structure.STRUCTURES_REGISTRY.put((CastleInTheSky.MOD_ID+":castle_in_the_sky").toLowerCase(Locale.ROOT), CASTLE_IN_THE_SKY_RAW);
+//        StructureFeature.STRUCTURES_REGISTRY.put((CastleInTheSky.MOD_ID+":castle_in_the_sky").toLowerCase(Locale.ROOT), CASTLE_IN_THE_SKY_RAW);
     }
 
 
@@ -36,7 +36,7 @@ public class StructureRegister {
     public static void setupStructures() {
         setupMapSpacingAndLand(
                 CASTLE_IN_THE_SKY.get(), /* The instance of the structure */
-                new StructureSeparationSettings(ConfigCommon.CASTLE_AVG_DIST_CHUNK.get() /* average distance apart in chunks between spawn attempts */,
+                new StructureFeatureConfiguration(ConfigCommon.CASTLE_AVG_DIST_CHUNK.get() /* average distance apart in chunks between spawn attempts */,
                         ConfigCommon.CASTLE_MIN_DIST_CHUNK.get() /* minimum distance apart in chunks between spawn attempts. MUST BE LESS THAN ABOVE VALUE*/,
                         1234567890 /* this modifies the seed of the structure so no two structures always spawn over each-other. Make this large and unique. */),
                 false);
@@ -48,9 +48,9 @@ public class StructureRegister {
      * this method in the structureSeparationSettings argument.
      * This method is called by setupStructures above.
      */
-    public static <F extends Structure<?>> void setupMapSpacingAndLand(
+    public static <F extends StructureFeature<?>> void setupMapSpacingAndLand(
             F structure,
-            StructureSeparationSettings structureSeparationSettings,
+            StructureFeatureConfiguration structureSeparationSettings,
             boolean transformSurroundingLand)
     {
         /*
@@ -60,7 +60,7 @@ public class StructureRegister {
          * If the registration is setup properly for the structure,
          * getRegistryName() should never return null.
          */
-        Structure.STRUCTURES_REGISTRY.put(structure.getRegistryName().toString(), structure);
+        StructureFeature.STRUCTURES_REGISTRY.put(structure.getRegistryName().toString(), structure);
 
         /*
          * Whether surrounding land will be modified automatically to conform to the bottom of the structure.
@@ -73,9 +73,9 @@ public class StructureRegister {
          * NOISE_AFFECTING_FEATURES requires AccessTransformer  (See resources/META-INF/accesstransformer.cfg)
          */
         if(transformSurroundingLand){
-            Structure.NOISE_AFFECTING_FEATURES =
-                    ImmutableList.<Structure<?>>builder()
-                            .addAll(Structure.NOISE_AFFECTING_FEATURES)
+            StructureFeature.NOISE_AFFECTING_FEATURES =
+                    ImmutableList.<StructureFeature<?>>builder()
+                            .addAll(StructureFeature.NOISE_AFFECTING_FEATURES)
                             .add(structure)
                             .build();
         }
@@ -93,9 +93,9 @@ public class StructureRegister {
          *
          * DEFAULTS requires AccessTransformer  (See resources/META-INF/accesstransformer.cfg)
          */
-        DimensionStructuresSettings.DEFAULTS =
-                ImmutableMap.<Structure<?>, StructureSeparationSettings>builder()
-                        .putAll(DimensionStructuresSettings.DEFAULTS)
+        StructureSettings.DEFAULTS =
+                ImmutableMap.<StructureFeature<?>, StructureFeatureConfiguration>builder()
+                        .putAll(StructureSettings.DEFAULTS)
                         .put(structure, structureSeparationSettings)
                         .build();
 
@@ -107,8 +107,8 @@ public class StructureRegister {
          * that field only applies for the default overworld and won't add to other worldtypes or dimensions (like amplified or Nether).
          * So yeah, don't do DimensionSettings.BUILTIN_OVERWORLD. Use the NOISE_GENERATOR_SETTINGS loop below instead if you must.
          */
-        WorldGenRegistries.NOISE_GENERATOR_SETTINGS.entrySet().forEach(settings -> {
-            Map<Structure<?>, StructureSeparationSettings> structureMap = settings.getValue().structureSettings().structureConfig();
+        BuiltinRegistries.NOISE_GENERATOR_SETTINGS.entrySet().forEach(settings -> {
+            Map<StructureFeature<?>, StructureFeatureConfiguration> structureMap = settings.getValue().structureSettings().structureConfig();
 
             /*
              * Pre-caution in case a mod makes the structure map immutable like datapacks do.
@@ -117,7 +117,7 @@ public class StructureRegister {
              * structureConfig requires AccessTransformer  (See resources/META-INF/accesstransformer.cfg)
              */
             if(structureMap instanceof ImmutableMap){
-                Map<Structure<?>, StructureSeparationSettings> tempMap = new HashMap<>(structureMap);
+                Map<StructureFeature<?>, StructureFeatureConfiguration> tempMap = new HashMap<>(structureMap);
                 tempMap.put(structure, structureSeparationSettings);
                 settings.getValue().structureSettings().structureConfig = tempMap;
             }

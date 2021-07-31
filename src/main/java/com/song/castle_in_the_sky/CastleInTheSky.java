@@ -1,8 +1,8 @@
 package com.song.castle_in_the_sky;
 
 import com.song.castle_in_the_sky.blocks.BlockRegister;
-import com.song.castle_in_the_sky.blocks.tile_entities.LaputaCoreTER;
-import com.song.castle_in_the_sky.blocks.tile_entities.TERegister;
+import com.song.castle_in_the_sky.blocks.block_entities.LaputaCoreTER;
+import com.song.castle_in_the_sky.blocks.block_entities.TERegister;
 import com.song.castle_in_the_sky.config.ConfigCommon;
 import com.song.castle_in_the_sky.config.ConfigServer;
 import com.song.castle_in_the_sky.effects.EffectRegister;
@@ -14,26 +14,26 @@ import com.song.castle_in_the_sky.loot.LootModifierRegister;
 import com.song.castle_in_the_sky.network.Channel;
 import com.song.castle_in_the_sky.network.LaputaTESynPkt;
 import com.song.castle_in_the_sky.network.ServerToClientInfoPacket;
-import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
+import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.RenderTypeLookup;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Block;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.Tags;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.InterModComms;
 import net.minecraftforge.fml.ModLoadingContext;
-import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModProcessEvent;
-import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.fmlserverevents.FMLServerStartingEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -46,7 +46,7 @@ public class CastleInTheSky
     // Directly reference a log4j logger.
     public static final Logger LOGGER = LogManager.getLogger();
     public static final String MOD_ID = "castle_in_the_sky";
-    public static final ItemGroup ITEM_GROUP = new ItemGroup(MOD_ID+".all") {
+    public static final CreativeModeTab ITEM_GROUP = new CreativeModeTab(MOD_ID+".all") {
         @Override
         public ItemStack makeIcon() {
             return new ItemStack(ItemsRegister.LEVITATION_STONE.get());
@@ -83,7 +83,7 @@ public class CastleInTheSky
     {
         // some preinit code
         LOGGER.info("HELLO FROM PREINIT");
-        LOGGER.info("DIRT BLOCK >> {}", Blocks.DIRT.getRegistryName());
+        LOGGER.info("DIRT BLOCK >> {}", Tags.Blocks.DIRT.getName());
         event.enqueueWork(()->{
             StructureRegister.setupStructures();
             StructureFeatureRegister.registerConfiguredStructures();
@@ -97,14 +97,14 @@ public class CastleInTheSky
 
     private void doClientStuff(final FMLClientSetupEvent event) {
         // do something that can only be done on the client
-        LOGGER.info("Got game settings {}", event.getMinecraftSupplier().get().options);
+        // TODO door render issue
+        ItemBlockRenderTypes.setRenderLayer(BlockRegister.RED_DOOR.get(), RenderType.cutoutMipped());
+        ItemBlockRenderTypes.setRenderLayer(BlockRegister.BLUE_DOOR.get(), RenderType.cutoutMipped());
+        ItemBlockRenderTypes.setRenderLayer(BlockRegister.YELLOW_DOOR.get(), RenderType.cutoutMipped());
+        ItemBlockRenderTypes.setRenderLayer(BlockRegister.FAKE_BEACON.get(), RenderType.cutout());
+        ItemBlockRenderTypes.setRenderLayer(BlockRegister.LAPUTA_CORE.get(), RenderType.solid());
 
-        RenderTypeLookup.setRenderLayer(BlockRegister.RED_DOOR.get(), RenderType.cutoutMipped());
-        RenderTypeLookup.setRenderLayer(BlockRegister.BLUE_DOOR.get(), RenderType.cutoutMipped());
-        RenderTypeLookup.setRenderLayer(BlockRegister.YELLOW_DOOR.get(), RenderType.cutoutMipped());
-        RenderTypeLookup.setRenderLayer(BlockRegister.FAKE_BEACON.get(), RenderType.cutout());
-
-        ClientRegistry.bindTileEntityRenderer(TERegister.LAPUTA_CORE_TE_TYPE.get(), LaputaCoreTER::new);
+        BlockEntityRenderers.register(TERegister.LAPUTA_CORE_TE_TYPE.get(), LaputaCoreTER::new);
     }
 
     private void enqueueIMC(final InterModEnqueueEvent event)
