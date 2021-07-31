@@ -75,15 +75,16 @@ public class CastleStructure extends StructureFeature<NoneFeatureConfiguration> 
                                 registryAccess,
                                 new JigsawConfiguration(() -> registryAccess.registryOrThrow(Registry.TEMPLATE_POOL_REGISTRY)
                                         .get(new ResourceLocation(CastleInTheSky.MOD_ID, String.format("castle_in_the_sky/laputa%d%d%d", finalShift1, finalShiftY, finalShift2))),
-                                        0),
+                                        10),
                                 PoolElementStructurePiece::new,
                                 chunkGenerator,
                                 templateManagerIn,
                                 blockpos.offset(shift2*48, shiftY*48, shift1*48),
-                                this.pieces,
+                                this,
                                 fakeRandom,
                                 false,
-                                false);
+                                false,
+                                levelHeightAccessor);
                     }
                 }
             }

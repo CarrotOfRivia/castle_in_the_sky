@@ -1,19 +1,13 @@
 package com.song.castle_in_the_sky.features;
 
 import com.song.castle_in_the_sky.CastleInTheSky;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.util.registry.WorldGenRegistries;
-import net.minecraft.world.gen.FlatGenerationSettings;
-import net.minecraft.world.gen.feature.IFeatureConfig;
-import net.minecraft.world.gen.feature.NoFeatureConfig;
-import net.minecraft.world.gen.feature.StructureFeature;
-import net.minecraft.world.gen.feature.structure.Structure;
-import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
+import net.minecraft.core.Registry;
+import net.minecraft.data.BuiltinRegistries;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.levelgen.feature.ConfiguredStructureFeature;
 import net.minecraft.world.level.levelgen.feature.StructureFeature;
 import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
-import net.minecraft.world.level.levelgen.feature.configurations.StructureFeatureConfiguration;
+import net.minecraft.world.level.levelgen.flat.FlatLevelGeneratorSettings;
 
 public class StructureFeatureRegister {
 
@@ -27,7 +21,7 @@ public class StructureFeatureRegister {
      * But the best time to register configured features by code is honestly to do it in FMLCommonSetupEvent.
      */
     public static void registerConfiguredStructures() {
-        Registry<StructureFeature<?, ?>> registry = WorldGenRegistries.CONFIGURED_STRUCTURE_FEATURE;
+        Registry<ConfiguredStructureFeature<?, ?>> registry = BuiltinRegistries.CONFIGURED_STRUCTURE_FEATURE;
         Registry.register(registry, new ResourceLocation(CastleInTheSky.MOD_ID, "castle_in_the_sky"), CONFIGURED_CASTLE_IN_THE_SKY);
 
         /* Ok so, this part may be hard to grasp but basically, just add your structure to this to
@@ -45,7 +39,7 @@ public class StructureFeatureRegister {
          *
          * Requires AccessTransformer ( see resources/META-INF/accesstransformer.cfg )
          */
-        FlatGenerationSettings.STRUCTURE_FEATURES.put(StructureRegister.CASTLE_IN_THE_SKY.get(), CONFIGURED_CASTLE_IN_THE_SKY);
+        FlatLevelGeneratorSettings.STRUCTURE_FEATURES.put(StructureRegister.CASTLE_IN_THE_SKY.get(), CONFIGURED_CASTLE_IN_THE_SKY);
     }
 
 }

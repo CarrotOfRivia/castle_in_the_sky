@@ -1,7 +1,7 @@
 package com.song.castle_in_the_sky.network;
 
 import com.song.castle_in_the_sky.CastleInTheSky;
-import com.song.castle_in_the_sky.blocks.tile_entities.LaputaCoreTE;
+import com.song.castle_in_the_sky.blocks.block_entities.LaputaCoreBE;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
@@ -17,8 +17,8 @@ public class ClientHandlerClass {
         BlockPos pos = new BlockPos(pkt.posX, pkt.posY, pkt.posZ);
         assert Minecraft.getInstance().level != null;
         BlockEntity tileEntity = Minecraft.getInstance().level.getBlockEntity(pos);
-        if(tileEntity instanceof LaputaCoreTE){
-            ((LaputaCoreTE) tileEntity).setActive(pkt.isActive);
+        if(tileEntity instanceof LaputaCoreBE){
+            ((LaputaCoreBE) tileEntity).setActive(pkt.isActive);
         }
     }
 

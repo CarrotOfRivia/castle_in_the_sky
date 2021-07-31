@@ -1,15 +1,19 @@
 package com.song.castle_in_the_sky.blocks;
 
-import com.song.castle_in_the_sky.blocks.tile_entities.LaputaCoreTE;
+import com.song.castle_in_the_sky.blocks.block_entities.LaputaCoreBE;
+import com.song.castle_in_the_sky.blocks.block_entities.TERegister;
 import com.song.castle_in_the_sky.network.Channel;
 import com.song.castle_in_the_sky.network.LaputaTESynPkt;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -22,12 +26,12 @@ import net.minecraftforge.fmllegacy.network.PacketDistributor;
 import javax.annotation.Nullable;
 import java.util.function.ToIntFunction;
 
-public class LaputaCore extends Block implements EntityBlock {
+public class LaputaCore extends BaseEntityBlock{
     public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
     protected static final VoxelShape BOTTOM_AABB = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 2.0D, 16.0D);
 
     public LaputaCore() {
-        super(Properties.of(Material.STONE).strength(-1.0F, 3600000.0F).lightLevel(litBlockEmission(15)).noDrops());
+        super(Properties.of(Material.STONE).strength(-1.0F, 3600000.0F).lightLevel(litBlockEmission(15)).noDrops().noOcclusion());
     }
 
     private static ToIntFunction<BlockState> litBlockEmission(int light) {
@@ -47,15 +51,15 @@ public class LaputaCore extends Block implements EntityBlock {
             boolean hasSignal = world.hasNeighborSignal(pos);
             if(hasSignal){
                 world.setBlock(pos, state.setValue(POWERED, true), 3);
-                if(tileEntity instanceof LaputaCoreTE){
-                    ((LaputaCoreTE) tileEntity).setActive(true);
+                if(tileEntity instanceof LaputaCoreBE){
+                    ((LaputaCoreBE) tileEntity).setActive(true);
                     tileEntity.setChanged();
                 }
             }
             else {
                 world.setBlock(pos, state.setValue(POWERED, false), 3);
-                if(tileEntity instanceof LaputaCoreTE){
-                    ((LaputaCoreTE) tileEntity).setActive(false);
+                if(tileEntity instanceof LaputaCoreBE){
+                    ((LaputaCoreBE) tileEntity).setActive(false);
                     tileEntity.setChanged();
                 }
             }
@@ -74,9 +78,22 @@ public class LaputaCore extends Block implements EntityBlock {
         return BOTTOM_AABB;
     }
 
+    @Override
+    public RenderShape getRenderShape(BlockState p_49232_) {
+        return RenderShape.MODEL;
+    }
+
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos blockPos, BlockState blockState) {
-        return new LaputaCoreTE(blockPos, blockState);
+        LaputaCoreBE result =  new LaputaCoreBE(blockPos, blockState);
+        result.setActive(blockState.getValue(POWERED));
+        return result;
+    }
+
+    @Nullable
+    @Override
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState blockState, BlockEntityType<T> blockEntityType) {
+        return createTickerHelper(blockEntityType, TERegister.LAPUTA_CORE_TE_TYPE.get(), LaputaCoreBE::tick);
     }
 }

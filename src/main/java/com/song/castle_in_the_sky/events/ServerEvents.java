@@ -4,7 +4,6 @@ import com.song.castle_in_the_sky.CastleInTheSky;
 import com.song.castle_in_the_sky.config.ConfigCommon;
 import com.song.castle_in_the_sky.effects.EffectRegister;
 import com.song.castle_in_the_sky.features.StructureFeatureRegister;
-import com.song.castle_in_the_sky.features.StructureRegister;
 import com.song.castle_in_the_sky.items.ItemsRegister;
 import com.song.castle_in_the_sky.network.Channel;
 import com.song.castle_in_the_sky.network.ClientHandlerClass;
@@ -12,25 +11,8 @@ import com.song.castle_in_the_sky.network.ServerToClientInfoPacket;
 import com.song.castle_in_the_sky.utils.MyTradingRecipe;
 import com.song.castle_in_the_sky.utils.RandomTradeBuilder;
 import net.minecraft.ChatFormatting;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityClassification;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.entity.merchant.villager.VillagerProfession;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.network.NetworkManager;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.EntityDamageSource;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.GameType;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.MobSpawnInfo;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.EntityDamageSource;
 import net.minecraft.world.entity.Entity;
@@ -39,9 +21,7 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.biome.Biome;
-import net.minecraftforge.event.LootTableLoadEvent;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
-import net.minecraftforge.event.entity.player.AdvancementEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.village.VillagerTradesEvent;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
@@ -49,14 +29,9 @@ import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.event.world.StructureSpawnListGatherEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.network.PacketDistributor;
 import net.minecraftforge.fmllegacy.network.PacketDistributor;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Objects;
-import java.util.function.Supplier;
 
 public class ServerEvents {
 
@@ -71,11 +46,11 @@ public class ServerEvents {
     public void onVillageTradeRegister(VillagerTradesEvent event){
         for (MyTradingRecipe recipe: ConfigCommon.MY_TRADING_RECIPES){
             if(recipe.getItem1()!=null || recipe.getItem2() != null && Objects.requireNonNull(event.getType().getRegistryName()).toString().equals(recipe.getStringProfession())){
-                event.getTrades().get((int)(recipe.level.get())).add(
+                event.getTrades().get(recipe.getLevel()).add(
                         new RandomTradeBuilder(64, 25, 0.05f)
-                                .setPrice(recipe.getItem1(), recipe.price1Min.get(), recipe.price1Max.get())
-                                .setPrice2(recipe.getItem2(), recipe.price2Min.get(), recipe.price2Max.get())
-                                .setForSale(recipe.getOutput(), recipe.outputMin.get(), recipe.outputMax.get())
+                                .setPrice(recipe.getItem1(), recipe.price1Min().get(), recipe.price1Max().get())
+                                .setPrice2(recipe.getItem2(), recipe.price2Min().get(), recipe.price2Max().get())
+                                .setForSale(recipe.getOutput(), recipe.outputMin().get(), recipe.outputMax().get())
                                 .build());
             }
         }

@@ -1,60 +1,40 @@
-package com.song.castle_in_the_sky.blocks.tile_entities;
+package com.song.castle_in_the_sky.blocks.block_entities;
 
 import com.song.castle_in_the_sky.config.ConfigCommon;
 import com.song.castle_in_the_sky.effects.EffectRegister;
 import com.song.castle_in_the_sky.network.Channel;
 import com.song.castle_in_the_sky.network.LaputaTESynPkt;
-import net.minecraft.block.BlockState;
 import net.minecraft.core.BlockPos;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SUpdateTileEntityPacket;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.Effects;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.world.World;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.TickingBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.server.ServerWorld;
-import net.minecraftforge.fml.network.PacketDistributor;
 import net.minecraftforge.fmllegacy.network.PacketDistributor;
 
-import javax.annotation.Nullable;
 import java.util.Objects;
 
-public class LaputaCoreTE extends BlockEntity implements TickingBlockEntity {
+public class LaputaCoreBE extends BlockEntity {
     private boolean isActive=false;
 
-    public LaputaCoreTE(BlockPos pos, BlockState state){
+    public LaputaCoreBE(BlockPos pos, BlockState state){
         super(TERegister.LAPUTA_CORE_TE_TYPE.get(), pos, state);
     }
 
-    @Override
-    public void tick() {
-        if(isActive() && !Objects.requireNonNull(getLevel()).isClientSide() && getLevel() instanceof ServerLevel){
-            ServerLevel serverWorld = (ServerLevel) getLevel();
+    public static void tick(Level level, BlockPos blockPos, BlockState blockState, LaputaCoreBE laputaCoreTE) {
+        if(laputaCoreTE.isActive() && !Objects.requireNonNull(laputaCoreTE.getLevel()).isClientSide() && laputaCoreTE.getLevel() instanceof ServerLevel){
+            ServerLevel serverWorld = (ServerLevel) laputaCoreTE.getLevel();
             if(ConfigCommon.NO_GRIEF_IN_CASTLE.get() && serverWorld.getGameTime() % 40 == 0){
                 for (Player playerEntity: serverWorld.players()){
-                    if(playerEntity.level.dimension().location().toString().equals("minecraft:overworld") && playerEntity.blockPosition().closerThan(this.getBlockPos(), ConfigCommon.LAPUTA_CORE_EFFECT_RANGE.get())){
+                    if(playerEntity.level.dimension().location().toString().equals("minecraft:overworld") && playerEntity.blockPosition().closerThan(laputaCoreTE.getBlockPos(), ConfigCommon.LAPUTA_CORE_EFFECT_RANGE.get())){
                         playerEntity.addEffect(new MobEffectInstance(EffectRegister.SACRED_CASTLE_EFFECT.get(), 100));
                     }
                 }
-                Channel.INSTANCE.send(PacketDistributor.NEAR.with(PacketDistributor.TargetPoint.p(this.getBlockPos().getX(), this.getBlockPos().getY(), this.getBlockPos().getZ(), 20, Level.OVERWORLD)), new LaputaTESynPkt(isActive(), this.getBlockPos()));
+                Channel.INSTANCE.send(PacketDistributor.NEAR.with(PacketDistributor.TargetPoint.p(laputaCoreTE.getBlockPos().getX(), laputaCoreTE.getBlockPos().getY(), laputaCoreTE.getBlockPos().getZ(), 20, Level.OVERWORLD)), new LaputaTESynPkt(laputaCoreTE.isActive(), laputaCoreTE.getBlockPos()));
             }
         }
-    }
-
-    @Override
-    public BlockPos getPos() {
-        return worldPosition;
     }
 
     @Override
@@ -88,6 +68,11 @@ public class LaputaCoreTE extends BlockEntity implements TickingBlockEntity {
         return nbt;
     }
 
+    @Override
+    public void handleUpdateTag(CompoundTag tag) {
+        super.handleUpdateTag(tag);
+        this.setActive(tag.getBoolean("is_active"));
+    }
 
     @Override
     public CompoundTag save(CompoundTag tag) {
@@ -96,4 +81,9 @@ public class LaputaCoreTE extends BlockEntity implements TickingBlockEntity {
         return tag;
     }
 
+    @Override
+    public void load(CompoundTag tag) {
+        super.load(tag);
+        this.setActive(tag.getBoolean("is_active"));
+    }
 }
