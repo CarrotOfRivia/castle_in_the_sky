@@ -9,10 +9,15 @@ import net.minecraft.world.gen.feature.IFeatureConfig;
 import net.minecraft.world.gen.feature.NoFeatureConfig;
 import net.minecraft.world.gen.feature.StructureFeature;
 import net.minecraft.world.gen.feature.structure.Structure;
+import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
+import net.minecraft.world.level.levelgen.feature.ConfiguredStructureFeature;
+import net.minecraft.world.level.levelgen.feature.StructureFeature;
+import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
+import net.minecraft.world.level.levelgen.feature.configurations.StructureFeatureConfiguration;
 
 public class StructureFeatureRegister {
 
-    public static final StructureFeature<NoFeatureConfig, ? extends Structure<NoFeatureConfig>> CONFIGURED_CASTLE_IN_THE_SKY = StructureRegister.CASTLE_IN_THE_SKY.get().configured(NoFeatureConfig.INSTANCE);
+    public static final ConfiguredStructureFeature<NoneFeatureConfiguration, ? extends StructureFeature<NoneFeatureConfiguration>> CONFIGURED_CASTLE_IN_THE_SKY = StructureRegister.CASTLE_IN_THE_SKY.get().configured(NoneFeatureConfiguration.INSTANCE);
 
     /**
      * Registers the configured structure which is what gets added to the biomes.

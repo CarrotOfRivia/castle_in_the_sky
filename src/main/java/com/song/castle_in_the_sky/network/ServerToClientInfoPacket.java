@@ -1,24 +1,23 @@
 package com.song.castle_in_the_sky.network;
 
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.chat.Component;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.fml.network.NetworkEvent;
-
+import net.minecraftforge.fmllegacy.network.NetworkEvent;
 import java.util.function.Supplier;
 
 public class ServerToClientInfoPacket {
-    private final ITextComponent info;
-    public ServerToClientInfoPacket(ITextComponent info){
+    private final Component info;
+    public ServerToClientInfoPacket(Component info){
         this.info = info;
     }
 
-    public static void encode(ServerToClientInfoPacket pkt, PacketBuffer buffer){
+    public static void encode(ServerToClientInfoPacket pkt, FriendlyByteBuf buffer){
         buffer.writeComponent(pkt.info);
     }
 
-    public static ServerToClientInfoPacket decode(PacketBuffer buffer){
+    public static ServerToClientInfoPacket decode(FriendlyByteBuf buffer){
         return new ServerToClientInfoPacket(buffer.readComponent());
     }
 

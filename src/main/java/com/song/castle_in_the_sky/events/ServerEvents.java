@@ -11,6 +11,7 @@ import com.song.castle_in_the_sky.network.ClientHandlerClass;
 import com.song.castle_in_the_sky.network.ServerToClientInfoPacket;
 import com.song.castle_in_the_sky.utils.MyTradingRecipe;
 import com.song.castle_in_the_sky.utils.RandomTradeBuilder;
+import net.minecraft.ChatFormatting;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.LivingEntity;
@@ -21,6 +22,8 @@ import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.network.NetworkManager;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EntityDamageSource;
 import net.minecraft.util.text.TextFormatting;
@@ -28,6 +31,14 @@ import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.GameType;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.MobSpawnInfo;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.EntityDamageSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.biome.Biome;
 import net.minecraftforge.event.LootTableLoadEvent;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.event.entity.player.AdvancementEvent;
@@ -39,6 +50,7 @@ import net.minecraftforge.event.world.StructureSpawnListGatherEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.network.PacketDistributor;
+import net.minecraftforge.fmllegacy.network.PacketDistributor;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -50,7 +62,7 @@ public class ServerEvents {
 
     @SubscribeEvent
     public void onBiomeLoading(BiomeLoadingEvent event){
-        if(event.getCategory() == Biome.Category.OCEAN){
+        if(event.getCategory() == Biome.BiomeCategory.OCEAN){
             event.getGeneration().addStructureStart(StructureFeatureRegister.CONFIGURED_CASTLE_IN_THE_SKY);
         }
     }
@@ -83,7 +95,7 @@ public class ServerEvents {
 
     @SubscribeEvent
     public void onBlockBreak(PlayerEvent.BreakSpeed event){
-        PlayerEntity playerEntity = event.getPlayer();
+        Player playerEntity = event.getPlayer();
         if(playerEntity.hasEffect(EffectRegister.SACRED_CASTLE_EFFECT.get()) && !playerEntity.isCreative()){
             event.setCanceled(true);
             if(playerEntity.level.isClientSide()){
@@ -95,11 +107,11 @@ public class ServerEvents {
     @SubscribeEvent
     public void onBlockPlaced(BlockEvent.EntityPlaceEvent event){
         Entity entity = event.getEntity();
-        if(entity instanceof PlayerEntity && ((PlayerEntity)entity).hasEffect(EffectRegister.SACRED_CASTLE_EFFECT.get()) && !((PlayerEntity) entity).isCreative()){
+        if(entity instanceof Player && ((Player)entity).hasEffect(EffectRegister.SACRED_CASTLE_EFFECT.get()) && !((Player) entity).isCreative()){
             event.setCanceled(true);
-            if(entity instanceof ServerPlayerEntity){
-                Channel.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) entity),
-                        new ServerToClientInfoPacket(new TranslationTextComponent(String.format("info.%s.sacred_castle_effect.place", CastleInTheSky.MOD_ID)).withStyle(TextFormatting.RED).withStyle(TextFormatting.BOLD)));
+            if(entity instanceof ServerPlayer){
+                Channel.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) entity),
+                        new ServerToClientInfoPacket(new TranslatableComponent(String.format("info.%s.sacred_castle_effect.place", CastleInTheSky.MOD_ID)).withStyle(ChatFormatting.RED).withStyle(ChatFormatting.BOLD)));
             }
         }
     }

@@ -1,64 +1,61 @@
 package com.song.castle_in_the_sky.features;
 
-import com.google.common.collect.ImmutableList;
 import com.mojang.serialization.Codec;
 import com.song.castle_in_the_sky.CastleInTheSky;
 import com.song.castle_in_the_sky.config.ConfigCommon;
-import com.song.castle_in_the_sky.config.ConfigServer;
-import net.minecraft.entity.EntityType;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.Rotation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MutableBoundingBox;
-import net.minecraft.util.registry.DynamicRegistries;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.MobSpawnInfo;
-import net.minecraft.world.gen.ChunkGenerator;
-import net.minecraft.world.gen.GenerationStage;
-import net.minecraft.world.gen.feature.NoFeatureConfig;
-import net.minecraft.world.gen.feature.jigsaw.JigsawManager;
-import net.minecraft.world.gen.feature.structure.AbstractVillagePiece;
-import net.minecraft.world.gen.feature.structure.Structure;
-import net.minecraft.world.gen.feature.structure.StructureStart;
-import net.minecraft.world.gen.feature.structure.VillageConfig;
-import net.minecraft.world.gen.feature.template.TemplateManager;
-import org.apache.logging.log4j.Level;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Registry;
+import net.minecraft.core.RegistryAccess;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.LevelHeightAccessor;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.biome.MobSpawnSettings;
+import net.minecraft.world.level.chunk.ChunkGenerator;
+import net.minecraft.world.level.levelgen.GenerationStep;
+import net.minecraft.world.level.levelgen.feature.StructureFeature;
+import net.minecraft.world.level.levelgen.feature.configurations.JigsawConfiguration;
+import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
+import net.minecraft.world.level.levelgen.feature.structures.JigsawPlacement;
+import net.minecraft.world.level.levelgen.structure.PoolElementStructurePiece;
+import net.minecraft.world.level.levelgen.structure.StructureStart;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureManager;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
-public class CastleStructure extends Structure<NoFeatureConfig> {
-    public CastleStructure(Codec<NoFeatureConfig> noFeatureConfigCodec) {
+public class CastleStructure extends StructureFeature<NoneFeatureConfiguration> {
+    public CastleStructure(Codec<NoneFeatureConfiguration> noFeatureConfigCodec) {
         super(noFeatureConfigCodec);
     }
 
     @Override
-    public GenerationStage.Decoration step() {
-        return GenerationStage.Decoration.SURFACE_STRUCTURES;
+    public GenerationStep.Decoration step() {
+        return GenerationStep.Decoration.SURFACE_STRUCTURES;
     }
 
     @Override
-    public List<MobSpawnInfo.Spawners> getDefaultSpawnList() {
-        return Collections.singletonList(new MobSpawnInfo.Spawners(EntityType.ZOMBIE, 1, 1, 1));
+    public List<MobSpawnSettings.SpawnerData> getDefaultSpawnList() {
+        return Collections.singletonList(new MobSpawnSettings.SpawnerData(EntityType.ZOMBIE, 1, 1, 1));
     }
 
     @Override
-    public IStartFactory<NoFeatureConfig> getStartFactory() {
+    public StructureFeature.StructureStartFactory<NoneFeatureConfiguration> getStartFactory() {
         return Start::new;
     }
 
-    public static class Start extends StructureStart<NoFeatureConfig>{
+    public static class Start extends StructureStart<NoneFeatureConfiguration> {
 
-        public Start(Structure<NoFeatureConfig> noFeatureConfigStructure, int p_i225876_2_, int p_i225876_3_, MutableBoundingBox mutableBoundingBox, int p_i225876_5_, long p_i225876_6_) {
-            super(noFeatureConfigStructure, p_i225876_2_, p_i225876_3_, mutableBoundingBox, p_i225876_5_, p_i225876_6_);
+        public Start(StructureFeature<NoneFeatureConfiguration> noFeatureConfigStructure, ChunkPos chunkPos, int references, long p_163598_) {
+            super(noFeatureConfigStructure,chunkPos, references, p_163598_);
         }
 
         @Override
-        public void generatePieces(DynamicRegistries dynamicRegistryManager, ChunkGenerator chunkGenerator, TemplateManager templateManagerIn, int chunkX, int chunkZ, Biome biomeIn, NoFeatureConfig config) {
-            int i = chunkX * 16;
-            int j = chunkZ * 16;
+        public void generatePieces(RegistryAccess registryAccess, ChunkGenerator chunkGenerator, StructureManager templateManagerIn, ChunkPos chunkPos, Biome biomeIn, NoneFeatureConfiguration config, LevelHeightAccessor levelHeightAccessor) {
+            int i = chunkPos.x * 16;
+            int j = chunkPos.z * 16;
 
             if(i*i+j*j < ConfigCommon.CASTLE_SPAWN_PROOF.get()*ConfigCommon.CASTLE_SPAWN_PROOF.get()){
                 return;
@@ -74,12 +71,12 @@ public class CastleStructure extends Structure<NoFeatureConfig> {
                         int finalShift1 = shift1;
                         int finalShift2 = shift2;
                         int finalShiftY = shiftY;
-                        JigsawManager.addPieces(
-                                dynamicRegistryManager,
-                                new VillageConfig(() -> dynamicRegistryManager.registryOrThrow(Registry.TEMPLATE_POOL_REGISTRY)
+                        JigsawPlacement.addPieces(
+                                registryAccess,
+                                new JigsawConfiguration(() -> registryAccess.registryOrThrow(Registry.TEMPLATE_POOL_REGISTRY)
                                         .get(new ResourceLocation(CastleInTheSky.MOD_ID, String.format("castle_in_the_sky/laputa%d%d%d", finalShift1, finalShiftY, finalShift2))),
                                         0),
-                                AbstractVillagePiece::new,
+                                PoolElementStructurePiece::new,
                                 chunkGenerator,
                                 templateManagerIn,
                                 blockpos.offset(shift2*48, shiftY*48, shift1*48),
@@ -91,7 +88,7 @@ public class CastleStructure extends Structure<NoFeatureConfig> {
                 }
             }
 
-            this.calculateBoundingBox();
+            this.getBoundingBox();
 
         }
     }

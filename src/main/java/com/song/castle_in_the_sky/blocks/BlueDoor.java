@@ -1,11 +1,10 @@
 package com.song.castle_in_the_sky.blocks;
 
 import com.song.castle_in_the_sky.items.ItemsRegister;
-import net.minecraft.block.SoundType;
-import net.minecraft.block.material.Material;
-import net.minecraft.block.material.MaterialColor;
-import net.minecraft.item.Item;
-import net.minecraft.item.Items;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.material.MaterialColor;
 
 public class BlueDoor extends LockedDoor {
     protected BlueDoor() {

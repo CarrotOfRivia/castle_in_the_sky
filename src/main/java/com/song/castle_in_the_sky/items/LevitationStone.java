@@ -3,30 +3,26 @@ package com.song.castle_in_the_sky.items;
 import com.song.castle_in_the_sky.CastleInTheSky;
 import com.song.castle_in_the_sky.config.ConfigCommon;
 import com.song.castle_in_the_sky.effects.EffectRegister;
-import com.song.castle_in_the_sky.features.CastleStructure;
 import com.song.castle_in_the_sky.features.StructureRegister;
-import net.minecraft.block.BeaconBlock;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.particles.ParticleTypes;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.Effects;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.ChatFormatting;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -37,20 +33,20 @@ public class LevitationStone extends Item {
     }
 
     @Override
-    public void inventoryTick(ItemStack itemStack, World world, Entity entity, int itemSlot, boolean isSelected) {
+    public void inventoryTick(ItemStack itemStack, Level world, Entity entity, int itemSlot, boolean isSelected) {
         if(isSelected && isActive(itemStack)){
-            if(!world.isClientSide() && world instanceof ServerWorld && world.getGameTime() % 40 == 0){
+            if(!world.isClientSide() && world instanceof ServerLevel && world.getGameTime() % 40 == 0){
                 if(entity instanceof LivingEntity){
                     if(((LivingEntity) entity).hasEffect(EffectRegister.SACRED_CASTLE_EFFECT.get())){
-                        ((LivingEntity) entity).addEffect(new EffectInstance(Effects.LEVITATION, 100));
+                        ((LivingEntity) entity).addEffect(new MobEffectInstance(MobEffects.LEVITATION, 100));
                     }
                     else {
-                        ((LivingEntity) entity).addEffect(new EffectInstance(Effects.SLOW_FALLING, 100));
+                        ((LivingEntity) entity).addEffect(new MobEffectInstance(MobEffects.SLOW_FALLING, 100));
                     }
                 }
             }
             if(world.isClientSide() && world.dimension().location().toString().equals("minecraft:overworld")){
-                CompoundNBT nbt = itemStack.getTagElement("targetLaputa");
+                CompoundTag nbt = itemStack.getTagElement("targetLaputa");
                 if(nbt!=null){
                     int posX = nbt.getInt("posX");
                     int posY = nbt.getInt("posY");
@@ -71,16 +67,16 @@ public class LevitationStone extends Item {
     }
 
     @Override
-    public ActionResult<ItemStack> use(World world, PlayerEntity playerEntity, Hand hand) {
+    public InteractionResultHolder<ItemStack> use(Level world, Player playerEntity, InteractionHand hand) {
         if(!world.isClientSide()){
             ItemStack itemStack = playerEntity.getItemInHand(hand);
-            CompoundNBT nbt = itemStack.getOrCreateTagElement("castle_in_the_sky");
+            CompoundTag nbt = itemStack.getOrCreateTagElement("castle_in_the_sky");
             nbt.putBoolean("active", !nbt.getBoolean("active"));
 
             if(isActive(itemStack)){
-                BlockPos blockpos = ((ServerWorld) world).findNearestMapFeature(StructureRegister.CASTLE_IN_THE_SKY.get(), playerEntity.blockPosition(), 100, false);
+                BlockPos blockpos = ((ServerLevel) world).findNearestMapFeature(StructureRegister.CASTLE_IN_THE_SKY.get(), playerEntity.blockPosition(), 100, false);
                 if(blockpos!=null){
-                    CompoundNBT nbt1 = itemStack.getOrCreateTagElement("targetLaputa");
+                    CompoundTag nbt1 = itemStack.getOrCreateTagElement("targetLaputa");
                     nbt1.putInt("posX", blockpos.getX()+72);
                     nbt1.putInt("posY", ConfigCommon.CASTLE_HEIGHT.get()+72);
                     nbt1.putInt("posZ", blockpos.getZ()+72);
@@ -91,12 +87,12 @@ public class LevitationStone extends Item {
     }
 
     @Override
-    public void appendHoverText(ItemStack itemStack, @Nullable World p_77624_2_, List<ITextComponent> iTextComponents, ITooltipFlag iTooltipFlag) {
+    public void appendHoverText(ItemStack itemStack, @Nullable Level p_77624_2_, List<Component> iTextComponents, TooltipFlag iTooltipFlag) {
         super.appendHoverText(itemStack, p_77624_2_, iTextComponents, iTooltipFlag);
 
-        iTextComponents.add(new TranslationTextComponent("tooltip."+ CastleInTheSky.MOD_ID+".levitation_stone.line1").withStyle(TextFormatting.GRAY));
-        iTextComponents.add(new TranslationTextComponent("tooltip."+ CastleInTheSky.MOD_ID+".levitation_stone.line2").withStyle(TextFormatting.GRAY));
-        iTextComponents.add(new TranslationTextComponent("tooltip."+ CastleInTheSky.MOD_ID+".levitation_stone.line3").withStyle(TextFormatting.GRAY));
+        iTextComponents.add(new TranslatableComponent("tooltip."+ CastleInTheSky.MOD_ID+".levitation_stone.line1").withStyle(ChatFormatting.GRAY));
+        iTextComponents.add(new TranslatableComponent("tooltip."+ CastleInTheSky.MOD_ID+".levitation_stone.line2").withStyle(ChatFormatting.GRAY));
+        iTextComponents.add(new TranslatableComponent("tooltip."+ CastleInTheSky.MOD_ID+".levitation_stone.line3").withStyle(ChatFormatting.GRAY));
 
         String s;
         if (isActive(itemStack)){
@@ -105,11 +101,11 @@ public class LevitationStone extends Item {
         else {
             s = "OFF";
         }
-        iTextComponents.add(new StringTextComponent(s).withStyle(TextFormatting.GOLD));
+        iTextComponents.add(new TextComponent(s).withStyle(ChatFormatting.GOLD));
     }
 
     public boolean isActive(ItemStack itemStack){
-        CompoundNBT nbt = itemStack.getOrCreateTagElement("castle_in_the_sky");
+        CompoundTag nbt = itemStack.getOrCreateTagElement("castle_in_the_sky");
         return nbt.getBoolean("active");
     }
 }
