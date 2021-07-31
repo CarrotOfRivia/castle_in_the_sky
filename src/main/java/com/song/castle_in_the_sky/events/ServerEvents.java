@@ -45,7 +45,7 @@ public class ServerEvents {
     @SubscribeEvent
     public void onVillageTradeRegister(VillagerTradesEvent event){
         for (MyTradingRecipe recipe: ConfigCommon.MY_TRADING_RECIPES){
-            if(recipe.getItem1()!=null || recipe.getItem2() != null && Objects.requireNonNull(event.getType().getRegistryName()).toString().equals(recipe.getStringProfession())){
+            if((recipe.getItem1()!=null || recipe.getItem2()!=null) && Objects.requireNonNull(event.getType().getRegistryName()).toString().equals(recipe.getStringProfession())){
                 event.getTrades().get(recipe.getLevel()).add(
                         new RandomTradeBuilder(64, 25, 0.05f)
                                 .setPrice(recipe.getItem1(), recipe.price1Min().get(), recipe.price1Max().get())
