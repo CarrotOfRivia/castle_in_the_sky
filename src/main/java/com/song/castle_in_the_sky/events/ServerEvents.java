@@ -40,10 +40,7 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.network.PacketDistributor;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.function.Supplier;
 
 public class ServerEvents {
@@ -58,7 +55,7 @@ public class ServerEvents {
     @SubscribeEvent
     public void onVillageTradeRegister(VillagerTradesEvent event){
         for (MyTradingRecipe recipe: ConfigCommon.MY_TRADING_RECIPES){
-            if(recipe.getItem1()!=null || recipe.getItem2() != null && Objects.requireNonNull(event.getType().getRegistryName()).toString().equals(recipe.getStringProfession())){
+            if((recipe.getItem1()!=null || recipe.getItem2() != null) && Objects.requireNonNull(event.getType().getRegistryName()).toString().equals(recipe.getStringProfession())){
                 event.getTrades().get((int)(recipe.level.get())).add(
                         new RandomTradeBuilder(64, 25, 0.05f)
                                 .setPrice(recipe.getItem1(), recipe.price1Min.get(), recipe.price1Max.get())
