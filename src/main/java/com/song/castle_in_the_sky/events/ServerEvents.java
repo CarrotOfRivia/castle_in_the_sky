@@ -16,6 +16,7 @@ import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.merchant.villager.VillagerProfession;
+import net.minecraft.entity.merchant.villager.VillagerTrades;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -56,12 +57,16 @@ public class ServerEvents {
     public void onVillageTradeRegister(VillagerTradesEvent event){
         for (MyTradingRecipe recipe: ConfigCommon.MY_TRADING_RECIPES){
             if((recipe.getItem1()!=null || recipe.getItem2() != null) && Objects.requireNonNull(event.getType().getRegistryName()).toString().equals(recipe.getStringProfession())){
-                event.getTrades().get((int)(recipe.level.get())).add(
+                int level = recipe.level.get();
+                List<VillagerTrades.ITrade> tmp = event.getTrades().get(level);
+                ArrayList<VillagerTrades.ITrade> mutableTrades = new ArrayList<>(tmp);
+                mutableTrades.add(
                         new RandomTradeBuilder(64, 25, 0.05f)
                                 .setPrice(recipe.getItem1(), recipe.price1Min.get(), recipe.price1Max.get())
                                 .setPrice2(recipe.getItem2(), recipe.price2Min.get(), recipe.price2Max.get())
                                 .setForSale(recipe.getOutput(), recipe.outputMin.get(), recipe.outputMax.get())
                                 .build());
+                event.getTrades().put(level, mutableTrades);
             }
         }
     }
