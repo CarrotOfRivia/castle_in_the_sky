@@ -18,6 +18,7 @@ import net.minecraft.world.damagesource.EntityDamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.npc.VillagerTrades;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.biome.Biome;
@@ -31,6 +32,8 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fmllegacy.network.PacketDistributor;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class ServerEvents {
@@ -45,13 +48,17 @@ public class ServerEvents {
     @SubscribeEvent
     public void onVillageTradeRegister(VillagerTradesEvent event){
         for (MyTradingRecipe recipe: ConfigCommon.MY_TRADING_RECIPES){
-            if((recipe.getItem1()!=null || recipe.getItem2()!=null) && Objects.requireNonNull(event.getType().getRegistryName()).toString().equals(recipe.getStringProfession())){
-                event.getTrades().get(recipe.getLevel()).add(
+            if((recipe.getItem1()!=null || recipe.getItem2() != null) && Objects.requireNonNull(event.getType().getRegistryName()).toString().equals(recipe.getStringProfession())){
+                int level = recipe.getLevel();
+                List<VillagerTrades.ItemListing> tmp = event.getTrades().get(level);
+                ArrayList<VillagerTrades.ItemListing> mutableTrades = new ArrayList<>(tmp);
+                mutableTrades.add(
                         new RandomTradeBuilder(64, 25, 0.05f)
                                 .setPrice(recipe.getItem1(), recipe.price1Min().get(), recipe.price1Max().get())
                                 .setPrice2(recipe.getItem2(), recipe.price2Min().get(), recipe.price2Max().get())
                                 .setForSale(recipe.getOutput(), recipe.outputMin().get(), recipe.outputMax().get())
                                 .build());
+                event.getTrades().put(level, mutableTrades);
             }
         }
     }
