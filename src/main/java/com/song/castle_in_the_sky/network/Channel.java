@@ -2,8 +2,8 @@ package com.song.castle_in_the_sky.network;
 
 import com.song.castle_in_the_sky.CastleInTheSky;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.fmllegacy.network.NetworkRegistry;
-import net.minecraftforge.fmllegacy.network.simple.SimpleChannel;
+import net.minecraftforge.network.NetworkRegistry;
+import net.minecraftforge.network.simple.SimpleChannel;
 
 public class Channel {
     private static final String PROTOCOL_VERSION = "1";

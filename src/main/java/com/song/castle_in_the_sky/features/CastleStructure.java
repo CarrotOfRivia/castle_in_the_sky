@@ -37,11 +37,6 @@ public class CastleStructure extends StructureFeature<NoneFeatureConfiguration> 
     }
 
     @Override
-    public List<MobSpawnSettings.SpawnerData> getDefaultSpawnList() {
-        return Collections.singletonList(new MobSpawnSettings.SpawnerData(EntityType.ZOMBIE, 1, 1, 1));
-    }
-
-    @Override
     public StructureFeature.StructureStartFactory<NoneFeatureConfiguration> getStartFactory() {
         return Start::new;
     }

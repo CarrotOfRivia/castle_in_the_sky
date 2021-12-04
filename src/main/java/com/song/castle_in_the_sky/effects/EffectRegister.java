@@ -2,9 +2,9 @@ package com.song.castle_in_the_sky.effects;
 
 import com.song.castle_in_the_sky.CastleInTheSky;
 import net.minecraft.world.effect.MobEffect;
-import net.minecraftforge.fmllegacy.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegistryObject;
 
 public class EffectRegister {
     public static final DeferredRegister<MobEffect> EFFECT = DeferredRegister.create(ForgeRegistries.MOB_EFFECTS, CastleInTheSky.MOD_ID);

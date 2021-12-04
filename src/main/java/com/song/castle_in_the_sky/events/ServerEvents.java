@@ -3,6 +3,7 @@ package com.song.castle_in_the_sky.events;
 import com.song.castle_in_the_sky.CastleInTheSky;
 import com.song.castle_in_the_sky.config.ConfigCommon;
 import com.song.castle_in_the_sky.effects.EffectRegister;
+import com.song.castle_in_the_sky.features.CastleStructure;
 import com.song.castle_in_the_sky.features.StructureFeatureRegister;
 import com.song.castle_in_the_sky.items.ItemsRegister;
 import com.song.castle_in_the_sky.network.Channel;
@@ -16,12 +17,16 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.EntityDamageSource;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.monster.Creeper;
 import net.minecraft.world.entity.npc.VillagerTrades;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.biome.MobSpawnSettings;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.village.VillagerTradesEvent;
@@ -30,7 +35,7 @@ import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.event.world.StructureSpawnListGatherEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fmllegacy.network.PacketDistributor;
+import net.minecraftforge.network.PacketDistributor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,6 +48,18 @@ public class ServerEvents {
         if(event.getCategory() == Biome.BiomeCategory.OCEAN){
             event.getGeneration().addStructureStart(StructureFeatureRegister.CONFIGURED_CASTLE_IN_THE_SKY);
         }
+    }
+
+    @SubscribeEvent
+    public void onGatherStructureSpawn(StructureSpawnListGatherEvent event){
+        if (event.getStructure() instanceof CastleStructure){
+            for(MobSpawnSettings.SpawnerData spawnerData: event.getEntitySpawns(MobCategory.MONSTER)){
+                if (spawnerData.type != EntityType.ZOMBIE){
+                    event.removeEntitySpawn(MobCategory.MONSTER, spawnerData);
+                }
+            }
+        }
+
     }
 
     @SubscribeEvent
