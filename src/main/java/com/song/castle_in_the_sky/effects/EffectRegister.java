@@ -7,7 +7,7 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 
 public class EffectRegister {
-    public static final DeferredRegister<MobEffect> EFFECT = DeferredRegister.create(ForgeRegistries.POTIONS, CastleInTheSky.MOD_ID);
+    public static final DeferredRegister<MobEffect> EFFECT = DeferredRegister.create(ForgeRegistries.MOB_EFFECTS, CastleInTheSky.MOD_ID);
 
     public static final RegistryObject<SacredCastle> SACRED_CASTLE_EFFECT = EFFECT.register("sacred_castle_effect", SacredCastle::new);
 }
