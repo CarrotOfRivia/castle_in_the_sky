@@ -100,7 +100,7 @@ public class ServerEvents {
                 // Skip all ocean, end, nether, and none category biomes.
                 // You can do checks for other traits that the biome has.
                 Biome.BiomeCategory biomeCategory = biomeEntry.getValue().getBiomeCategory();
-                if(biomeCategory != Biome.BiomeCategory.OCEAN && biomeCategory != Biome.BiomeCategory.THEEND && biomeCategory != Biome.BiomeCategory.NETHER && biomeCategory != Biome.BiomeCategory.NONE) {
+                if(biomeCategory == Biome.BiomeCategory.OCEAN) {
                     associateBiomeToConfiguredStructure(STStructureToMultiMap, StructureFeatureRegister.CONFIGURED_CASTLE_IN_THE_SKY, biomeEntry.getKey());
                 }
             }
