@@ -7,6 +7,7 @@ import com.song.castle_in_the_sky.config.ConfigCommon;
 import net.minecraft.data.BuiltinRegistries;
 import net.minecraft.world.level.levelgen.StructureSettings;
 import net.minecraft.world.level.levelgen.feature.StructureFeature;
+import net.minecraft.world.level.levelgen.feature.configurations.JigsawConfiguration;
 import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
 import net.minecraft.world.level.levelgen.feature.configurations.StructureFeatureConfiguration;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
@@ -19,9 +20,9 @@ import java.util.Map;
 
 public class StructureRegister {
     public static final DeferredRegister<StructureFeature<?>> STRUCTURES = DeferredRegister.create(ForgeRegistries.STRUCTURE_FEATURES, CastleInTheSky.MOD_ID);
-    public static final CastleStructure CASTLE_IN_THE_SKY_RAW = new CastleStructure(NoneFeatureConfiguration.CODEC);
+    public static final CastleStructure CASTLE_IN_THE_SKY_RAW = new CastleStructure(JigsawConfiguration.CODEC);
 
-    public static final RegistryObject<StructureFeature<NoneFeatureConfiguration>> CASTLE_IN_THE_SKY = STRUCTURES.register("castle_in_the_sky", ()-> CASTLE_IN_THE_SKY_RAW);
+    public static final RegistryObject<StructureFeature<JigsawConfiguration>> CASTLE_IN_THE_SKY = STRUCTURES.register("castle_in_the_sky", ()-> CASTLE_IN_THE_SKY_RAW);
 
 
     static {
