@@ -34,6 +34,10 @@ import java.util.*;
 import java.util.function.Predicate;
 
 public class CastleFixedRotationPlacement {
+    /**
+    Pretty much copied from net.minecraft.world.level.levelgen.feature.structures.JigsawPlacement
+     I have to remove the random rotation feature for my structure to generate properly.
+     */
     static final Logger LOGGER = LogManager.getLogger();
 
     public static Optional<PieceGenerator<JigsawConfiguration>> addPieces(PieceGeneratorSupplier.Context<JigsawConfiguration> context, CastleFixedRotationPlacement.PieceFactory pieceFactory, BlockPos blockPos, boolean p_197214_, boolean p_197215_, Rotation rotation) {

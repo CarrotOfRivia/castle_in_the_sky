@@ -7,6 +7,9 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
+/**
+ * A wrapper class to generate multiple nbt at once
+ */
 public class PieceGeneratorList implements PieceGenerator<JigsawConfiguration> {
     private final List<PieceGenerator<JigsawConfiguration>> list;
     public PieceGeneratorList(List<PieceGenerator<JigsawConfiguration>> list){

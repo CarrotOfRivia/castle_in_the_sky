@@ -39,6 +39,10 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.stream.Collectors;
 
+/**
+ * If you are looking for a structure generation tutorial, check this out: https://github.com/TelepathicGrunt/StructureTutorialMod
+ */
+
 // The value here should match an entry in the META-INF/mods.toml file
 @Mod(CastleInTheSky.MOD_ID)
 public class CastleInTheSky

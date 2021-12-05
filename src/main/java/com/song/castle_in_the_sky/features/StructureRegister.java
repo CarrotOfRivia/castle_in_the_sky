@@ -18,6 +18,10 @@ import net.minecraftforge.registries.RegistryObject;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Hugely inspired from this tutorial: https://github.com/TelepathicGrunt/StructureTutorialMod
+ */
+
 public class StructureRegister {
     public static final DeferredRegister<StructureFeature<?>> STRUCTURES = DeferredRegister.create(ForgeRegistries.STRUCTURE_FEATURES, CastleInTheSky.MOD_ID);
     public static final CastleStructure CASTLE_IN_THE_SKY_RAW = new CastleStructure(JigsawConfiguration.CODEC);

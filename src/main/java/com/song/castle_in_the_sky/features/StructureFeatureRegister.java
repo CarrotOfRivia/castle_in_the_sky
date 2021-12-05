@@ -15,6 +15,10 @@ import net.minecraft.world.level.levelgen.feature.configurations.JigsawConfigura
 
 import java.util.Objects;
 
+/**
+ * Hugely inspired from this tutorial: https://github.com/TelepathicGrunt/StructureTutorialMod
+ */
+
 public class StructureFeatureRegister {
 
     public static final ConfiguredStructureFeature<JigsawConfiguration, ? extends StructureFeature<JigsawConfiguration>> CONFIGURED_CASTLE_IN_THE_SKY = StructureRegister.CASTLE_IN_THE_SKY.get().configured(new JigsawConfiguration(() -> {

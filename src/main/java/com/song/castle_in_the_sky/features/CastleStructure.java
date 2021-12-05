@@ -28,6 +28,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
+/**
+ * Hugely inspired from this tutorial: https://github.com/TelepathicGrunt/StructureTutorialMod
+ */
+
 public class CastleStructure extends StructureFeature<JigsawConfiguration> {
     public static final StructureTemplatePool START = Pools.register(new StructureTemplatePool(new ResourceLocation(CastleInTheSky.MOD_ID+":castle_in_the_sky"), new ResourceLocation("empty"),
             ImmutableList.of(Pair.of(StructurePoolElement.legacy(CastleInTheSky.MOD_ID+":laputa000.nbt"), 1)), StructureTemplatePool.Projection.RIGID));

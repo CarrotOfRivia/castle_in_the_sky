@@ -63,6 +63,8 @@ import java.util.*;
 public class ServerEvents {
 
     /**
+     * Adapted from https://github.com/TelepathicGrunt/StructureTutorialMod
+     * Check the link above for a detailed tutorial on structure generation
      * Tells the chunkgenerator which biomes our structure can spawn in.
      * Will go into the world's chunkgenerator and manually add our structure spacing.
      * If the spacing is not added, the structure doesn't spawn.
