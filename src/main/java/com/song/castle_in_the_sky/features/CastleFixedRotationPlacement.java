@@ -72,7 +72,7 @@ public class CastleFixedRotationPlacement {
             } else {
                 int l = boundingbox.minY() + poolelementstructurepiece.getGroundLevelDelta();
                 poolelementstructurepiece.move(0, k - l, 0);
-                return Optional.of((p_197208_, p_197209_) -> {
+                return Optional.of((structurePiecesBuilder, jigsawConfigurationContext) -> {
                     List<PoolElementStructurePiece> list = Lists.newArrayList();
                     list.add(poolelementstructurepiece);
                     if (jigsawconfiguration.maxDepth() > 0) {
@@ -86,7 +86,7 @@ public class CastleFixedRotationPlacement {
                             CastleFixedRotationPlacement$placer.tryPlacingChildren(CastleFixedRotationPlacement$piecestate.piece, CastleFixedRotationPlacement$piecestate.free, CastleFixedRotationPlacement$piecestate.depth, p_197214_, levelheightaccessor);
                         }
 
-                        list.forEach(p_197208_::addPiece);
+                        list.forEach(structurePiecesBuilder::addPiece);
                     }
                 });
             }

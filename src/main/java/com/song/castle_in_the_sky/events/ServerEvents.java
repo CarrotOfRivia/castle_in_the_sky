@@ -31,16 +31,15 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.entity.monster.Creeper;
 import net.minecraft.world.entity.npc.VillagerTrades;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.biome.MobSpawnSettings;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.FlatLevelSource;
-import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.StructureSettings;
 import net.minecraft.world.level.levelgen.feature.ConfiguredStructureFeature;
 import net.minecraft.world.level.levelgen.feature.StructureFeature;
@@ -48,7 +47,6 @@ import net.minecraft.world.level.levelgen.feature.configurations.StructureFeatur
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.village.VillagerTradesEvent;
-import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.event.world.StructureSpawnListGatherEvent;
 import net.minecraftforge.event.world.WorldEvent;
@@ -101,10 +99,10 @@ public class ServerEvents {
             for(Map.Entry<ResourceKey<Biome>, Biome> biomeEntry : serverLevel.registryAccess().ownedRegistryOrThrow(Registry.BIOME_REGISTRY).entrySet()) {
                 // Skip all ocean, end, nether, and none category biomes.
                 // You can do checks for other traits that the biome has.
-                Biome.BiomeCategory biomeCategory = biomeEntry.getValue().getBiomeCategory();
-                if(biomeCategory == Biome.BiomeCategory.OCEAN) {
-                    associateBiomeToConfiguredStructure(STStructureToMultiMap, StructureFeatureRegister.CONFIGURED_CASTLE_IN_THE_SKY, biomeEntry.getKey());
-                }
+//                if(biomeEntry.getKey() == Biomes.DEEP_OCEAN || biomeEntry.getKey() == Biomes.DEEP_COLD_OCEAN || biomeEntry.getKey() == Biomes.DEEP_LUKEWARM_OCEAN|| biomeEntry.getKey() == Biomes.DEEP_FROZEN_OCEAN) {
+//                    associateBiomeToConfiguredStructure(STStructureToMultiMap, StructureFeatureRegister.CONFIGURED_CASTLE_IN_THE_SKY, biomeEntry.getKey());
+//                }
+                associateBiomeToConfiguredStructure(STStructureToMultiMap, StructureFeatureRegister.CONFIGURED_CASTLE_IN_THE_SKY, biomeEntry.getKey());
             }
 
             // Alternative way to add our structures to a fixed set of biomes by creating a set of biome resource keys.

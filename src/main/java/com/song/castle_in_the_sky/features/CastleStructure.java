@@ -6,12 +6,17 @@ import com.mojang.serialization.Codec;
 import com.song.castle_in_the_sky.CastleInTheSky;
 import com.song.castle_in_the_sky.config.ConfigCommon;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.QuartPos;
 import net.minecraft.core.Registry;
 import net.minecraft.core.Vec3i;
 import net.minecraft.data.worldgen.Pools;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.levelgen.GenerationStep;
+import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.feature.StructureFeature;
 import net.minecraft.world.level.levelgen.feature.configurations.JigsawConfiguration;
 import net.minecraft.world.level.levelgen.feature.structures.StructurePoolElement;
@@ -23,16 +28,15 @@ import net.minecraft.world.level.levelgen.structure.pieces.PieceGeneratorSupplie
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Random;
+import java.util.*;
 
 /**
  * Hugely inspired from this tutorial: https://github.com/TelepathicGrunt/StructureTutorialMod
  */
 
 public class CastleStructure extends StructureFeature<JigsawConfiguration> {
+//    private static final List<ResourceKey<Biome>> VALID_BIOMES = Arrays.asList(Biomes.DEEP_COLD_OCEAN, Biomes.DEEP_FROZEN_OCEAN, Biomes.DEEP_OCEAN, Biomes.DEEP_LUKEWARM_OCEAN);
+
     public static final StructureTemplatePool START = Pools.register(new StructureTemplatePool(new ResourceLocation(CastleInTheSky.MOD_ID+":castle_in_the_sky"), new ResourceLocation("empty"),
             ImmutableList.of(Pair.of(StructurePoolElement.legacy(CastleInTheSky.MOD_ID+":laputa000.nbt"), 1)), StructureTemplatePool.Projection.RIGID));
     private static final Logger LOGGER = LogManager.getLogger();
@@ -75,6 +79,7 @@ public class CastleStructure extends StructureFeature<JigsawConfiguration> {
 
 
                     context.config().maxDepth = 10;
+
                     // All a structure has to do is call this method to turn it into a jigsaw based structure!
                     Optional<PieceGenerator<JigsawConfiguration>> structurePiecesGenerator =
                             CastleFixedRotationPlacement.addPieces(
@@ -89,6 +94,7 @@ public class CastleStructure extends StructureFeature<JigsawConfiguration> {
                             );
                     structurePiecesGenerator.ifPresent(list::add);
 
+
                 }
             }
         }
@@ -99,8 +105,19 @@ public class CastleStructure extends StructureFeature<JigsawConfiguration> {
 
     private static boolean isFeatureChunk(PieceGeneratorSupplier.Context<JigsawConfiguration> context) {
         BlockPos blockPos = context.chunkPos().getWorldPosition();
+        boolean flag1 =  !blockPos.closerThan(new Vec3i(0, 0, 0), ConfigCommon.CASTLE_SPAWN_PROOF.get());
+        if (flag1){
+            int i = context.chunkPos().getMiddleBlockX();
+            int j = context.chunkPos().getMiddleBlockZ();
+            int k = context.chunkGenerator().getFirstOccupiedHeight(i, j, Heightmap.Types.OCEAN_FLOOR_WG, context.heightAccessor());
+            Biome biome = context.chunkGenerator().getNoiseBiome(QuartPos.fromBlock(i), QuartPos.fromBlock(k), QuartPos.fromBlock(j));
 
-        return !blockPos.closerThan(new Vec3i(0, 0, 0), ConfigCommon.CASTLE_SPAWN_PROOF.get());
+            return (biome.getBiomeCategory() == Biome.BiomeCategory.OCEAN);
+        }
+        else {
+            return false;
+        }
+
     }
 
 

@@ -10,15 +10,11 @@ import java.util.List;
 /**
  * A wrapper class to generate multiple nbt at once
  */
-public class PieceGeneratorList implements PieceGenerator<JigsawConfiguration> {
-    private final List<PieceGenerator<JigsawConfiguration>> list;
-    public PieceGeneratorList(List<PieceGenerator<JigsawConfiguration>> list){
-        this.list = list;
-    }
+public record PieceGeneratorList(List<PieceGenerator<JigsawConfiguration>> list) implements PieceGenerator<JigsawConfiguration> {
 
     @Override
     public void generatePieces(@NotNull StructurePiecesBuilder piecesBuilder, @NotNull Context<JigsawConfiguration> context) {
-        for (PieceGenerator<JigsawConfiguration> generator:list){
+        for (PieceGenerator<JigsawConfiguration> generator : list) {
             generator.generatePieces(piecesBuilder, context);
         }
     }

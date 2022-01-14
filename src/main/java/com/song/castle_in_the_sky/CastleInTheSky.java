@@ -87,7 +87,6 @@ public class CastleInTheSky
     {
         // some preinit code
         LOGGER.info("HELLO FROM PREINIT");
-        LOGGER.info("DIRT BLOCK >> {}", Tags.Blocks.DIRT.getName());
         event.enqueueWork(()->{
             StructureRegister.setupStructures();
             StructureFeatureRegister.registerConfiguredStructures();
