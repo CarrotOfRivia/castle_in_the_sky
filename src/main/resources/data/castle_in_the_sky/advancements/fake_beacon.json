@@ -21,7 +21,9 @@
       "conditions": {
         "items": [
           {
-            "item": "castle_in_the_sky:fake_beacon"
+            "items": [
+              "castle_in_the_sky:fake_beacon"
+            ]
           }
         ]
       }

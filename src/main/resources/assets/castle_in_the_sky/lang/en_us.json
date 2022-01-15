@@ -15,13 +15,15 @@
   "tooltip.castle_in_the_sky.levitation_stone.line3": "Right click to activate/deactivate.",
   "tooltip.castle_in_the_sky.keys": "Obtained by looting chests or killing mobs in the castle.",
 
+  "advancements.castle_in_the_sky.trade.title": "There is a Castle on a Cloud",
+  "advancements.castle_in_the_sky.trade.description": "Legend says that a mysterious stone leads you to a castle full of treasure.",
   "advancements.castle_in_the_sky.get_levitation_stone.title": "Flight Mystery of the Stone",
   "advancements.castle_in_the_sky.get_levitation_stone.description": "Get a levitation stone by trading with a Cartographer.",
   "advancements.castle_in_the_sky.find_castle.title": "Castle in the Sky",
   "advancements.castle_in_the_sky.find_castle.description": "Find *Castle in the Sky* by following the levitation stone.",
   "advancements.castle_in_the_sky.conquer_castle.title": "Conquer the Castle",
   "advancements.castle_in_the_sky.conquer_castle.description": "Travel through the castle dungeon and find the levitation crystal.",
-  "advancements.castle_in_the_sky.fake_beacon.title": "It's a Beacon! Wait, is it?",
+  "advancements.castle_in_the_sky.fake_beacon.title": "The Beacon is a Lie",
   "advancements.castle_in_the_sky.fake_beacon.description": "Loot a beacon light in the castle.",
 
   "effect.castle_in_the_sky.sacred_castle_effect": "Sacred Castle",

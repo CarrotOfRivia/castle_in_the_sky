@@ -1,19 +1,19 @@
 {
+  "parent": "castle_in_the_sky:trade",
   "display": {
     "icon": {
       "item": "castle_in_the_sky:levitation_stone"
     },
-    "title": {
-      "translate": "advancements.castle_in_the_sky.get_levitation_stone.title"
-    },
     "description": {
       "translate": "advancements.castle_in_the_sky.get_levitation_stone.description"
+    },
+    "title": {
+      "translate": "advancements.castle_in_the_sky.get_levitation_stone.title"
     },
     "frame": "task",
     "show_toast": true,
     "announce_to_chat": true,
-    "hidden": false,
-    "background": "minecraft:textures/gui/advancements/backgrounds/stone.png"
+    "hidden": false
   },
   "criteria": {
     "levitation_stone": {
@@ -21,7 +21,9 @@
       "conditions": {
         "items": [
           {
-            "item": "castle_in_the_sky:levitation_stone"
+            "items": [
+              "castle_in_the_sky:levitation_stone"
+            ]
           }
         ]
       }
