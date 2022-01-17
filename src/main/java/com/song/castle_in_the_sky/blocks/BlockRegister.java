@@ -15,5 +15,6 @@ public class BlockRegister {
 
     public static final RegistryObject<LaputaCore> LAPUTA_CORE = BLOCKS.register("laputa_core", LaputaCore::new);
     public static final RegistryObject<FakeBeacon> FAKE_BEACON = BLOCKS.register("fake_beacon", FakeBeacon::new);
+    public static final RegistryObject<LaputaMiniature> LAPUTA_MINIATURE = BLOCKS.register("laputa_miniature", LaputaMiniature::new);
 
 }

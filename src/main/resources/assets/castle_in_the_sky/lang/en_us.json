@@ -4,6 +4,7 @@
   "block.castle_in_the_sky.red_door": "Red Door",
   "block.castle_in_the_sky.laputa_core": "Levitation Crystal",
   "block.castle_in_the_sky.fake_beacon": "Bacon",
+  "block.castle_in_the_sky.laputa_miniature": "Castle in the Sky Trophy",
 
   "item.castle_in_the_sky.blue_key": "Blue Key",
   "item.castle_in_the_sky.yellow_key": "Yellow Key",
@@ -14,6 +15,7 @@
   "tooltip.castle_in_the_sky.levitation_stone.line2": "Trade with a cartographer for the item.",
   "tooltip.castle_in_the_sky.levitation_stone.line3": "Right click to activate/deactivate.",
   "tooltip.castle_in_the_sky.keys": "Obtained by looting chests or killing mobs in the castle.",
+  "tooltip.castle_in_the_sky.laputa_miniature": "Currently creative mode only",
 
   "advancements.castle_in_the_sky.trade.title": "There is a Castle on a Cloud",
   "advancements.castle_in_the_sky.trade.description": "Legend says that a mysterious stone leads you to a castle full of treasure.",

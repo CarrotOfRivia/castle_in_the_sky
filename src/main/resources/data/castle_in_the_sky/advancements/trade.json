@@ -1,7 +1,7 @@
 {
   "display": {
     "icon": {
-      "item": "castle_in_the_sky:levitation_stone"
+      "item": "castle_in_the_sky:laputa_miniature"
     },
     "title": {
       "translate": "advancements.castle_in_the_sky.trade.title"

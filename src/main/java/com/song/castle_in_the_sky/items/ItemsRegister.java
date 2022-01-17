@@ -18,6 +18,7 @@ public class ItemsRegister {
     public static final RegistryObject<Item> BLUE_DOOR = ITEMS.register("blue_door", ()->new BlockItem(BlockRegister.BLUE_DOOR.get(), new Item.Properties().tab(CastleInTheSky.ITEM_GROUP)));
     public static final RegistryObject<Item> YELLOW_DOOR = ITEMS.register("yellow_door", ()->new BlockItem(BlockRegister.YELLOW_DOOR.get(), new Item.Properties().tab(CastleInTheSky.ITEM_GROUP)));
     public static final RegistryObject<Item> FAKE_BEACON = ITEMS.register("fake_beacon", ()->new BlockItem(BlockRegister.FAKE_BEACON.get(), new Item.Properties().tab(CastleInTheSky.ITEM_GROUP).rarity(Rarity.RARE)));
+    public static final RegistryObject<Item> LAPUTA_MINIATURE = ITEMS.register("laputa_miniature", ()->new BlockItem(BlockRegister.LAPUTA_MINIATURE.get(), new Item.Properties().rarity(Rarity.EPIC)));
 
     public static final RegistryObject<Item> RED_KEY = ITEMS.register("red_key", KeyItem::new);
     public static final RegistryObject<Item> BLUE_KEY = ITEMS.register("blue_key", KeyItem::new);
