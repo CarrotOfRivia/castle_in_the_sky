@@ -26,10 +26,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.EntityDamageSource;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.npc.VillagerTrades;
 import net.minecraft.world.entity.player.Player;
@@ -195,14 +192,12 @@ public class ServerEvents {
         }
     }
 
-    @SubscribeEvent
+    @SubscribeEvent(priority = EventPriority.HIGH)
     public void onGatherStructureSpawn(StructureSpawnListGatherEvent event){
         if (event.getStructure() instanceof CastleStructure){
-            for(MobSpawnSettings.SpawnerData spawnerData: event.getEntitySpawns(MobCategory.MONSTER)){
-                if (spawnerData.type != EntityType.ZOMBIE){
-                    event.removeEntitySpawn(MobCategory.MONSTER, spawnerData);
-                }
-            }
+            event.addEntitySpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(EntityType.ZOMBIE, 3, 2, 5));
+            event.addEntitySpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(EntityType.SKELETON, 3, 2, 5));
+            event.addEntitySpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(EntityType.SPIDER, 1, 2, 3));
         }
 
     }
