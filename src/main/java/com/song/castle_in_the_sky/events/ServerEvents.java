@@ -5,15 +5,18 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMultimap;
 import com.mojang.serialization.Codec;
 import com.song.castle_in_the_sky.CastleInTheSky;
+import com.song.castle_in_the_sky.blocks.block_entities.LaputaCoreBE;
 import com.song.castle_in_the_sky.config.ConfigCommon;
 import com.song.castle_in_the_sky.effects.EffectRegister;
 import com.song.castle_in_the_sky.features.CastleStructure;
 import com.song.castle_in_the_sky.features.StructureFeatureRegister;
 import com.song.castle_in_the_sky.features.StructureRegister;
 import com.song.castle_in_the_sky.items.ItemsRegister;
+import com.song.castle_in_the_sky.items.LevitationStone;
 import com.song.castle_in_the_sky.network.Channel;
 import com.song.castle_in_the_sky.network.ClientHandlerClass;
 import com.song.castle_in_the_sky.network.ServerToClientInfoPacket;
+import com.song.castle_in_the_sky.utils.CapabilityCastle;
 import com.song.castle_in_the_sky.utils.MyTradingRecipe;
 import com.song.castle_in_the_sky.utils.RandomTradeBuilder;
 import net.minecraft.ChatFormatting;
@@ -35,12 +38,17 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.biome.MobSpawnSettings;
+import net.minecraft.world.level.block.LadderBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.FlatLevelSource;
 import net.minecraft.world.level.levelgen.StructureSettings;
 import net.minecraft.world.level.levelgen.feature.ConfiguredStructureFeature;
 import net.minecraft.world.level.levelgen.feature.StructureFeature;
 import net.minecraft.world.level.levelgen.feature.configurations.StructureFeatureConfiguration;
+import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
+import net.minecraftforge.event.AttachCapabilitiesEvent;
+import net.minecraftforge.event.ServerChatEvent;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.village.VillagerTradesEvent;
@@ -200,6 +208,45 @@ public class ServerEvents {
             event.addEntitySpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(EntityType.SPIDER, 1, 2, 3));
         }
 
+    }
+
+    private static final Set<String> DESTRUCTION_INCANTATIONS = new HashSet<>(Arrays.asList("BALSE", "BALUS", "バルス", "巴鲁斯"));
+    private static final int SEARCH_RADIUS = 5;
+    private static final int SEARCH_RADIUS2 = SEARCH_RADIUS * SEARCH_RADIUS;
+    private static final int SEARCH_HEIGHT=3;
+
+    @SubscribeEvent
+    public void onPlayerChat(final ServerChatEvent event){
+        if (DESTRUCTION_INCANTATIONS.contains(event.getMessage())){
+            if (event.getPlayer().getMainHandItem().getItem() instanceof LevitationStone){
+                boolean found = false;
+                for (int dy=-SEARCH_HEIGHT; !found && dy<=SEARCH_HEIGHT; dy++){
+                    for (int dx=-SEARCH_RADIUS; !found && dx<+SEARCH_RADIUS; dx++){
+                        for (int dz=-SEARCH_RADIUS; !found && dz<+SEARCH_RADIUS; dz++){
+                            if (dx*dx+dy*dy < SEARCH_RADIUS2){
+                                BlockEntity blockEntity = event.getPlayer().level.getBlockEntity(event.getPlayer().blockPosition().offset(dx, dy, dz));
+                                if (blockEntity instanceof LaputaCoreBE){
+                                    ((LaputaCoreBE) blockEntity).setDestroying(true);
+                                    found = true;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public void onAttachCapEntity(final AttachCapabilitiesEvent<Entity> event){
+        if (event.getObject() instanceof Player){
+            event.addCapability(new ResourceLocation(CastleInTheSky.MOD_ID, "castle_caps"), new CapabilityCastle());
+        }
+    }
+
+    @SubscribeEvent
+    public void registerCaps(RegisterCapabilitiesEvent event) {
+        event.register(CapabilityCastle.class);
     }
 
     @SubscribeEvent

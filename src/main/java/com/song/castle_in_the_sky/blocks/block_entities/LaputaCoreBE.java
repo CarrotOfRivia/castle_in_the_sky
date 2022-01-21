@@ -1,23 +1,24 @@
 package com.song.castle_in_the_sky.blocks.block_entities;
 
-import com.song.castle_in_the_sky.blocks.BlockRegister;
 import com.song.castle_in_the_sky.config.ConfigCommon;
 import com.song.castle_in_the_sky.effects.EffectRegister;
 import com.song.castle_in_the_sky.items.ItemsRegister;
 import com.song.castle_in_the_sky.network.Channel;
 import com.song.castle_in_the_sky.network.LaputaTESynPkt;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.network.PacketDistributor;
-import org.checkerframework.checker.units.qual.A;
 
 import java.util.*;
 
@@ -27,14 +28,15 @@ public class LaputaCoreBE extends BlockEntity {
     private boolean isDestroying=false;
     private int destroyProgress = 0;
 
-    private static final int ANIMATION_TIME = 20;
-    private static final int DESTRUCTION_TIME = 60;
-    private static final int DESTROY_MAX = ANIMATION_TIME + DESTRUCTION_TIME;
-    private static final int RADIUS = 20;
+    private static final int ANIMATION_TIME = 200;
+    private static final int DESTRUCTION_TICKS = 200;
+    private static final int DESTRUCTION_TIME_PER_TICK = 10;
+    private static final int DESTROY_MAX = ANIMATION_TIME + DESTRUCTION_TICKS * DESTRUCTION_TIME_PER_TICK;
+    private static final int RADIUS = 80;
     private static final int RADIUS2 = RADIUS * RADIUS;
-    private static final int HEIGHT_MIN = -10;
-    private static final int HEIGHT_MAX = 20;
-    private static final ArrayList<ArrayList<Integer>> DestructionPattern = new ArrayList<>();
+    private static final int HEIGHT_MIN = -14;
+    private static final int HEIGHT_MAX = 100;
+    private static final ArrayList<ArrayList<Integer>> DESTRUCTION_PATTERN = new ArrayList<>();
     private static final int PROGRESS_EACH_TICK;
     static {
         for(int dx = -RADIUS; dx<=RADIUS; dx++){
@@ -42,16 +44,17 @@ public class LaputaCoreBE extends BlockEntity {
                 for(int dz = -RADIUS; dz<=RADIUS; dz++){
                     if (dx*dx + dz*dz <= RADIUS2){
                         ArrayList<Integer> tmp = new ArrayList<>(Arrays.asList(dx, dy, dz));
-                        DestructionPattern.add(tmp);
+                        DESTRUCTION_PATTERN.add(tmp);
                     }
                 }
             }
         }
 
-        Collections.shuffle(DestructionPattern);
+        Collections.shuffle(DESTRUCTION_PATTERN);
 
-        PROGRESS_EACH_TICK = DestructionPattern.size() / DESTRUCTION_TIME + 1;
+        PROGRESS_EACH_TICK = DESTRUCTION_PATTERN.size() / DESTRUCTION_TICKS + 1;
     }
+    private static final Set<String> DESTRUCTION_BLACKLIST = new HashSet<>(Arrays.asList("castle_in_the_sky:laputa_core", "minecraft:spruce_log", "minecraft:spruce_wood", "minecraft:shroomlight"));
 
     public LaputaCoreBE(BlockPos pos, BlockState state){
         super(TERegister.LAPUTA_CORE_TE_TYPE.get(), pos, state);
@@ -67,15 +70,28 @@ public class LaputaCoreBE extends BlockEntity {
                     }
                     else {
                         // Destruction in progress
-                        int process_tick = laputaCoreTE.destroyProgress - ANIMATION_TIME;
-                        for (int i=process_tick*PROGRESS_EACH_TICK; i<(process_tick+1)*PROGRESS_EACH_TICK; i++){
-                            if (i >= DestructionPattern.size()){
-                                break;
+                        int exceed = (laputaCoreTE.destroyProgress - ANIMATION_TIME);
+                        if(exceed == DESTRUCTION_TIME_PER_TICK/2){
+                            // remove all fluids
+                            for (ArrayList<Integer> pos: DESTRUCTION_PATTERN){
+                                BlockPos target = blockPos.offset(pos.get(0), pos.get(1), pos.get(2));
+                                if(level.getFluidState(target) != Fluids.EMPTY.defaultFluidState()){
+                                    level.setBlock(target, Blocks.AIR.defaultBlockState(), 11);
+                                }
                             }
-                            ArrayList<Integer> pos = DestructionPattern.get(i);
-                            BlockPos target = blockPos.offset(pos.get(0), pos.get(1), pos.get(2));
-                            if(level.getBlockState(target).getBlock() != BlockRegister.LAPUTA_CORE.get()){
-                                level.destroyBlock(target, false);
+                        }
+
+                        if (exceed % DESTRUCTION_TIME_PER_TICK == 0){
+                            int process_tick = exceed / DESTRUCTION_TIME_PER_TICK;
+                            for (int i=process_tick*PROGRESS_EACH_TICK; i<(process_tick+1)*PROGRESS_EACH_TICK; i++){
+                                if (i >= DESTRUCTION_PATTERN.size()){
+                                    break;
+                                }
+                                ArrayList<Integer> pos = DESTRUCTION_PATTERN.get(i);
+                                BlockPos target = blockPos.offset(pos.get(0), pos.get(1), pos.get(2));
+                                if(! DESTRUCTION_BLACKLIST.contains(Registry.BLOCK.getKey(level.getBlockState(target).getBlock()).toString())){
+                                    level.removeBlock(target, false);
+                                }
                             }
                         }
                     }
