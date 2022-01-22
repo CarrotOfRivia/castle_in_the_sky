@@ -20,8 +20,11 @@ import com.song.castle_in_the_sky.utils.CapabilityCastle;
 import com.song.castle_in_the_sky.utils.MyTradingRecipe;
 import com.song.castle_in_the_sky.utils.RandomTradeBuilder;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
+import net.minecraft.commands.Commands;
 import net.minecraft.core.Registry;
 import net.minecraft.data.BuiltinRegistries;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -36,9 +39,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
-import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.biome.MobSpawnSettings;
-import net.minecraft.world.level.block.LadderBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.FlatLevelSource;
@@ -62,6 +63,7 @@ import net.minecraftforge.network.PacketDistributor;
 
 import java.lang.reflect.Method;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ServerEvents {
 
@@ -218,6 +220,15 @@ public class ServerEvents {
     @SubscribeEvent
     public void onPlayerChat(final ServerChatEvent event){
         if (DESTRUCTION_INCANTATIONS.contains(event.getMessage())){
+            AtomicBoolean warned = new AtomicBoolean(false);
+            event.getPlayer().getCapability(CapabilityCastle.CASTLE_CAPS).ifPresent(
+                    (data -> warned.set(data.isIncantationWarned()))
+            );
+            if (! warned.get()){
+                event.getPlayer().sendMessage(new TranslatableComponent("info."+CastleInTheSky.MOD_ID+".destruction_warning").withStyle(ChatFormatting.RED, ChatFormatting.BOLD), event.getPlayer().getUUID());
+                event.getPlayer().getCapability(CapabilityCastle.CASTLE_CAPS).ifPresent((data -> data.setIncantationWarned(true)));
+                return;
+            }
             if (event.getPlayer().getMainHandItem().getItem() instanceof LevitationStone){
                 boolean found = false;
                 for (int dy=-SEARCH_HEIGHT; !found && dy<=SEARCH_HEIGHT; dy++){
@@ -227,6 +238,7 @@ public class ServerEvents {
                                 BlockEntity blockEntity = event.getPlayer().level.getBlockEntity(event.getPlayer().blockPosition().offset(dx, dy, dz));
                                 if (blockEntity instanceof LaputaCoreBE){
                                     ((LaputaCoreBE) blockEntity).setDestroying(true);
+                                    event.getPlayer().getCapability(CapabilityCastle.CASTLE_CAPS).ifPresent((data -> data.setIncantationWarned(false)));
                                     found = true;
                                 }
                             }

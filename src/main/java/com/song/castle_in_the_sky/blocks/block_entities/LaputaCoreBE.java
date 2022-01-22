@@ -19,12 +19,12 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.network.PacketDistributor;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
 public class LaputaCoreBE extends BlockEntity {
     private boolean isActive=false;
-
     private boolean isDestroying=false;
     private int destroyProgress = 0;
 
@@ -98,6 +98,7 @@ public class LaputaCoreBE extends BlockEntity {
                 }
 
                 laputaCoreTE.destroyProgress ++;
+                laputaCoreTE.setChanged();
             }
             else {
                 if(laputaCoreTE.isActive()){
@@ -144,9 +145,11 @@ public class LaputaCoreBE extends BlockEntity {
     }
 
     @Override
-    public CompoundTag getUpdateTag() {
+    public @NotNull CompoundTag getUpdateTag() {
         CompoundTag nbt = new CompoundTag();
         nbt.putBoolean("is_active", isActive());
+        nbt.putBoolean("isDestroying", isDestroying);
+        nbt.putInt("destroyProgress", destroyProgress);
         return nbt;
     }
 
@@ -154,18 +157,23 @@ public class LaputaCoreBE extends BlockEntity {
     public void handleUpdateTag(CompoundTag tag) {
         super.handleUpdateTag(tag);
         this.setActive(tag.getBoolean("is_active"));
+        this.setDestroying(tag.getBoolean("isDestroying"));
+        this.destroyProgress = tag.getInt("destroyProgress");
     }
 
     @Override
-    public CompoundTag save(CompoundTag tag) {
-        super.save(tag);
+    public @NotNull void saveAdditional(@NotNull CompoundTag tag) {
+        super.saveAdditional(tag);
         tag.putBoolean("is_active", isActive());
-        return tag;
+        tag.putBoolean("isDestroying", isDestroying);
+        tag.putInt("destroyProgress", destroyProgress);
     }
 
     @Override
-    public void load(CompoundTag tag) {
+    public void load(@NotNull CompoundTag tag) {
         super.load(tag);
         this.setActive(tag.getBoolean("is_active"));
+        this.setDestroying(tag.getBoolean("isDestroying"));
+        this.destroyProgress = tag.getInt("destroyProgress");
     }
 }

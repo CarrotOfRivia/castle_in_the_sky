@@ -104,6 +104,7 @@ public class LaputaCore extends BaseEntityBlock{
     public BlockEntity newBlockEntity(BlockPos blockPos, BlockState blockState) {
         LaputaCoreBE result =  new LaputaCoreBE(blockPos, blockState);
         result.setActive(blockState.getValue(POWERED));
+        result.setChanged();
         return result;
     }
 
