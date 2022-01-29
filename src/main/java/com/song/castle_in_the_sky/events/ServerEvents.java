@@ -50,6 +50,7 @@ import net.minecraft.world.level.levelgen.feature.configurations.StructureFeatur
 import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.ServerChatEvent;
+import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.village.VillagerTradesEvent;
@@ -212,7 +213,7 @@ public class ServerEvents {
 
     }
 
-    private static final Set<String> DESTRUCTION_INCANTATIONS = new HashSet<>(Arrays.asList("BALSE", "BALUS", "バルス", "巴鲁斯"));
+    private static final Set<String> DESTRUCTION_INCANTATIONS = new HashSet<>(Arrays.asList("BARUSU", "BALSE", "BALUS", "バルス", "巴鲁斯"));
     private static final int SEARCH_RADIUS = 5;
     private static final int SEARCH_RADIUS2 = SEARCH_RADIUS * SEARCH_RADIUS;
     private static final int SEARCH_HEIGHT=3;
@@ -220,32 +221,68 @@ public class ServerEvents {
     @SubscribeEvent
     public void onPlayerChat(final ServerChatEvent event){
         if (DESTRUCTION_INCANTATIONS.contains(event.getMessage())){
-            AtomicBoolean warned = new AtomicBoolean(false);
-            event.getPlayer().getCapability(CapabilityCastle.CASTLE_CAPS).ifPresent(
-                    (data -> warned.set(data.isIncantationWarned()))
-            );
-            if (! warned.get()){
-                event.getPlayer().sendMessage(new TranslatableComponent("info."+CastleInTheSky.MOD_ID+".destruction_warning").withStyle(ChatFormatting.RED, ChatFormatting.BOLD), event.getPlayer().getUUID());
-                event.getPlayer().getCapability(CapabilityCastle.CASTLE_CAPS).ifPresent((data -> data.setIncantationWarned(true)));
+            if(ConfigCommon.DISABLE_INCANTATION.get()){
+                event.getPlayer().sendMessage(new TranslatableComponent("info."+CastleInTheSky.MOD_ID+".destruction_disabled").withStyle(ChatFormatting.GRAY, ChatFormatting.BOLD), event.getPlayer().getUUID());
                 return;
             }
-            if (event.getPlayer().getMainHandItem().getItem() instanceof LevitationStone){
-                boolean found = false;
+
+            ServerPlayer player = event.getPlayer();
+            AtomicBoolean warned = new AtomicBoolean(false);
+            player.getCapability(CapabilityCastle.CASTLE_CAPS).ifPresent(
+                    (data -> warned.set(data.isIncantationWarned()))
+            );
+            boolean found = false;
+            if (player.getMainHandItem().getItem() instanceof LevitationStone){
                 for (int dy=-SEARCH_HEIGHT; !found && dy<=SEARCH_HEIGHT; dy++){
                     for (int dx=-SEARCH_RADIUS; !found && dx<+SEARCH_RADIUS; dx++){
                         for (int dz=-SEARCH_RADIUS; !found && dz<+SEARCH_RADIUS; dz++){
                             if (dx*dx+dy*dy < SEARCH_RADIUS2){
-                                BlockEntity blockEntity = event.getPlayer().level.getBlockEntity(event.getPlayer().blockPosition().offset(dx, dy, dz));
-                                if (blockEntity instanceof LaputaCoreBE){
-                                    ((LaputaCoreBE) blockEntity).setDestroying(true);
-                                    event.getPlayer().getCapability(CapabilityCastle.CASTLE_CAPS).ifPresent((data -> data.setIncantationWarned(false)));
-                                    found = true;
+                                BlockEntity blockEntity = player.level.getBlockEntity(player.blockPosition().offset(dx, dy, dz));
+                                if (blockEntity instanceof LaputaCoreBE && !((LaputaCoreBE) blockEntity).isActive()){
+                                    if (! warned.get()){
+                                        player.sendMessage(new TranslatableComponent("info."+CastleInTheSky.MOD_ID+".destruction_warning").withStyle(ChatFormatting.RED, ChatFormatting.BOLD), player.getUUID());
+                                        player.getCapability(CapabilityCastle.CASTLE_CAPS).ifPresent((data -> {
+                                            data.setIncantationWarned(true);
+                                            data.setWarningCD();
+                                        }));
+                                        if (ConfigCommon.SILENT_INCANTATION.get()){
+                                            event.setCanceled(true);
+                                        }
+                                        return;
+                                    }
+                                    else {
+                                        player.getInventory().removeItem(player.getMainHandItem());
+                                        ((LaputaCoreBE) blockEntity).setDestroying(true);
+                                        ((LaputaCoreBE) blockEntity).setActivatedInitPos(player.getEyePosition());
+                                        player.getCapability(CapabilityCastle.CASTLE_CAPS).ifPresent((data -> data.setIncantationWarned(false)));
+                                        found = true;
+                                        for (ServerPlayer playerOther: ((ServerLevel)player.level).players()){
+                                            playerOther.sendMessage(new TranslatableComponent("info."+CastleInTheSky.MOD_ID+".incantation_casted", player.getName()).withStyle(ChatFormatting.YELLOW, ChatFormatting.BOLD), playerOther.getUUID());
+                                        }
+                                    }
                                 }
                             }
                         }
                     }
                 }
+                if(! found){
+                    event.getPlayer().sendMessage(new TranslatableComponent("info."+CastleInTheSky.MOD_ID+".crystal_not_found").withStyle(ChatFormatting.GRAY, ChatFormatting.BOLD), event.getPlayer().getUUID());
+                }
             }
+            else {
+                event.getPlayer().sendMessage(new TranslatableComponent("info."+CastleInTheSky.MOD_ID+".item_not_hold").withStyle(ChatFormatting.GRAY, ChatFormatting.BOLD), event.getPlayer().getUUID());
+            }
+
+            if (ConfigCommon.SILENT_INCANTATION.get()){
+                event.setCanceled(true);
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public void tickCap(final TickEvent.PlayerTickEvent event){
+        if (! event.player.level.isClientSide()){
+            event.player.getCapability(CapabilityCastle.CASTLE_CAPS).ifPresent((CapabilityCastle.Data::tick));
         }
     }
 

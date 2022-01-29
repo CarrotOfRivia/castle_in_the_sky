@@ -40,7 +40,7 @@ public class LaputaCore extends BaseEntityBlock{
     }
 
     private static ToIntFunction<BlockState> litBlockEmission(int light) {
-        return (p_235421_1_) -> p_235421_1_.getValue(BlockStateProperties.POWERED) ? light : 0;
+        return (blockState) -> blockState.getValue(BlockStateProperties.POWERED) ? light : 0;
     }
 
     @Override
@@ -68,7 +68,9 @@ public class LaputaCore extends BaseEntityBlock{
                     tileEntity.setChanged();
                 }
             }
-            Channel.INSTANCE.send(PacketDistributor.ALL.noArg(), new LaputaTESynPkt(hasSignal, pos));
+            if(tileEntity instanceof LaputaCoreBE){
+                Channel.INSTANCE.send(PacketDistributor.ALL.noArg(), new LaputaTESynPkt(((LaputaCoreBE) tileEntity).isDestroying(), hasSignal, pos));
+            }
         }
     }
 

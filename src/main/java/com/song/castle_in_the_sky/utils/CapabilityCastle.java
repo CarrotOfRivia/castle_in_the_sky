@@ -39,16 +39,23 @@ public class CapabilityCastle implements ICapabilitySerializable<CompoundTag> {
     }
 
     public static class Data{
+        private static final int INCANTATION_WARNING_CD = 200;
+
         private boolean incantationWarned;
-        private int incantationCD=0;
+        private int incantationWarningCD =0;
 
         public void tick(){
-            if (incantationCD >= 1){
-                incantationCD --;
-                if (incantationCD == 0){
+            if (incantationWarningCD > 0){
+                incantationWarningCD--;
+                if (incantationWarningCD <= 0){
                     setIncantationWarned(false);
+                    incantationWarningCD = 0;
                 }
             }
+        }
+
+        public void setWarningCD(){
+            this.incantationWarningCD = INCANTATION_WARNING_CD;
         }
 
         public void setIncantationWarned(boolean incantationWarned){
@@ -62,13 +69,13 @@ public class CapabilityCastle implements ICapabilitySerializable<CompoundTag> {
         public CompoundTag save(){
             CompoundTag tag = new CompoundTag();
             tag.putBoolean("incantationWarned", incantationWarned);
-            tag.putInt("incantationCD", incantationCD);
+            tag.putInt("incantationWarningCD", incantationWarningCD);
             return tag;
         }
 
         public void load(CompoundTag tag){
             this.incantationWarned = tag.getBoolean("incantationWarned");
-            this.incantationCD = tag.getInt("incantationCD");
+            this.incantationWarningCD = tag.getInt("incantationWarningCD");
         }
     }
 }

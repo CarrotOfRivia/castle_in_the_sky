@@ -6,6 +6,7 @@ import com.song.castle_in_the_sky.effects.EffectRegister;
 import com.song.castle_in_the_sky.features.StructureRegister;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Vec3i;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -69,6 +70,12 @@ public class LevitationStone extends Item {
     @Override
     public InteractionResultHolder<ItemStack> use(Level world, Player playerEntity, InteractionHand hand) {
         if(!world.isClientSide()){
+            int useDistance = (int) (ConfigCommon.LEVITATION_STONE_USE_PERCENT.get()*ConfigCommon.CASTLE_SPAWN_PROOF.get());
+            if(playerEntity.blockPosition().closerThan(new Vec3i(0, 0, 0), useDistance)){
+                playerEntity.sendMessage(new TranslatableComponent("info."+CastleInTheSky.MOD_ID+".too_close_to_spawn", ConfigCommon.CASTLE_SPAWN_PROOF.get(),  useDistance).withStyle(ChatFormatting.RED, ChatFormatting.BOLD), playerEntity.getUUID());
+                return super.use(world, playerEntity, hand);
+            }
+
             ItemStack itemStack = playerEntity.getItemInHand(hand);
             CompoundTag nbt = itemStack.getOrCreateTagElement("castle_in_the_sky");
             nbt.putBoolean("active", !nbt.getBoolean("active"));

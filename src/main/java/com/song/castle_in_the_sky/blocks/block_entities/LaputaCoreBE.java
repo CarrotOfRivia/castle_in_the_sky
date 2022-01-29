@@ -1,5 +1,7 @@
 package com.song.castle_in_the_sky.blocks.block_entities;
 
+import com.song.castle_in_the_sky.blocks.BlockRegister;
+import com.song.castle_in_the_sky.blocks.LaputaCore;
 import com.song.castle_in_the_sky.config.ConfigCommon;
 import com.song.castle_in_the_sky.effects.EffectRegister;
 import com.song.castle_in_the_sky.items.ItemsRegister;
@@ -9,15 +11,20 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.boss.wither.WitherBoss;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.entity.BeaconBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.common.IForgeShearable;
 import net.minecraftforge.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
 
@@ -27,8 +34,11 @@ public class LaputaCoreBE extends BlockEntity {
     private boolean isActive=false;
     private boolean isDestroying=false;
     private int destroyProgress = 0;
+    // Manually update the active state based on powered state.
+    private boolean initialUpdated = false;
+    private Vec3 activatedInitPos = new Vec3(0, 0, 0);
 
-    private static final int ANIMATION_TIME = 200;
+    public static final int ANIMATION_TIME = 200;
     private static final int DESTRUCTION_TICKS = 200;
     private static final int DESTRUCTION_TIME_PER_TICK = 10;
     private static final int DESTROY_MAX = ANIMATION_TIME + DESTRUCTION_TICKS * DESTRUCTION_TIME_PER_TICK;
@@ -38,6 +48,7 @@ public class LaputaCoreBE extends BlockEntity {
     private static final int HEIGHT_MAX = 100;
     private static final ArrayList<ArrayList<Integer>> DESTRUCTION_PATTERN = new ArrayList<>();
     private static final int PROGRESS_EACH_TICK;
+
     static {
         for(int dx = -RADIUS; dx<=RADIUS; dx++){
             for(int dy = HEIGHT_MIN; dy<=HEIGHT_MAX; dy++){
@@ -54,7 +65,7 @@ public class LaputaCoreBE extends BlockEntity {
 
         PROGRESS_EACH_TICK = DESTRUCTION_PATTERN.size() / DESTRUCTION_TICKS + 1;
     }
-    private static final Set<String> DESTRUCTION_BLACKLIST = new HashSet<>(Arrays.asList("castle_in_the_sky:laputa_core", "minecraft:spruce_log", "minecraft:spruce_wood", "minecraft:shroomlight"));
+    private static final Set<String> DESTRUCTION_BLACKLIST = new HashSet<>(Arrays.asList("castle_in_the_sky:laputa_core", "minecraft:spruce_log", "minecraft:spruce_wood", "minecraft:shroomlight", "minecraft:spawner", "minecraft:chest", "minecraft:barrel"));
 
     public LaputaCoreBE(BlockPos pos, BlockState state){
         super(TERegister.LAPUTA_CORE_TE_TYPE.get(), pos, state);
@@ -62,24 +73,52 @@ public class LaputaCoreBE extends BlockEntity {
 
     public static void tick(Level level, BlockPos blockPos, BlockState blockState, LaputaCoreBE laputaCoreTE) {
         if(!level.isClientSide()){
+            if (!laputaCoreTE.initialUpdated){
+                laputaCoreTE.setActive(blockState.getValue(LaputaCore.POWERED));
+                laputaCoreTE.initialUpdated = true;
+            }
+
             if (laputaCoreTE.isDestroying){
+                boolean drops = ConfigCommon.DESTRUCTION_DROPS.get();
+                if(laputaCoreTE.destroyProgress % 20 == 0){
+                    // update to client
+                    Channel.INSTANCE.send(PacketDistributor.NEAR.with(PacketDistributor.TargetPoint.p(laputaCoreTE.getBlockPos().getX(), laputaCoreTE.getBlockPos().getY(), laputaCoreTE.getBlockPos().getZ(), 20, Level.OVERWORLD)),
+                            new LaputaTESynPkt(laputaCoreTE.isDestroying, laputaCoreTE.isActive(), laputaCoreTE.getBlockPos(), laputaCoreTE.getActivatedInitPos(), laputaCoreTE.destroyProgress));
+                }
+
+                if(laputaCoreTE.destroyProgress == 0){
+                    // remove all fluids and plants
+                    for (ArrayList<Integer> pos: DESTRUCTION_PATTERN){
+                        BlockPos target = blockPos.offset(pos.get(0), pos.get(1), pos.get(2));
+                        if(level.getFluidState(target) != Fluids.EMPTY.defaultFluidState()){
+                            level.setBlockAndUpdate(target, Blocks.AIR.defaultBlockState());
+                        }
+                        if (level.getBlockState(target).getBlock() instanceof TwistingVinesBlock ){
+                            level.destroyBlock(target, drops);
+                        }
+                    }
+                }
+
+
                 if (laputaCoreTE.destroyProgress >= ANIMATION_TIME){
                     if(laputaCoreTE.destroyProgress >= DESTROY_MAX){
+                        // add fake beacon platform after destruction
+                        for (int dx = -1; dx <=1; dx++){
+                            for (int dz = -1; dz <=1; dz++){
+                                level.setBlockAndUpdate(blockPos.offset(dx, -1, dz), BlockRegister.FAKE_BEACON.get().defaultBlockState());
+                            }
+                        }
                         level.destroyBlock(blockPos, false);
                         level.addFreshEntity(new ItemEntity(level, blockPos.getX(), blockPos.getY(), blockPos.getZ(), new ItemStack(ItemsRegister.LAPUTA_MINIATURE.get())));
                     }
                     else {
+                        if(laputaCoreTE.destroyProgress == ANIMATION_TIME){
+                            // animation end, explode.
+                            level.explode(null, blockPos.getX(), blockPos.getY()+1, blockPos.getZ(), 1.5f, Explosion.BlockInteraction.NONE);
+                        }
+
                         // Destruction in progress
                         int exceed = (laputaCoreTE.destroyProgress - ANIMATION_TIME);
-                        if(exceed == DESTRUCTION_TIME_PER_TICK/2){
-                            // remove all fluids
-                            for (ArrayList<Integer> pos: DESTRUCTION_PATTERN){
-                                BlockPos target = blockPos.offset(pos.get(0), pos.get(1), pos.get(2));
-                                if(level.getFluidState(target) != Fluids.EMPTY.defaultFluidState()){
-                                    level.setBlock(target, Blocks.AIR.defaultBlockState(), 11);
-                                }
-                            }
-                        }
 
                         if (exceed % DESTRUCTION_TIME_PER_TICK == 0){
                             int process_tick = exceed / DESTRUCTION_TIME_PER_TICK;
@@ -90,9 +129,10 @@ public class LaputaCoreBE extends BlockEntity {
                                 ArrayList<Integer> pos = DESTRUCTION_PATTERN.get(i);
                                 BlockPos target = blockPos.offset(pos.get(0), pos.get(1), pos.get(2));
                                 if(! DESTRUCTION_BLACKLIST.contains(Registry.BLOCK.getKey(level.getBlockState(target).getBlock()).toString())){
-                                    level.removeBlock(target, false);
+                                    level.destroyBlock(target, drops);
                                 }
                             }
+                            blockState.setValue(LaputaCore.POWERED, true);
                         }
                     }
                 }
@@ -108,7 +148,8 @@ public class LaputaCoreBE extends BlockEntity {
                                 playerEntity.addEffect(new MobEffectInstance(EffectRegister.SACRED_CASTLE_EFFECT.get(), 100));
                             }
                         }
-                        Channel.INSTANCE.send(PacketDistributor.NEAR.with(PacketDistributor.TargetPoint.p(laputaCoreTE.getBlockPos().getX(), laputaCoreTE.getBlockPos().getY(), laputaCoreTE.getBlockPos().getZ(), 20, Level.OVERWORLD)), new LaputaTESynPkt(laputaCoreTE.isActive(), laputaCoreTE.getBlockPos()));
+                        Channel.INSTANCE.send(PacketDistributor.NEAR.with(PacketDistributor.TargetPoint.p(laputaCoreTE.getBlockPos().getX(), laputaCoreTE.getBlockPos().getY(), laputaCoreTE.getBlockPos().getZ(), 20, Level.OVERWORLD)),
+                                new LaputaTESynPkt(laputaCoreTE.isDestroying, laputaCoreTE.isActive(), laputaCoreTE.getBlockPos()));
                     }
                 }
             }
@@ -120,11 +161,31 @@ public class LaputaCoreBE extends BlockEntity {
         isDestroying = destroying;
     }
 
+    public boolean isDestroying() {
+        return isDestroying;
+    }
+
+    public Vec3 getActivatedInitPos() {
+        return activatedInitPos;
+    }
+
+    public void setActivatedInitPos(Vec3 activatedInitPos) {
+        this.activatedInitPos = activatedInitPos;
+    }
+
+    public int getDestroyProgress() {
+        return destroyProgress;
+    }
+
+    public void setDestroyProgress(int destroyProgress) {
+        this.destroyProgress = destroyProgress;
+    }
+
     @Override
     public void onChunkUnloaded() {
         super.onChunkUnloaded();
         if(level!=null && !level.isClientSide()){
-            Channel.INSTANCE.send(PacketDistributor.ALL.noArg(), new LaputaTESynPkt(this.isActive, this.getBlockPos()));
+            Channel.INSTANCE.send(PacketDistributor.ALL.noArg(), new LaputaTESynPkt(this.isDestroying, this.isActive, this.getBlockPos()));
         }
     }
 
@@ -132,7 +193,7 @@ public class LaputaCoreBE extends BlockEntity {
     public void onLoad() {
         super.onLoad();
         if(level!=null && !level.isClientSide()){
-            Channel.INSTANCE.send(PacketDistributor.ALL.noArg(), new LaputaTESynPkt(this.isActive, this.getBlockPos()));
+            Channel.INSTANCE.send(PacketDistributor.ALL.noArg(), new LaputaTESynPkt(this.isDestroying, this.isActive, this.getBlockPos()));
         }
     }
 

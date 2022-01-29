@@ -15,7 +15,7 @@
   "tooltip.castle_in_the_sky.levitation_stone.line2": "Trade with a cartographer for the item.",
   "tooltip.castle_in_the_sky.levitation_stone.line3": "Right click to activate/deactivate.",
   "tooltip.castle_in_the_sky.keys": "Obtained by looting chests or killing mobs in the castle.",
-  "tooltip.castle_in_the_sky.laputa_miniature": "Currently creative mode only",
+  "tooltip.castle_in_the_sky.laputa_miniature": "Obtained by using the destruction incantation in the castle.",
 
   "advancements.castle_in_the_sky.trade.title": "There is a Castle on a Cloud",
   "advancements.castle_in_the_sky.trade.description": "Legend says that a mysterious stone leads you to a castle full of treasure.",
@@ -33,7 +33,12 @@
   "info.castle_in_the_sky.sacred_castle_effect.place": "You need to conquer the castle first.",
   "info.castle_in_the_sky.sacred_castle_effect.break": "You need to conquer the castle first.",
   "info.castle_in_the_sky.locked_doors": "Unlocked by keys with corresponding color. Kill mobs or loot chests to obtain them.",
-  "info.castle_in_the_sky.destruction_warning": "You are activating the destruction incantation. Say it again to confirm.",
+  "info.castle_in_the_sky.destruction_warning": "You are saying the destruction incantation. Say it again to confirm.",
+  "info.castle_in_the_sky.crystal_not_found": "Nothing happened... You need to stand nearby a de-activated crystal.",
+  "info.castle_in_the_sky.item_not_hold": "Nothing happened... Make sure you are holding a levitation stone.",
+  "info.castle_in_the_sky.incantation_casted": "%s chanted the destruction spell.",
+  "info.castle_in_the_sky.destruction_disabled": "Destruction incantation is disabled in the server",
+  "info.castle_in_the_sky.too_close_to_spawn": "No castle spawns within %d blocks near spawn. You must go at least %d blocks to use this stone.",
 
   "itemGroup.castle_in_the_sky.all": "Castle in the Sky"
 }

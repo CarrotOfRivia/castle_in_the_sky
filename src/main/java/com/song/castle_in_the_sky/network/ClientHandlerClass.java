@@ -19,6 +19,13 @@ public class ClientHandlerClass {
         BlockEntity tileEntity = Minecraft.getInstance().level.getBlockEntity(pos);
         if(tileEntity instanceof LaputaCoreBE){
             ((LaputaCoreBE) tileEntity).setActive(pkt.isActive);
+            ((LaputaCoreBE) tileEntity).setDestroying(pkt.isDestroying);
+            if (pkt.activatedInitPos.y != -9999){
+                ((LaputaCoreBE) tileEntity).setActivatedInitPos(pkt.activatedInitPos);
+            }
+            if(pkt.destroyingProcess != -9999){
+                ((LaputaCoreBE) tileEntity).setDestroyProgress(pkt.destroyingProcess);
+            }
         }
     }
 
