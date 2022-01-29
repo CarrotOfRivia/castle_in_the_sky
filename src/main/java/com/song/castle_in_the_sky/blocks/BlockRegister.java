@@ -2,6 +2,7 @@ package com.song.castle_in_the_sky.blocks;
 
 import com.song.castle_in_the_sky.CastleInTheSky;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.RootsBlock;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;

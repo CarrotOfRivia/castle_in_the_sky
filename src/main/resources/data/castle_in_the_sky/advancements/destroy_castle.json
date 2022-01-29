@@ -1,0 +1,37 @@
+{
+  "parent": "castle_in_the_sky:conquer_castle",
+  "display": {
+    "icon": {
+      "item": "minecraft:hanging_roots"
+    },
+    "title": {
+      "translate": "advancements.castle_in_the_sky.destroy_castle.title"
+    },
+    "description": {
+      "translate": "advancements.castle_in_the_sky.destroy_castle.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "destroy_castle": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "castle_in_the_sky:laputa_miniature"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "destroy_castle"
+    ]
+  ]
+}

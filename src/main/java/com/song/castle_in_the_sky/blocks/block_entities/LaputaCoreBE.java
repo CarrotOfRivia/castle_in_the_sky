@@ -10,22 +10,22 @@ import com.song.castle_in_the_sky.network.LaputaTESynPkt;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.entity.boss.wither.WitherBoss;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.*;
-import net.minecraft.world.level.block.entity.BeaconBlockEntity;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.IForgeShearable;
+import net.minecraftforge.common.ForgeConfigSpec;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.network.PacketDistributor;
+import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -54,6 +54,9 @@ public class LaputaCoreBE extends BlockEntity {
             for(int dy = HEIGHT_MIN; dy<=HEIGHT_MAX; dy++){
                 for(int dz = -RADIUS; dz<=RADIUS; dz++){
                     if (dx*dx + dz*dz <= RADIUS2){
+                        if(dx==0 && dy==-1 && dz==0){
+                            continue;
+                        }
                         ArrayList<Integer> tmp = new ArrayList<>(Arrays.asList(dx, dy, dz));
                         DESTRUCTION_PATTERN.add(tmp);
                     }
@@ -80,7 +83,7 @@ public class LaputaCoreBE extends BlockEntity {
 
             if (laputaCoreTE.isDestroying){
                 boolean drops = ConfigCommon.DESTRUCTION_DROPS.get();
-                if(laputaCoreTE.destroyProgress % 20 == 0){
+                if(laputaCoreTE.destroyProgress % 3 == 0){
                     // update to client
                     Channel.INSTANCE.send(PacketDistributor.NEAR.with(PacketDistributor.TargetPoint.p(laputaCoreTE.getBlockPos().getX(), laputaCoreTE.getBlockPos().getY(), laputaCoreTE.getBlockPos().getZ(), 20, Level.OVERWORLD)),
                             new LaputaTESynPkt(laputaCoreTE.isDestroying, laputaCoreTE.isActive(), laputaCoreTE.getBlockPos(), laputaCoreTE.getActivatedInitPos(), laputaCoreTE.destroyProgress));
@@ -93,10 +96,11 @@ public class LaputaCoreBE extends BlockEntity {
                         if(level.getFluidState(target) != Fluids.EMPTY.defaultFluidState()){
                             level.setBlockAndUpdate(target, Blocks.AIR.defaultBlockState());
                         }
-                        if (level.getBlockState(target).getBlock() instanceof TwistingVinesBlock ){
-                            level.destroyBlock(target, drops);
-                        }
+//                        if (level.getBlockState(target).getBlock() instanceof TwistingVinesBlock ){
+//                            level.destroyBlock(target, drops);
+//                        }
                     }
+                    level.setBlockAndUpdate(blockPos.offset(0, -1, 0), BlockRegister.FAKE_BEACON.get().defaultBlockState());
                 }
 
 
@@ -110,11 +114,17 @@ public class LaputaCoreBE extends BlockEntity {
                         }
                         level.destroyBlock(blockPos, false);
                         level.addFreshEntity(new ItemEntity(level, blockPos.getX(), blockPos.getY(), blockPos.getZ(), new ItemStack(ItemsRegister.LAPUTA_MINIATURE.get())));
+
+                        if (ModList.get().isLoaded("botania")) {
+                            // waiting for Botania to be updated to 1.18.1...
+                            ItemStack itemStack = new ItemStack(ForgeRegistries.ITEMS.getValue(new ResourceLocation("botania:laputa_shard")));
+                            level.addFreshEntity(new ItemEntity(level, blockPos.getX(), blockPos.getY(), blockPos.getZ(), itemStack));
+                        }
                     }
                     else {
                         if(laputaCoreTE.destroyProgress == ANIMATION_TIME){
                             // animation end, explode.
-                            level.explode(null, blockPos.getX(), blockPos.getY()+1, blockPos.getZ(), 1.5f, Explosion.BlockInteraction.NONE);
+                            level.explode(null, blockPos.getX()+0.5, blockPos.getY()+1, blockPos.getZ()+0.5, 1.5f, Explosion.BlockInteraction.NONE);
                         }
 
                         // Destruction in progress
@@ -132,7 +142,6 @@ public class LaputaCoreBE extends BlockEntity {
                                     level.destroyBlock(target, drops);
                                 }
                             }
-                            blockState.setValue(LaputaCore.POWERED, true);
                         }
                     }
                 }
