@@ -86,7 +86,7 @@ public class ServerEvents {
 
     // I have removed the Japanese and Chinese incantation because my stupid Windows PC cannot understand it
     // Coding in Windows sucks
-    private static final Set<String> DESTRUCTION_INCANTATIONS = new HashSet<>(Arrays.asList("BARUSU", "BALSE", "BALUS"));
+    private static final Set<String> DESTRUCTION_INCANTATIONS = new HashSet<>(Arrays.asList("BARUSU", "BALSE", "BALUS", "バルス", "巴鲁斯"));
     private static final int SEARCH_RADIUS = 5;
     private static final int SEARCH_RADIUS2 = SEARCH_RADIUS * SEARCH_RADIUS;
     private static final int SEARCH_HEIGHT=3;
