@@ -7,10 +7,8 @@ import com.song.castle_in_the_sky.config.ConfigCommon;
 import com.song.castle_in_the_sky.config.ConfigServer;
 import com.song.castle_in_the_sky.effects.EffectRegister;
 import com.song.castle_in_the_sky.events.ServerEvents;
-import com.song.castle_in_the_sky.features.StructureFeatureRegister;
 import com.song.castle_in_the_sky.features.StructureRegister;
 import com.song.castle_in_the_sky.items.ItemsRegister;
-import com.song.castle_in_the_sky.loot.LootModifierRegister;
 import com.song.castle_in_the_sky.network.Channel;
 import com.song.castle_in_the_sky.network.LaputaTESynPkt;
 import com.song.castle_in_the_sky.network.ServerToClientInfoPacket;
@@ -21,7 +19,6 @@ import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.Tags;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.server.ServerStartingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -72,7 +69,6 @@ public class CastleInTheSky
         MinecraftForge.EVENT_BUS.register(new ServerEvents());
 
         ItemsRegister.ITEMS.register(FMLJavaModLoadingContext.get().getModEventBus());
-        LootModifierRegister.GLM.register(FMLJavaModLoadingContext.get().getModEventBus());
         BlockRegister.BLOCKS.register(FMLJavaModLoadingContext.get().getModEventBus());
         TERegister.TILE_ENTITIES.register(FMLJavaModLoadingContext.get().getModEventBus());
         EffectRegister.EFFECT.register(FMLJavaModLoadingContext.get().getModEventBus());
@@ -87,10 +83,6 @@ public class CastleInTheSky
     {
         // some preinit code
         LOGGER.info("HELLO FROM PREINIT");
-        event.enqueueWork(()->{
-            StructureRegister.setupStructures();
-            StructureFeatureRegister.registerConfiguredStructures();
-        });
 
         int id = 0;
         Channel.INSTANCE.registerMessage(id++, LaputaTESynPkt.class, LaputaTESynPkt::encode, LaputaTESynPkt::decode, LaputaTESynPkt::handle);

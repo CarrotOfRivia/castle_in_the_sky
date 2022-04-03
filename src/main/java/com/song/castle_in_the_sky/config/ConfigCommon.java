@@ -27,12 +27,12 @@ public class ConfigCommon {
 
     static {
         ForgeConfigSpec.Builder CONFIG_BUILDER = new ForgeConfigSpec.Builder();
+        CONFIG_BUILDER.comment("NOTE: as of 1.18.2, castle_avg_dist_chunk and castle_min_dist_chunk are no longer in the config file. You need to use datapacks (https://minecraft.fandom.com/wiki/Custom_world_generation) to config them");
+
+        CONFIG_BUILDER.push("behaviours");
         CASTLE_HEIGHT = CONFIG_BUILDER.comment("The height of generated castle, recommended value is below $WORLD_HEIGHT - 144").defineInRange("castle_height", 174, Integer.MIN_VALUE, Integer.MAX_VALUE);
         CASTLE_SPAWN_PROOF = CONFIG_BUILDER.comment("the minimum distance between castle and 0,0").defineInRange("castle_spawn_proof", 10000, 0, Integer.MAX_VALUE);
         LEVITATION_STONE_USE_PERCENT = CONFIG_BUILDER.comment("Levitation can only be used when the user is bigger than this percent of spawn_proof. This is to prevent lag.").defineInRange("levitation_stone_use_percent", 0.8, 0, Double.MAX_VALUE);
-
-        CASTLE_AVG_DIST_CHUNK = CONFIG_BUILDER.comment("average distance apart in chunks between spawn attempts").defineInRange("castle_avg_dist_chunk", 500, 0, Integer.MAX_VALUE);
-        CASTLE_MIN_DIST_CHUNK = CONFIG_BUILDER.comment("minimum distance apart in chunks between spawn attempts").defineInRange("castle_min_dist_chunk", 300, 0, Integer.MAX_VALUE);
 
         LAPUTA_CORE_EFFECT_RANGE = CONFIG_BUILDER.comment("Effect Range of Laputa Core").defineInRange("laputa_core_effect_range", 100, 0, Integer.MAX_VALUE);
 
@@ -45,6 +45,7 @@ public class ConfigCommon {
         DISABLE_INCANTATION = CONFIG_BUILDER.comment("Disable destruction incantation").define("disable_incantation", false);
         SILENT_INCANTATION = CONFIG_BUILDER.comment("Do not say the incantation (eg. BALSE) to public chat.").define("silent_incantation", true);
         DESTRUCTION_DROPS = CONFIG_BUILDER.comment("Destruction drop items").define("destruction_drops", false);
+        CONFIG_BUILDER.pop();
 
         CONFIG_BUILDER.comment("Trading configuration: use the correct item id by pressing F3+H in game. Set 'null' to disable this slot, set both price1 and price2 to 'null' to disable the trading").push("tradings");
         addTrader("minecraft:cartographer", "castle_in_the_sky:levitation_stone", 5, "minecraft:emerald", 50, 64, "minecraft:compass", 1, 1, 1, 1, CONFIG_BUILDER);

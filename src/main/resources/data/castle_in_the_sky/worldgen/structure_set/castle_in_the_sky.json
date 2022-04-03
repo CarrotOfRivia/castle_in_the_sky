@@ -1,0 +1,17 @@
+{
+  "structures": [
+    {
+      "structure": "castle_in_the_sky:castle_in_the_sky",
+      "weight": 1
+    }
+  ],
+  "placement": {
+    "salt": 19260817,
+
+    "spacing": 500,
+
+    "separation": 300,
+
+    "type": "minecraft:random_spread"
+  }
+}

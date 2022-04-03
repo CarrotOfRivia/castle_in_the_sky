@@ -1,0 +1,39 @@
+{
+  "type": "castle_in_the_sky:castle_in_the_sky",
+
+  "config": {
+    "start_pool": "castle_in_the_sky:castle_in_the_sky/laputa000",
+
+    "size": 1
+  },
+
+  "biomes": "#castle_in_the_sky:has_structure/castle_in_the_sky_biomes",
+
+  "adapt_noise": false,
+
+  "spawn_overrides": {
+    "monster": {
+      "bounding_box": "piece",
+      "spawns": [
+        {
+          "type": "minecraft:zombie",
+          "weight": 5,
+          "minCount": 1,
+          "maxCount": 2
+        },
+        {
+          "type": "minecraft:skeleton",
+          "weight": 2,
+          "minCount": 1,
+          "maxCount": 1
+        },
+        {
+          "type": "minecraft:spider",
+          "weight": 2,
+          "minCount": 1,
+          "maxCount": 1
+        }
+      ]
+    }
+  }
+}

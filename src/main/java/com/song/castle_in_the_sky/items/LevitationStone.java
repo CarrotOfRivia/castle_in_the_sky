@@ -53,7 +53,7 @@ public class LevitationStone extends Item {
                     int posY = nbt.getInt("posY");
                     int posZ = nbt.getInt("posZ");
                     BlockPos entityPos = entity.blockPosition();
-                    double dist = Math.sqrt(entityPos.distSqr(posX, posY, posZ, false));
+                    double dist = Math.sqrt(entityPos.distSqr(new Vec3i(posX, posY, posZ)));
                     double dx = (posX - entityPos.getX())/dist;
                     double dy = (posY - entityPos.getY()-2)/dist;
                     double dz = (posZ - entityPos.getZ())/dist;
@@ -81,7 +81,7 @@ public class LevitationStone extends Item {
             nbt.putBoolean("active", !nbt.getBoolean("active"));
 
             if(isActive(itemStack)){
-                BlockPos blockpos = ((ServerLevel) world).findNearestMapFeature(StructureRegister.CASTLE_IN_THE_SKY.get(), playerEntity.blockPosition(), 100, false);
+                BlockPos blockpos = ((ServerLevel) world).findNearestMapFeature(StructureRegister.TAG_CASTLE_IN_THE_SKY, playerEntity.blockPosition(), 100, false);
                 if(blockpos!=null){
                     CompoundTag nbt1 = itemStack.getOrCreateTagElement("targetLaputa");
                     nbt1.putInt("posX", blockpos.getX()+72);
