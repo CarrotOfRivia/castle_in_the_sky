@@ -18,7 +18,7 @@
   "tooltip.castle_in_the_sky.laputa_miniature": "在城堡里使用毁灭咒语获得。",
 
   "advancements.castle_in_the_sky.trade.title": "云上有座城堡",
-  "advancements.castle_in_the_sky.trade.description": "传说有一块神秘的石头会引导你前往满是宝藏的城堡",
+  "advancements.castle_in_the_sky.trade.description": "传说有一块神秘的石头会引导你前往满是宝藏的城堡。",
   "advancements.castle_in_the_sky.get_levitation_stone.title": "飞行石之谜",
   "advancements.castle_in_the_sky.get_levitation_stone.description": "与制图师交易获得一块飞行石。",
   "advancements.castle_in_the_sky.find_castle.title": "天空之城",
@@ -41,7 +41,7 @@
   "info.castle_in_the_sky.item_not_hold": "什么事也没有发生…确保你拿着飞行石。",
   "info.castle_in_the_sky.incantation_casted": "%s 发动了毁灭法术。",
   "info.castle_in_the_sky.destruction_disabled": "服务器已禁用毁灭咒语",
-  "info.castle_in_the_sky.too_close_to_spawn": "出生点附近的 %d 方块内没有生成城堡，你必须前进至少 %d 方块才能使用这个石头",
+  "info.castle_in_the_sky.too_close_to_spawn": "出生点附近的 %d 方块内没有生成城堡，你必须前进至少 %d 方块才能使用这个石头。",
 
   "itemGroup.castle_in_the_sky.all": "天空之城"
 }
