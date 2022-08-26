@@ -116,8 +116,8 @@ public class LaputaCoreBE extends BlockEntity {
                         level.addFreshEntity(new ItemEntity(level, blockPos.getX(), blockPos.getY(), blockPos.getZ(), new ItemStack(ItemsRegister.LAPUTA_MINIATURE.get())));
 
                         if (ModList.get().isLoaded("botania")) {
-                            // waiting for Botania to be updated to 1.18.1...
                             ItemStack itemStack = new ItemStack(ForgeRegistries.ITEMS.getValue(new ResourceLocation("botania:laputa_shard")));
+                            itemStack.getOrCreateTag().putInt("level", 20);
                             level.addFreshEntity(new ItemEntity(level, blockPos.getX(), blockPos.getY(), blockPos.getZ(), itemStack));
                         }
                     }
