@@ -4,11 +4,9 @@ import com.song.castle_in_the_sky.CastleInTheSky;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
-import net.minecraft.world.level.levelgen.feature.ConfiguredStructureFeature;
-import net.minecraft.world.level.levelgen.feature.StructureFeature;
-import net.minecraft.world.level.levelgen.feature.configurations.JigsawConfiguration;
+import net.minecraft.world.level.levelgen.structure.Structure;
+import net.minecraft.world.level.levelgen.structure.StructureType;
 import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
 /**
@@ -16,11 +14,17 @@ import net.minecraftforge.registries.RegistryObject;
  */
 
 public class StructureRegister {
-    public static final DeferredRegister<StructureFeature<?>> STRUCTURES = DeferredRegister.create(ForgeRegistries.STRUCTURE_FEATURES, CastleInTheSky.MOD_ID);
-    public static final CastleStructure CASTLE_IN_THE_SKY_RAW = new CastleStructure(JigsawConfiguration.CODEC);
 
-    public static final RegistryObject<StructureFeature<JigsawConfiguration>> CASTLE_IN_THE_SKY = STRUCTURES.register("castle_in_the_sky", ()-> CASTLE_IN_THE_SKY_RAW);
+    /**
+     * We are using the Deferred Registry system to register our structure as this is the preferred way on Forge.
+     * This will handle registering the base structure for us at the correct time so we don't have to handle it ourselves.
+     */
+    public static final DeferredRegister<StructureType<?>> DEFERRED_REGISTRY_STRUCTURE = DeferredRegister.create(Registry.STRUCTURE_TYPE_REGISTRY, CastleInTheSky.MOD_ID);
 
-    public static final TagKey<ConfiguredStructureFeature<?, ?>> TAG_CASTLE_IN_THE_SKY = TagKey.create(Registry.CONFIGURED_STRUCTURE_FEATURE_REGISTRY, new ResourceLocation("castle_in_the_sky", "castle_in_the_sky"));
-
+    /**
+     * Registers the base structure itself and sets what its path is. In this case,
+     * this base structure will have the resourcelocation of castle_in_the_sky:castle_in_the_sky.
+     */
+    public static final RegistryObject<StructureType<CastleStructure>> CASTLE_IN_THE_SKY = DEFERRED_REGISTRY_STRUCTURE.register("castle_in_the_sky", () -> () -> CastleStructure.CODEC);
+    public static final TagKey<Structure> CASTLE_IN_THE_SKY_LOCATED = TagKey.create(Registry.STRUCTURE_REGISTRY, new ResourceLocation("castle_in_the_sky_located"));
 }
