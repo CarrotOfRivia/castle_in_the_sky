@@ -1,4 +1,4 @@
-package com.song.castle_in_the_sky.features;
+package com.song.castle_in_the_sky.structures;
 
 import com.song.castle_in_the_sky.CastleInTheSky;
 import net.minecraft.core.Registry;

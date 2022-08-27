@@ -3,7 +3,7 @@ package com.song.castle_in_the_sky.items;
 import com.song.castle_in_the_sky.CastleInTheSky;
 import com.song.castle_in_the_sky.config.ConfigCommon;
 import com.song.castle_in_the_sky.effects.EffectRegister;
-import com.song.castle_in_the_sky.features.StructureRegister;
+import com.song.castle_in_the_sky.structures.StructureRegister;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;

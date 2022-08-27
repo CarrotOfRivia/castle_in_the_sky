@@ -19,9 +19,17 @@
     "in_city": {
       "trigger": "minecraft:location",
       "conditions": {
-        "location": {
-          "feature": "castle_in_the_sky:castle_in_the_sky"
-        }
+        "player": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "location": {
+                "structure": "castle_in_the_sky:castle_in_the_sky"
+              }
+            }
+          }
+        ]
       }
     }
   },

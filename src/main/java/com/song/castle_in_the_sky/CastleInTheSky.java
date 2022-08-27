@@ -7,7 +7,7 @@ import com.song.castle_in_the_sky.config.ConfigCommon;
 import com.song.castle_in_the_sky.config.ConfigServer;
 import com.song.castle_in_the_sky.effects.EffectRegister;
 import com.song.castle_in_the_sky.events.ServerEvents;
-import com.song.castle_in_the_sky.features.StructureRegister;
+import com.song.castle_in_the_sky.structures.StructureRegister;
 import com.song.castle_in_the_sky.items.ItemsRegister;
 import com.song.castle_in_the_sky.network.Channel;
 import com.song.castle_in_the_sky.network.LaputaTESynPkt;
@@ -19,7 +19,6 @@ import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.server.ServerStartingEvent;
-import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.InterModComms;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -43,6 +42,7 @@ import java.util.stream.Collectors;
 @Mod(CastleInTheSky.MOD_ID)
 public class CastleInTheSky
 {
+    // TODO: 1. castle_in_the_sky advancement; 2. trading levitation stone; 3. generation
     // Directly reference a log4j logger.
     public static final Logger LOGGER = LogManager.getLogger();
     public static final String MOD_ID = "castle_in_the_sky";
