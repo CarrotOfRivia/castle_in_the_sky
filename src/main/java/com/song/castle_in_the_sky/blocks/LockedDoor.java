@@ -5,7 +5,6 @@ import com.song.castle_in_the_sky.network.ClientHandlerClass;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -43,7 +42,7 @@ public abstract class LockedDoor extends DoorBlock {
         }
         else {
             if(world.isClientSide()){
-                ClientHandlerClass.showInfo(new TranslatableComponent("info."+ CastleInTheSky.MOD_ID+".locked_doors"));
+                ClientHandlerClass.showInfo(Component.translatable("info."+ CastleInTheSky.MOD_ID+".locked_doors"));
             }
             return InteractionResult.PASS;
         }
@@ -62,6 +61,6 @@ public abstract class LockedDoor extends DoorBlock {
     @Override
     public void appendHoverText(ItemStack itemStack, @Nullable BlockGetter blockReader, List<Component> iTextComponents, TooltipFlag tooltipFlag) {
         super.appendHoverText(itemStack, blockReader, iTextComponents, tooltipFlag);
-        iTextComponents.add(new TranslatableComponent("info."+ CastleInTheSky.MOD_ID+".locked_doors").withStyle(ChatFormatting.GRAY));
+        iTextComponents.add(Component.translatable("info."+ CastleInTheSky.MOD_ID+".locked_doors").withStyle(ChatFormatting.GRAY));
     }
 }

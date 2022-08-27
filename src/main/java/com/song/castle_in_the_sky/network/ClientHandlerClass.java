@@ -6,7 +6,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.network.NetworkEvent;
 
@@ -30,7 +29,7 @@ public class ClientHandlerClass {
     }
 
     public static void showSacredCastleInfoBreak(){
-        Minecraft.getInstance().gui.setOverlayMessage(new TranslatableComponent(String.format("info.%s.sacred_castle_effect.break", CastleInTheSky.MOD_ID)).withStyle(ChatFormatting.RED).withStyle(ChatFormatting.BOLD), false);
+        Minecraft.getInstance().gui.setOverlayMessage(Component.translatable(String.format("info.%s.sacred_castle_effect.break", CastleInTheSky.MOD_ID)).withStyle(ChatFormatting.RED).withStyle(ChatFormatting.BOLD), false);
     }
 
     public static void showInfo(Component component){

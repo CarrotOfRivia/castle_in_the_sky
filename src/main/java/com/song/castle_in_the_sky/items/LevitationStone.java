@@ -10,8 +10,6 @@ import net.minecraft.core.Vec3i;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -72,7 +70,7 @@ public class LevitationStone extends Item {
         if(!world.isClientSide()){
             int useDistance = (int) (ConfigCommon.LEVITATION_STONE_USE_PERCENT.get()*ConfigCommon.CASTLE_SPAWN_PROOF.get());
             if(playerEntity.blockPosition().closerThan(new Vec3i(0, 0, 0), useDistance)){
-                playerEntity.sendMessage(new TranslatableComponent("info."+CastleInTheSky.MOD_ID+".too_close_to_spawn", ConfigCommon.CASTLE_SPAWN_PROOF.get(),  useDistance).withStyle(ChatFormatting.RED, ChatFormatting.BOLD), playerEntity.getUUID());
+                playerEntity.sendSystemMessage(Component.translatable("info."+CastleInTheSky.MOD_ID+".too_close_to_spawn", ConfigCommon.CASTLE_SPAWN_PROOF.get(),  useDistance).withStyle(ChatFormatting.RED, ChatFormatting.BOLD));
                 return super.use(world, playerEntity, hand);
             }
 
@@ -81,7 +79,7 @@ public class LevitationStone extends Item {
             nbt.putBoolean("active", !nbt.getBoolean("active"));
 
             if(isActive(itemStack)){
-                BlockPos blockpos = ((ServerLevel) world).findNearestMapFeature(StructureRegister.TAG_CASTLE_IN_THE_SKY, playerEntity.blockPosition(), 100, false);
+                BlockPos blockpos = ((ServerLevel) world).findNearestMapStructure(StructureRegister.TAG_CASTLE_IN_THE_SKY, playerEntity.blockPosition(), 100, false);
                 if(blockpos!=null){
                     CompoundTag nbt1 = itemStack.getOrCreateTagElement("targetLaputa");
                     nbt1.putInt("posX", blockpos.getX()+72);
@@ -97,9 +95,9 @@ public class LevitationStone extends Item {
     public void appendHoverText(ItemStack itemStack, @Nullable Level p_77624_2_, List<Component> iTextComponents, TooltipFlag iTooltipFlag) {
         super.appendHoverText(itemStack, p_77624_2_, iTextComponents, iTooltipFlag);
 
-        iTextComponents.add(new TranslatableComponent("tooltip."+ CastleInTheSky.MOD_ID+".levitation_stone.line1").withStyle(ChatFormatting.GRAY));
-        iTextComponents.add(new TranslatableComponent("tooltip."+ CastleInTheSky.MOD_ID+".levitation_stone.line2").withStyle(ChatFormatting.GRAY));
-        iTextComponents.add(new TranslatableComponent("tooltip."+ CastleInTheSky.MOD_ID+".levitation_stone.line3").withStyle(ChatFormatting.GRAY));
+        iTextComponents.add(Component.translatable("tooltip."+ CastleInTheSky.MOD_ID+".levitation_stone.line1").withStyle(ChatFormatting.GRAY));
+        iTextComponents.add(Component.translatable("tooltip."+ CastleInTheSky.MOD_ID+".levitation_stone.line2").withStyle(ChatFormatting.GRAY));
+        iTextComponents.add(Component.translatable("tooltip."+ CastleInTheSky.MOD_ID+".levitation_stone.line3").withStyle(ChatFormatting.GRAY));
 
         String s;
         if (isActive(itemStack)){
@@ -108,7 +106,7 @@ public class LevitationStone extends Item {
         else {
             s = "OFF";
         }
-        iTextComponents.add(new TextComponent(s).withStyle(ChatFormatting.GOLD));
+        iTextComponents.add(Component.literal(s).withStyle(ChatFormatting.GOLD));
     }
 
     public boolean isActive(ItemStack itemStack){

@@ -36,7 +36,7 @@ public class LaputaCore extends BaseEntityBlock{
     protected static final VoxelShape BOTTOM_AABB = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 2.0D, 16.0D);
 
     public LaputaCore() {
-        super(Properties.of(Material.STONE).strength(-1.0F, 3600000.0F).lightLevel(litBlockEmission(15)).noDrops().noOcclusion());
+        super(Properties.of(Material.STONE).strength(-1.0F, 3600000.0F).lightLevel(litBlockEmission(15)).noLootTable().noOcclusion());
     }
 
     private static ToIntFunction<BlockState> litBlockEmission(int light) {

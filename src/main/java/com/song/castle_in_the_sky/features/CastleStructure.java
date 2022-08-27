@@ -44,19 +44,7 @@ import java.util.function.Predicate;
  */
 
 public class CastleStructure extends StructureFeature<JigsawConfiguration> {
-//    private static final HashMap<String, Holder<StructureTemplatePool>> CASTLE_POOLS = new HashMap<>();
-//    static {
-//        for (int shift1=0; shift1<3; shift1++) {
-//            for (int shift2 = 0; shift2 < 3; shift2++) {
-//                for (int shiftY = 0; shiftY < 3; shiftY++) {
-//                    String xyz = String.format("%d%d%d", shift1, shiftY, shift2);
-//                    CASTLE_POOLS.put(xyz,
-//                            Pools.register(new StructureTemplatePool(new ResourceLocation("castle_in_the_sky:castle_in_the_sky/laputa"+xyz), new ResourceLocation("empty"),
-//                                    ImmutableList.of(Pair.of(StructurePoolElement.legacy("castle_in_the_sky:castle_in_the_sky/laputa"+xyz), 1)), StructureTemplatePool.Projection.RIGID)));
-//                }
-//            }
-//        }
-//    }
+
     public static final Holder<StructureTemplatePool> START = Pools.register(new StructureTemplatePool(new ResourceLocation("village/desert/town_centers"), new ResourceLocation("empty"),
             ImmutableList.of(Pair.of(StructurePoolElement.legacy("village/desert/town_centers/desert_meeting_point_1"), 98)), StructureTemplatePool.Projection.RIGID));
 

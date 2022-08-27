@@ -1,5 +1,6 @@
 package com.song.castle_in_the_sky.utils;
 
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.npc.VillagerTrades;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -77,9 +78,9 @@ public class RandomTradeBuilder {
         }
     }
 
-    protected Function<Random, ItemStack> price;
-    protected Function<Random, ItemStack> price2;
-    protected Function<Random, ItemStack> forSale;
+    protected Function<RandomSource, ItemStack> price;
+    protected Function<RandomSource, ItemStack> price2;
+    protected Function<RandomSource, ItemStack> forSale;
 
     protected final int maxTrades;
     protected final int xp;
@@ -98,7 +99,7 @@ public class RandomTradeBuilder {
         this.rare = false;
     }
 
-    public RandomTradeBuilder setPrice(Function<Random, ItemStack> price)
+    public RandomTradeBuilder setPrice(Function<RandomSource, ItemStack> price)
     {
         this.price = price;
         return this;
@@ -109,7 +110,7 @@ public class RandomTradeBuilder {
         return this.setPrice(RandomTradeBuilder.createFunction(item, min, max));
     }
 
-    public RandomTradeBuilder setPrice2(Function<Random, ItemStack> price2)
+    public RandomTradeBuilder setPrice2(Function<RandomSource, ItemStack> price2)
     {
         this.price2 = price2;
         return this;
@@ -120,7 +121,7 @@ public class RandomTradeBuilder {
         return this.setPrice2(RandomTradeBuilder.createFunction(item, min, max));
     }
 
-    public RandomTradeBuilder setForSale(Function<Random, ItemStack> forSale)
+    public RandomTradeBuilder setForSale(Function<RandomSource, ItemStack> forSale)
     {
         this.forSale = forSale;
         return this;
@@ -179,15 +180,9 @@ public class RandomTradeBuilder {
         return (entity, random) -> !this.canBuild() ? null : new MerchantOffer(this.price.apply(random), this.price2.apply(random), this.forSale.apply(random), this.maxTrades, this.xp, this.priceMult);
     }
 
-    public static Function<Random, ItemStack> createFunction(Item item, int min, int max)
+    public static Function<RandomSource, ItemStack> createFunction(Item item, int min, int max)
     {
-        return (random) -> {
-            int modifier = 0;
-            if (max > min){
-                modifier = random.nextInt(max-min);
-            }
-            return new ItemStack(item, modifier+min);
-        };
+        return (random) -> new ItemStack(item, random.nextInt(min, max));
     }
 
     // --- registering stuff ---

@@ -51,7 +51,7 @@ public record MyTradingRecipe(ForgeConfigSpec.ConfigValue<String> resItem1,
     }
 
     public VillagerProfession getProfession() {
-        return ForgeRegistries.PROFESSIONS.getValue(new ResourceLocation(resProfession.get()));
+        return ForgeRegistries.VILLAGER_PROFESSIONS.getValue(new ResourceLocation(resProfession.get()));
     }
 
     public List<ItemStack> getInputStacks() {
