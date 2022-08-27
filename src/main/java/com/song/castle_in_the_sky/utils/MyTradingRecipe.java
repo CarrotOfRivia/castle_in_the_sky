@@ -50,29 +50,6 @@ public record MyTradingRecipe(ForgeConfigSpec.ConfigValue<String> resItem1,
         return ForgeRegistries.ITEMS.getValue(new ResourceLocation(resOutput.get()));
     }
 
-    public VillagerProfession getProfession() {
-        return ForgeRegistries.VILLAGER_PROFESSIONS.getValue(new ResourceLocation(resProfession.get()));
-    }
-
-    public List<ItemStack> getInputStacks() {
-        List<ItemStack> output = new ArrayList<>();
-        if (getItem1() != null) {
-            output.add(new ItemStack(getItem1()));
-        }
-        if (getItem2() != null) {
-            output.add(new ItemStack(getItem2()));
-        }
-        if (!output.isEmpty()) {
-            return output;
-        } else {
-            return Arrays.asList(new ItemStack(Items.BARRIER), new ItemStack(Items.BARRIER));
-        }
-    }
-
-    public ItemStack getOutputStack() {
-        return new ItemStack(getOutput());
-    }
-
     public int getLevel() {
         return level.get();
     }

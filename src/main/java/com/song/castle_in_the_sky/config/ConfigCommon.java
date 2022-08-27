@@ -1,6 +1,7 @@
 package com.song.castle_in_the_sky.config;
 
 import com.song.castle_in_the_sky.utils.MyTradingRecipe;
+import net.minecraft.world.item.Items;
 import net.minecraftforge.common.ForgeConfigSpec;
 
 import java.util.ArrayList;
@@ -48,7 +49,7 @@ public class ConfigCommon {
         CONFIG_BUILDER.pop();
 
         CONFIG_BUILDER.comment("Trading configuration: use the correct item id by pressing F3+H in game. Set 'null' to disable this slot, set both price1 and price2 to 'null' to disable the trading").push("tradings");
-        addTrader("minecraft:cartographer", "castle_in_the_sky:levitation_stone", 5, "minecraft:emerald", 50, 64, "minecraft:compass", 1, 1, 1, 1, CONFIG_BUILDER);
+        addTrader("cartographer", "castle_in_the_sky:levitation_stone", 5, "minecraft:elytra", 1, 1, "minecraft:recovery_compass", 1, 1, 1, 1, CONFIG_BUILDER);
         CONFIG_BUILDER.pop();
 
         COMMON = CONFIG_BUILDER.build();

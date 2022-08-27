@@ -182,6 +182,9 @@ public class RandomTradeBuilder {
 
     public static Function<RandomSource, ItemStack> createFunction(Item item, int min, int max)
     {
+        if (min==max){
+            return (randomSource -> new ItemStack(item, max));
+        }
         return (random) -> new ItemStack(item, random.nextInt(min, max));
     }
 

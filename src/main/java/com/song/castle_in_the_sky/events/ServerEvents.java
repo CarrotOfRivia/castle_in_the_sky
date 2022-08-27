@@ -42,16 +42,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ServerEvents {
 
-//    @SubscribeEvent(priority = EventPriority.HIGH)
-//    public void onGatherStructureSpawn(StructureSpawnListGatherEvent event){
-//        if (event.getStructure() instanceof CastleStructure){
-//            event.addEntitySpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(EntityType.ZOMBIE, 3, 2, 5));
-//            event.addEntitySpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(EntityType.SKELETON, 3, 2, 5));
-//            event.addEntitySpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(EntityType.SPIDER, 1, 2, 3));
-//        }
-//
-//    }
-
     // I have removed the Japanese and Chinese incantation because my stupid Windows PC cannot understand it
     // Coding in Windows sucks
     private static final Set<String> DESTRUCTION_INCANTATIONS = new HashSet<>(Arrays.asList("BARUSU", "BALSE", "BALUS", "バルス", "巴鲁斯"));
@@ -60,8 +50,8 @@ public class ServerEvents {
     private static final int SEARCH_HEIGHT=3;
 
     @SubscribeEvent
-    public void onPlayerChat(final ServerChatEvent event){
-        if (DESTRUCTION_INCANTATIONS.contains(event.getMessage())){
+    public void onPlayerChat(final ServerChatEvent.Submitted event){
+        if (DESTRUCTION_INCANTATIONS.contains(event.getMessage().getString())){
             if(ConfigCommon.DISABLE_INCANTATION.get()){
                 event.getPlayer().sendSystemMessage(Component.translatable("info."+CastleInTheSky.MOD_ID+".destruction_disabled").withStyle(ChatFormatting.GRAY, ChatFormatting.BOLD));
                 return;
@@ -77,7 +67,7 @@ public class ServerEvents {
                 for (int dy=-SEARCH_HEIGHT; !found && dy<=SEARCH_HEIGHT; dy++){
                     for (int dx=-SEARCH_RADIUS; !found && dx<+SEARCH_RADIUS; dx++){
                         for (int dz=-SEARCH_RADIUS; !found && dz<+SEARCH_RADIUS; dz++){
-                            if (dx*dx+dy*dy < SEARCH_RADIUS2){
+                            if (dx*dx+dz*dz < SEARCH_RADIUS2){
                                 BlockEntity blockEntity = player.level.getBlockEntity(player.blockPosition().offset(dx, dy, dz));
                                 if (blockEntity instanceof LaputaCoreBE && !((LaputaCoreBE) blockEntity).isActive()){
                                     if (! warned.get()){

@@ -26,5 +26,5 @@ public class StructureRegister {
      * this base structure will have the resourcelocation of castle_in_the_sky:castle_in_the_sky.
      */
     public static final RegistryObject<StructureType<CastleStructure>> CASTLE_IN_THE_SKY = DEFERRED_REGISTRY_STRUCTURE.register("castle_in_the_sky", () -> () -> CastleStructure.CODEC);
-    public static final TagKey<Structure> CASTLE_IN_THE_SKY_LOCATED = TagKey.create(Registry.STRUCTURE_REGISTRY, new ResourceLocation("castle_in_the_sky_located"));
+    public static final TagKey<Structure> CASTLE_IN_THE_SKY_LOCATED = TagKey.create(Registry.STRUCTURE_REGISTRY, new ResourceLocation(CastleInTheSky.MOD_ID, "castle_in_the_sky_located"));
 }
