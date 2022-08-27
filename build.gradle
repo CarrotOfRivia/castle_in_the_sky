@@ -13,7 +13,7 @@ apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
-version = '1.18.2'
+version = '1.19.2'
 group = 'com.song.castle_in_the_sky' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'castle_in_the_sky'
 
