@@ -37,7 +37,7 @@
   "info.castle_in_the_sky.sacred_castle_effect.break": "You need to conquer the castle first.",
   "info.castle_in_the_sky.locked_doors": "Unlocked by keys with corresponding color. Kill mobs or loot chests to obtain them.",
   "info.castle_in_the_sky.destruction_warning": "You are saying the destruction incantation. Say it again to confirm.",
-  "info.castle_in_the_sky.crystal_not_found": "Destruction incantation does not work yet. Stay tuned for later updates.",
+  "info.castle_in_the_sky.crystal_not_found": "Nothing happened... You need to stand nearby a de-activated crystal.",
   "info.castle_in_the_sky.item_not_hold": "Nothing happened... Make sure you are holding a levitation stone.",
   "info.castle_in_the_sky.incantation_casted": "%s casted the destruction spell.",
   "info.castle_in_the_sky.destruction_disabled": "Destruction incantation is disabled in the server",
