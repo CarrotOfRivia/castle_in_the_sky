@@ -43,5 +43,5 @@
   "info.castle_in_the_sky.destruction_disabled": "Destruction incantation is disabled in the server",
   "info.castle_in_the_sky.too_close_to_spawn": "No castle spawns within %d blocks near spawn. You must go at least %d blocks to use this stone.",
 
-  "itemGroup.castle_in_the_sky.all": "Castle in the Sky"
+  "item_group.castle_in_the_sky.item_group": "Castle in the Sky"
 }
