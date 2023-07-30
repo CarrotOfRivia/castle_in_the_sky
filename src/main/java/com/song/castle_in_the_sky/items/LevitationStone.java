@@ -28,7 +28,7 @@ import java.util.List;
 
 public class LevitationStone extends Item {
     public LevitationStone() {
-        super(new Item.Properties().tab(CastleInTheSky.ITEM_GROUP).stacksTo(1));
+        super(new Item.Properties().stacksTo(1));
     }
 
     @Override
@@ -79,12 +79,13 @@ public class LevitationStone extends Item {
             nbt.putBoolean("active", !nbt.getBoolean("active"));
 
             if(isActive(itemStack)){
-                BlockPos blockpos = ((ServerLevel) world).findNearestMapStructure(StructureRegister.CASTLE_IN_THE_SKY_LOCATED, playerEntity.blockPosition(), 100, false);
-                if(blockpos!=null){
+//                BlockPos blockPos = ((ServerLevel) world).findNearestMapStructure(StructureRegister.CASTLE_IN_THE_SKY_LOCATED, playerEntity.blockPosition(), 100, false);
+                BlockPos blockPos = null;
+                if(blockPos!=null){
                     CompoundTag nbt1 = itemStack.getOrCreateTagElement("targetLaputa");
-                    nbt1.putInt("posX", blockpos.getX()+72);
+                    nbt1.putInt("posX", blockPos.getX()+72);
                     nbt1.putInt("posY", ConfigCommon.CASTLE_HEIGHT.get()+72);
-                    nbt1.putInt("posZ", blockpos.getZ()+72);
+                    nbt1.putInt("posZ", blockPos.getZ()+72);
                 }
             }
         }

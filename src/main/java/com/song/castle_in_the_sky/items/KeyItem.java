@@ -13,7 +13,7 @@ import java.util.List;
 
 public class KeyItem extends Item {
     public KeyItem() {
-        super(new Item.Properties().tab(CastleInTheSky.ITEM_GROUP));
+        super(new Item.Properties());
     }
 
     @Override

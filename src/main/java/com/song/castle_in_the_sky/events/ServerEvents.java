@@ -13,14 +13,11 @@ import com.song.castle_in_the_sky.utils.CapabilityCastle;
 import com.song.castle_in_the_sky.utils.MyTradingRecipe;
 import com.song.castle_in_the_sky.utils.RandomTradeBuilder;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.damagesource.EntityDamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -30,6 +27,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
+import net.minecraftforge.event.CreativeModeTabEvent;
 import net.minecraftforge.event.ServerChatEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
@@ -42,6 +40,9 @@ import net.minecraftforge.network.PacketDistributor;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import static com.song.castle_in_the_sky.CastleInTheSky.MOD_ID;
+import static net.minecraft.world.damagesource.DamageTypes.PLAYER_ATTACK;
+
 public class ServerEvents {
 
     // I have removed the Japanese and Chinese incantation because my stupid Windows PC cannot understand it
@@ -52,10 +53,35 @@ public class ServerEvents {
     private static final int SEARCH_HEIGHT=3;
 
     @SubscribeEvent
-    public void onPlayerChat(final ServerChatEvent.Submitted event){
+    public void buildContents(CreativeModeTabEvent.Register event) {
+        event.registerCreativeModeTab(new ResourceLocation(MOD_ID, "item_group"), builder ->
+                // Set name of tab to display
+                builder.title(Component.translatable("item_group." + MOD_ID + ".item_group"))
+                        // Set icon of creative tab
+                        .icon(() -> new ItemStack(ItemsRegister.LEVITATION_STONE.get()))
+                        // Add default items to tab
+                        .displayItems((params, output) -> {
+                            output.accept(ItemsRegister.LEVITATION_STONE.get());
+                            output.accept(ItemsRegister.RED_DOOR.get());
+                            output.accept(ItemsRegister.BLUE_DOOR.get());
+                            output.accept(ItemsRegister.YELLOW_DOOR.get());
+
+                            output.accept(ItemsRegister.LAPUTA_MINIATURE.get());
+                            output.accept(ItemsRegister.RED_KEY.get());
+                            output.accept(ItemsRegister.BLUE_KEY.get());
+                            output.accept(ItemsRegister.YELLOW_KEY.get());
+
+                            output.accept(ItemsRegister.LAPUTA_CORE.get());
+                            output.accept(ItemsRegister.LAPUTA_CORE_ORB.get());
+                        })
+        );
+    }
+
+    @SubscribeEvent
+    public void onPlayerChat(final ServerChatEvent event){
         if (DESTRUCTION_INCANTATIONS.contains(event.getMessage().getString())){
             if(ConfigCommon.DISABLE_INCANTATION.get()){
-                event.getPlayer().sendSystemMessage(Component.translatable("info."+CastleInTheSky.MOD_ID+".destruction_disabled").withStyle(ChatFormatting.GRAY, ChatFormatting.BOLD));
+                event.getPlayer().sendSystemMessage(Component.translatable("info."+ MOD_ID+".destruction_disabled").withStyle(ChatFormatting.GRAY, ChatFormatting.BOLD));
                 return;
             }
             ServerPlayer player = event.getPlayer();
@@ -64,7 +90,7 @@ public class ServerEvents {
         }
     }
 
-    private static void incantationSpoken(ServerPlayer player, final ServerChatEvent.Submitted event){
+    private static void incantationSpoken(ServerPlayer player, final ServerChatEvent event){
         boolean found = false;
         AtomicBoolean warned = new AtomicBoolean(false);
         player.getCapability(CapabilityCastle.CASTLE_CAPS).ifPresent(
@@ -81,7 +107,7 @@ public class ServerEvents {
                             }
                             if (blockEntity instanceof LaputaCoreBE && !((LaputaCoreBE) blockEntity).isActive()){
                                 if (! warned.get()){
-                                    player.sendSystemMessage(Component.translatable("info."+CastleInTheSky.MOD_ID+".destruction_warning").withStyle(ChatFormatting.RED, ChatFormatting.BOLD));
+                                    player.sendSystemMessage(Component.translatable("info."+ MOD_ID+".destruction_warning").withStyle(ChatFormatting.RED, ChatFormatting.BOLD));
                                     player.getCapability(CapabilityCastle.CASTLE_CAPS).ifPresent((data -> {
                                         data.setIncantationWarned(true);
                                         data.setWarningCD();
@@ -98,7 +124,7 @@ public class ServerEvents {
                                     player.getCapability(CapabilityCastle.CASTLE_CAPS).ifPresent((data -> data.setIncantationWarned(false)));
                                     found = true;
                                     for (ServerPlayer playerOther: ((ServerLevel)player.level).players()){
-                                        playerOther.sendSystemMessage(Component.translatable("info."+CastleInTheSky.MOD_ID+".incantation_casted", player.getName()).withStyle(ChatFormatting.YELLOW, ChatFormatting.BOLD));
+                                        playerOther.sendSystemMessage(Component.translatable("info."+ MOD_ID+".incantation_casted", player.getName()).withStyle(ChatFormatting.YELLOW, ChatFormatting.BOLD));
                                     }
                                 }
                             }
@@ -107,11 +133,11 @@ public class ServerEvents {
                 }
             }
             if(! found){
-                player.sendSystemMessage(Component.translatable("info."+CastleInTheSky.MOD_ID+".crystal_not_found").withStyle(ChatFormatting.GRAY, ChatFormatting.BOLD));
+                player.sendSystemMessage(Component.translatable("info."+ MOD_ID+".crystal_not_found").withStyle(ChatFormatting.GRAY, ChatFormatting.BOLD));
             }
         }
         else {
-            player.sendSystemMessage(Component.translatable("info."+CastleInTheSky.MOD_ID+".item_not_hold").withStyle(ChatFormatting.GRAY, ChatFormatting.BOLD));
+            player.sendSystemMessage(Component.translatable("info."+ MOD_ID+".item_not_hold").withStyle(ChatFormatting.GRAY, ChatFormatting.BOLD));
         }
 
         if (ConfigCommon.SILENT_INCANTATION.get()){
@@ -129,7 +155,7 @@ public class ServerEvents {
     @SubscribeEvent
     public void onAttachCapEntity(final AttachCapabilitiesEvent<Entity> event){
         if (event.getObject() instanceof Player){
-            event.addCapability(new ResourceLocation(CastleInTheSky.MOD_ID, "castle_caps"), new CapabilityCastle());
+            event.addCapability(new ResourceLocation(MOD_ID, "castle_caps"), new CapabilityCastle());
         }
     }
 
@@ -174,7 +200,7 @@ public class ServerEvents {
             event.setCanceled(true);
             if(entity instanceof ServerPlayer){
                 Channel.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) entity),
-                        new ServerToClientInfoPacket(Component.translatable(String.format("info.%s.sacred_castle_effect.place", CastleInTheSky.MOD_ID)).withStyle(ChatFormatting.RED).withStyle(ChatFormatting.BOLD)));
+                        new ServerToClientInfoPacket(Component.translatable(String.format("info.%s.sacred_castle_effect.place", MOD_ID)).withStyle(ChatFormatting.RED).withStyle(ChatFormatting.BOLD)));
             }
         }
     }
@@ -182,7 +208,7 @@ public class ServerEvents {
     @SubscribeEvent
     public void onMobDrop(LivingDropsEvent event){
         DamageSource damageSource = event.getSource();
-        if(damageSource instanceof EntityDamageSource){
+        if(damageSource.is(PLAYER_ATTACK)){
             Entity killer = damageSource.getEntity();
             if(killer instanceof LivingEntity && ((LivingEntity) killer).hasEffect(EffectRegister.SACRED_CASTLE_EFFECT.get())){
                 LivingEntity dropper = event.getEntity();

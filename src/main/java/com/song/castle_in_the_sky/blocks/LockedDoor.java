@@ -15,6 +15,7 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.DoorBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockSetType;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.BlockHitResult;
 
@@ -24,7 +25,7 @@ import java.util.List;
 public abstract class LockedDoor extends DoorBlock {
 
     protected LockedDoor(Properties properties) {
-        super(properties);
+        super(properties, BlockSetType.IRON);
     }
 
 

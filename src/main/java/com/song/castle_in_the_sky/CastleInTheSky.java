@@ -7,16 +7,14 @@ import com.song.castle_in_the_sky.config.ConfigCommon;
 import com.song.castle_in_the_sky.config.ConfigServer;
 import com.song.castle_in_the_sky.effects.EffectRegister;
 import com.song.castle_in_the_sky.events.ServerEvents;
-import com.song.castle_in_the_sky.structures.StructureRegister;
 import com.song.castle_in_the_sky.items.ItemsRegister;
 import com.song.castle_in_the_sky.network.Channel;
 import com.song.castle_in_the_sky.network.LaputaTESynPkt;
 import com.song.castle_in_the_sky.network.ServerToClientInfoPacket;
+import com.song.castle_in_the_sky.structures.StructureRegister;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
-import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.server.ServerStartingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -35,7 +33,7 @@ import org.apache.logging.log4j.Logger;
 import java.util.stream.Collectors;
 
 /**
- * If you are looking for a structure generation tutorial, check this out: https://github.com/TelepathicGrunt/StructureTutorialMod
+ * If you are looking for a structure generation tutorial, check this out: <a href="https://github.com/TelepathicGrunt/StructureTutorialMod">StructureTutorialMod</a>
  */
 
 // The value here should match an entry in the META-INF/mods.toml file
@@ -46,20 +44,10 @@ public class CastleInTheSky
     // Directly reference a log4j logger.
     public static final Logger LOGGER = LogManager.getLogger();
     public static final String MOD_ID = "castle_in_the_sky";
-    public static final CreativeModeTab ITEM_GROUP = new CreativeModeTab(MOD_ID+".all") {
-        @Override
-        public ItemStack makeIcon() {
-            return new ItemStack(ItemsRegister.LEVITATION_STONE.get());
-        }
-    };
 
     public CastleInTheSky() {
         // Register the setup method for modloading
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
-        // Register the enqueueIMC method for modloading
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::enqueueIMC);
-        // Register the processIMC method for modloading
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::processIMC);
         // Register the doClientStuff method for modloading
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::doClientStuff);
 
@@ -90,34 +78,7 @@ public class CastleInTheSky
     }
 
     private void doClientStuff(final FMLClientSetupEvent event) {
-        // do something that can only be done on the client
-        // TODO door render issue
-        ItemBlockRenderTypes.setRenderLayer(BlockRegister.RED_DOOR.get(), RenderType.cutoutMipped());
-        ItemBlockRenderTypes.setRenderLayer(BlockRegister.BLUE_DOOR.get(), RenderType.cutoutMipped());
-        ItemBlockRenderTypes.setRenderLayer(BlockRegister.YELLOW_DOOR.get(), RenderType.cutoutMipped());
-        ItemBlockRenderTypes.setRenderLayer(BlockRegister.FAKE_BEACON.get(), RenderType.cutout());
-        ItemBlockRenderTypes.setRenderLayer(BlockRegister.LAPUTA_CORE.get(), RenderType.solid());
-
         BlockEntityRenderers.register(TERegister.LAPUTA_CORE_TE_TYPE.get(), LaputaCoreTER::new);
     }
 
-    private void enqueueIMC(final InterModEnqueueEvent event)
-    {
-        // some example code to dispatch IMC to another mod
-        InterModComms.sendTo("examplemod", "helloworld", () -> { LOGGER.info("Hello world from the MDK"); return "Hello world";});
-    }
-
-    private void processIMC(final InterModProcessEvent event)
-    {
-        // some example code to receive and process InterModComms from other mods
-        LOGGER.info("Got IMC {}", event.getIMCStream().
-                map(m->m.getMessageSupplier().get()).
-                collect(Collectors.toList()));
-    }
-    // You can use SubscribeEvent and let the Event Bus discover methods to call
-    @SubscribeEvent
-    public void onServerStarting(ServerStartingEvent event) {
-        // do something when the server starts
-        LOGGER.info("HELLO from server starting");
-    }
 }

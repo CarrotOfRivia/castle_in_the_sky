@@ -9,7 +9,6 @@ import net.minecraft.core.Vec3i;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.levelgen.Heightmap;
-import net.minecraft.world.level.levelgen.WorldGenerationContext;
 import net.minecraft.world.level.levelgen.heightproviders.HeightProvider;
 import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.levelgen.structure.StructureType;
@@ -26,6 +25,8 @@ import java.util.function.Consumer;
 
 public class CastleStructure extends Structure{
 
+    // A custom codec that changes the size limit for our code_structure_sky_fan.json's config to not be capped at 7.
+    // With this, we can have a structure with a size limit up to 30 if we want to have extremely long branches of pieces in the structure.
     public static final Codec<CastleStructure> CODEC = RecordCodecBuilder.<CastleStructure>mapCodec(instance ->
             instance.group(CastleStructure.settingsCodec(instance),
                     StructureTemplatePool.CODEC.fieldOf("start_pool").forGetter(structure -> structure.startPool),
@@ -43,13 +44,13 @@ public class CastleStructure extends Structure{
     private final Optional<Heightmap.Types> projectStartToHeightmap;
     private final int maxDistanceFromCenter;
 
-    protected CastleStructure(Structure.StructureSettings config,
-                              Holder<StructureTemplatePool> startPool,
-                              Optional<ResourceLocation> startJigsawName,
-                              int size,
-                              HeightProvider startHeight,
-                              Optional<Heightmap.Types> projectStartToHeightmap,
-                              int maxDistanceFromCenter)
+    public CastleStructure(Structure.StructureSettings config,
+                         Holder<StructureTemplatePool> startPool,
+                         Optional<ResourceLocation> startJigsawName,
+                         int size,
+                         HeightProvider startHeight,
+                         Optional<Heightmap.Types> projectStartToHeightmap,
+                         int maxDistanceFromCenter)
     {
         super(config);
         this.startPool = startPool;
@@ -84,14 +85,11 @@ public class CastleStructure extends Structure{
         for (int shift1=0; shift1<3; shift1++) {
             for (int shift2 = 0; shift2 < 3; shift2++) {
                 for (int shiftY = 0; shiftY < 3; shiftY++) {
-                    String xyz = String.format("%d%d%d", shift1, shiftY, shift2);
-                    //TODO not working
-//                    ((SinglePoolElement)(this.startPool.value().templates.get(0))).template = Either.left(new ResourceLocation(CastleInTheSky.MOD_ID, String.format("laputa%d%d%d", shift1, shiftY, shift2)));
                     Optional<Structure.GenerationStub> structurePiecesGenerator =
                             CastlePlacement.addPieces(
                                     context, // Used for JigsawPlacement to get all the proper behaviors done.
                                     this.startPool, // The starting pool to use to create the structure layout from
-                                    this.startJigsawName, // Can be used to only spawn from one Jigsaw block. But we don't need to worry about this.
+                                    // Can be used to only spawn from one Jigsaw block. But we don't need to worry about this.
                                     this.size, // How deep a branch of pieces can go away from center piece. (5 means branches cannot be longer than 5 pieces from center piece)
                                     blockPos.offset(shift2*48, shiftY*48, shift1*48), // Where to spawn the structure.
                                     false, // "useExpansionHack" This is for legacy villages to generate properly. You should keep this false always.

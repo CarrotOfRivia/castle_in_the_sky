@@ -15,14 +15,12 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -124,7 +122,7 @@ public class LaputaCoreBE extends BlockEntity {
                     else {
                         if(laputaCoreTE.destroyProgress == ANIMATION_TIME){
                             // animation end, explode.
-                            level.explode(null, blockPos.getX()+0.5, blockPos.getY()+1, blockPos.getZ()+0.5, 1.5f, Explosion.BlockInteraction.NONE);
+                            level.explode(null, blockPos.getX()+0.5, blockPos.getY()+1, blockPos.getZ()+0.5, 1.5f, Level.ExplosionInteraction.NONE);
                         }
 
                         // Destruction in progress
@@ -138,7 +136,7 @@ public class LaputaCoreBE extends BlockEntity {
                                 }
                                 ArrayList<Integer> pos = DESTRUCTION_PATTERN.get(i);
                                 BlockPos target = blockPos.offset(pos.get(0), pos.get(1), pos.get(2));
-                                if(! DESTRUCTION_BLACKLIST.contains(Registry.BLOCK.getKey(level.getBlockState(target).getBlock()).toString())){
+                                if(! DESTRUCTION_BLACKLIST.contains(ForgeRegistries.BLOCKS.getKey(level.getBlockState(target).getBlock()).toString())){
                                     level.destroyBlock(target, drops);
                                 }
                             }
