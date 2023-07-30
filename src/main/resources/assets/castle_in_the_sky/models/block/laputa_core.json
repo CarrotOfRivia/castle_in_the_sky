@@ -1,9 +1,9 @@
 {
 	"credit": "Made with Blockbench",
 	"textures": {
-		"0": "castle_in_the_sky:materials/diamond",
-		"2": "castle_in_the_sky:materials/iron_texture2",
-		"particle": "castle_in_the_sky:materials/diamond"
+		"0": "castle_in_the_sky:item/diamond",
+		"2": "castle_in_the_sky:item/iron_texture2",
+		"particle": "castle_in_the_sky:item/diamond"
 	},
 	"elements": [
 		{
@@ -211,7 +211,8 @@
 			"translation": [0, 0, -2.25]
 		}
 	},
-	"groups": [0,
+	"groups": [
+		0,
 		{
 			"name": "group",
 			"origin": [8, 0.5, 8],
@@ -223,5 +224,7 @@
 			"origin": [8, 0.5, 8],
 			"color": 0,
 			"children": [7, 8, 9, 10, 11, 12]
-		}, 13]
+		},
+		13
+	]
 }

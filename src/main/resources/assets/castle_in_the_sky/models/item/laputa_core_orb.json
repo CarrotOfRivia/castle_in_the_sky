@@ -1,8 +1,8 @@
 {
 	"credit": "Made with Blockbench",
 	"textures": {
-		"0": "castle_in_the_sky:materials/diamond",
-		"particle": "castle_in_the_sky:materials/diamond"
+		"0": "castle_in_the_sky:item/diamond",
+		"particle": "castle_in_the_sky:item/diamond"
 	},
 	"elements": [
 		{

@@ -1,9 +1,9 @@
 {
 	"credit": "Made with Blockbench",
 	"textures": {
-		"0": "castle_in_the_sky:materials/aluminium_blue",
-		"1": "castle_in_the_sky:materials/gold",
-		"particle": "castle_in_the_sky:materials/aluminium_blue"
+		"0": "castle_in_the_sky:item/aluminium_blue",
+		"1": "castle_in_the_sky:item/gold",
+		"particle": "castle_in_the_sky:item/aluminium_blue"
 	},
 	"elements": [
 		{

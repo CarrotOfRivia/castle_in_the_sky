@@ -1,8 +1,8 @@
 {
 	"credit": "Made with Blockbench",
 	"textures": {
-		"0": "castle_in_the_sky:materials/iron_texture5",
-		"particle": "castle_in_the_sky:materials/iron_texture5"
+		"0": "castle_in_the_sky:item/iron_texture5",
+		"particle": "castle_in_the_sky:item/iron_texture5"
 	},
 	"elements": [
 		{
