@@ -79,8 +79,7 @@ public class LevitationStone extends Item {
             nbt.putBoolean("active", !nbt.getBoolean("active"));
 
             if(isActive(itemStack)){
-//                BlockPos blockPos = ((ServerLevel) world).findNearestMapStructure(StructureRegister.CASTLE_IN_THE_SKY_LOCATED, playerEntity.blockPosition(), 100, false);
-                BlockPos blockPos = null;
+                BlockPos blockPos = ((ServerLevel) world).findNearestMapStructure(StructureRegister.CASTLE_IN_THE_SKY_LOCATED, playerEntity.blockPosition(), 100, false);
                 if(blockPos!=null){
                     CompoundTag nbt1 = itemStack.getOrCreateTagElement("targetLaputa");
                     nbt1.putInt("posX", blockPos.getX()+72);

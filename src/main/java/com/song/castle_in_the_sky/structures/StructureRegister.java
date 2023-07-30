@@ -38,5 +38,5 @@ public class StructureRegister {
         return () -> structureCodec;
     }
 
-    //    public static final TagKey<Structure> CASTLE_IN_THE_SKY_LOCATED = TagKey.create(Registries.STRUCTURE, new ResourceLocation(CastleInTheSky.MOD_ID, "castle_in_the_sky_located"));
+        public static final TagKey<Structure> CASTLE_IN_THE_SKY_LOCATED = TagKey.create(Registries.STRUCTURE, new ResourceLocation(CastleInTheSky.MOD_ID, "castle_in_the_sky_located"));
 }

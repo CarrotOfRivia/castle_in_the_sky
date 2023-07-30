@@ -44,16 +44,13 @@ import static com.song.castle_in_the_sky.CastleInTheSky.MOD_ID;
 import static net.minecraft.world.damagesource.DamageTypes.PLAYER_ATTACK;
 
 public class ServerEvents {
-
-    // I have removed the Japanese and Chinese incantation because my stupid Windows PC cannot understand it
-    // Coding in Windows sucks
     private static final Set<String> DESTRUCTION_INCANTATIONS = new HashSet<>(Arrays.asList("BARUSU", "BALSE", "BALUS", "バルス", "巴鲁斯"));
     private static final int SEARCH_RADIUS = 5;
     private static final int SEARCH_RADIUS2 = SEARCH_RADIUS * SEARCH_RADIUS;
     private static final int SEARCH_HEIGHT=3;
 
     @SubscribeEvent
-    public void buildContents(CreativeModeTabEvent.Register event) {
+    public void buildContents(final CreativeModeTabEvent.Register event) {
         event.registerCreativeModeTab(new ResourceLocation(MOD_ID, "item_group"), builder ->
                 // Set name of tab to display
                 builder.title(Component.translatable("item_group." + MOD_ID + ".item_group"))
@@ -67,6 +64,7 @@ public class ServerEvents {
                             output.accept(ItemsRegister.YELLOW_DOOR.get());
 
                             output.accept(ItemsRegister.LAPUTA_MINIATURE.get());
+                            output.accept(ItemsRegister.FAKE_BEACON.get());
                             output.accept(ItemsRegister.RED_KEY.get());
                             output.accept(ItemsRegister.BLUE_KEY.get());
                             output.accept(ItemsRegister.YELLOW_KEY.get());

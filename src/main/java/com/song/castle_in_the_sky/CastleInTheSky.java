@@ -78,6 +78,14 @@ public class CastleInTheSky
     }
 
     private void doClientStuff(final FMLClientSetupEvent event) {
+        // do something that can only be done on the client
+        // TODO door render issue
+        ItemBlockRenderTypes.setRenderLayer(BlockRegister.RED_DOOR.get(), RenderType.cutoutMipped());
+        ItemBlockRenderTypes.setRenderLayer(BlockRegister.BLUE_DOOR.get(), RenderType.cutoutMipped());
+        ItemBlockRenderTypes.setRenderLayer(BlockRegister.YELLOW_DOOR.get(), RenderType.cutoutMipped());
+        ItemBlockRenderTypes.setRenderLayer(BlockRegister.FAKE_BEACON.get(), RenderType.cutout());
+        ItemBlockRenderTypes.setRenderLayer(BlockRegister.LAPUTA_CORE.get(), RenderType.solid());
+
         BlockEntityRenderers.register(TERegister.LAPUTA_CORE_TE_TYPE.get(), LaputaCoreTER::new);
     }
 
