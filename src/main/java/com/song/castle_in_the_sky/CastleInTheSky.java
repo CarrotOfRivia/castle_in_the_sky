@@ -6,6 +6,7 @@ import com.song.castle_in_the_sky.blocks.block_entities.TERegister;
 import com.song.castle_in_the_sky.config.ConfigCommon;
 import com.song.castle_in_the_sky.config.ConfigServer;
 import com.song.castle_in_the_sky.effects.EffectRegister;
+import com.song.castle_in_the_sky.events.ModEvents;
 import com.song.castle_in_the_sky.events.ServerEvents;
 import com.song.castle_in_the_sky.items.ItemsRegister;
 import com.song.castle_in_the_sky.network.Channel;
@@ -16,21 +17,14 @@ import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.server.ServerStartingEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.InterModComms;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
-import net.minecraftforge.fml.event.lifecycle.InterModProcessEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import java.util.stream.Collectors;
 
 /**
  * If you are looking for a structure generation tutorial, check this out: <a href="https://github.com/TelepathicGrunt/StructureTutorialMod">StructureTutorialMod</a>
@@ -54,6 +48,7 @@ public class CastleInTheSky
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
         MinecraftForge.EVENT_BUS.register(new ServerEvents());
+        FMLJavaModLoadingContext.get().getModEventBus().register(new ModEvents());
 
         ItemsRegister.ITEMS.register(FMLJavaModLoadingContext.get().getModEventBus());
         BlockRegister.BLOCKS.register(FMLJavaModLoadingContext.get().getModEventBus());
