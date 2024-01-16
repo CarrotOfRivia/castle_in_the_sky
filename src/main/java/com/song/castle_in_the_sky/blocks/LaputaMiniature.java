@@ -7,15 +7,14 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.material.Material;
-import net.minecraft.world.level.material.MaterialColor;
+import net.minecraft.world.level.material.MapColor;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
 public class LaputaMiniature extends Block {
     public LaputaMiniature() {
-        super(Properties.of(Material.DIRT, MaterialColor.DIAMOND).strength(3.0F).lightLevel((p)->15).noOcclusion());
+        super(Properties.of().mapColor(MapColor.DIRT).strength(3.0F).lightLevel((p)->15).noOcclusion());
     }
 
     @Override

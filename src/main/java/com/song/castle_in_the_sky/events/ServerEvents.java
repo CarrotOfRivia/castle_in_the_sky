@@ -1,6 +1,5 @@
 package com.song.castle_in_the_sky.events;
 
-import com.song.castle_in_the_sky.CastleInTheSky;
 import com.song.castle_in_the_sky.blocks.block_entities.LaputaCoreBE;
 import com.song.castle_in_the_sky.config.ConfigCommon;
 import com.song.castle_in_the_sky.effects.EffectRegister;
@@ -27,7 +26,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
-import net.minecraftforge.event.CreativeModeTabEvent;
 import net.minecraftforge.event.ServerChatEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
@@ -73,7 +71,7 @@ public class ServerEvents {
                 for (int dx=-SEARCH_RADIUS; !found && dx<+SEARCH_RADIUS; dx++){
                     for (int dz=-SEARCH_RADIUS; !found && dz<+SEARCH_RADIUS; dz++){
                         if (dx*dx+dz*dz < SEARCH_RADIUS2){
-                            BlockEntity blockEntity = player.level.getBlockEntity(player.blockPosition().offset(dx, dy, dz));
+                            BlockEntity blockEntity = player.level().getBlockEntity(player.blockPosition().offset(dx, dy, dz));
                             if (blockEntity != null){
                                 System.out.println("checkpoint");
                             }
@@ -95,7 +93,7 @@ public class ServerEvents {
                                     ((LaputaCoreBE) blockEntity).setActivatedInitPos(player.getEyePosition());
                                     player.getCapability(CapabilityCastle.CASTLE_CAPS).ifPresent((data -> data.setIncantationWarned(false)));
                                     found = true;
-                                    for (ServerPlayer playerOther: ((ServerLevel)player.level).players()){
+                                    for (ServerPlayer playerOther: ((ServerLevel)player.level()).players()){
                                         playerOther.sendSystemMessage(Component.translatable("info."+ MOD_ID+".incantation_casted", player.getName()).withStyle(ChatFormatting.YELLOW, ChatFormatting.BOLD));
                                     }
                                 }
@@ -119,7 +117,7 @@ public class ServerEvents {
 
     @SubscribeEvent
     public void tickCap(final TickEvent.PlayerTickEvent event){
-        if (! event.player.level.isClientSide()){
+        if (! event.player.level().isClientSide()){
             event.player.getCapability(CapabilityCastle.CASTLE_CAPS).ifPresent((CapabilityCastle.Data::tick));
         }
     }
@@ -159,7 +157,7 @@ public class ServerEvents {
         Player playerEntity = event.getEntity();
         if(playerEntity.hasEffect(EffectRegister.SACRED_CASTLE_EFFECT.get()) && !playerEntity.isCreative()){
             event.setCanceled(true);
-            if(playerEntity.level.isClientSide()){
+            if(playerEntity.level().isClientSide()){
                 ClientHandlerClass.showSacredCastleInfoBreak();
             }
         }
@@ -185,13 +183,13 @@ public class ServerEvents {
             if(killer instanceof LivingEntity && ((LivingEntity) killer).hasEffect(EffectRegister.SACRED_CASTLE_EFFECT.get())){
                 LivingEntity dropper = event.getEntity();
                 if(dropper.getRandom().nextDouble()< ConfigCommon.YELLOW_KEY_DROP_RATE.get()){
-                    event.getDrops().add(new ItemEntity(dropper.level, dropper.position().x, dropper.position().y, dropper.position().z, new ItemStack(ItemsRegister.YELLOW_KEY.get())));
+                    event.getDrops().add(new ItemEntity(dropper.level(), dropper.position().x, dropper.position().y, dropper.position().z, new ItemStack(ItemsRegister.YELLOW_KEY.get())));
                 }
                 if(dropper.getRandom().nextDouble()<ConfigCommon.BLUE_KEY_DROP_RATE.get()){
-                    event.getDrops().add(new ItemEntity(dropper.level, dropper.position().x, dropper.position().y, dropper.position().z, new ItemStack(ItemsRegister.BLUE_KEY.get())));
+                    event.getDrops().add(new ItemEntity(dropper.level(), dropper.position().x, dropper.position().y, dropper.position().z, new ItemStack(ItemsRegister.BLUE_KEY.get())));
                 }
                 if(dropper.getRandom().nextDouble()<ConfigCommon.RED_KEY_DROP_RATE.get()){
-                    event.getDrops().add(new ItemEntity(dropper.level, dropper.position().x, dropper.position().y, dropper.position().z, new ItemStack(ItemsRegister.RED_KEY.get())));
+                    event.getDrops().add(new ItemEntity(dropper.level(), dropper.position().x, dropper.position().y, dropper.position().z, new ItemStack(ItemsRegister.RED_KEY.get())));
                 }
             }
         }

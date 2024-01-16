@@ -6,7 +6,6 @@ import com.song.castle_in_the_sky.blocks.block_entities.TERegister;
 import com.song.castle_in_the_sky.config.ConfigCommon;
 import com.song.castle_in_the_sky.config.ConfigServer;
 import com.song.castle_in_the_sky.effects.EffectRegister;
-import com.song.castle_in_the_sky.events.ModEvents;
 import com.song.castle_in_the_sky.events.ServerEvents;
 import com.song.castle_in_the_sky.items.ItemsRegister;
 import com.song.castle_in_the_sky.network.Channel;
@@ -48,9 +47,9 @@ public class CastleInTheSky
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
         MinecraftForge.EVENT_BUS.register(new ServerEvents());
-        FMLJavaModLoadingContext.get().getModEventBus().register(new ModEvents());
 
         ItemsRegister.ITEMS.register(FMLJavaModLoadingContext.get().getModEventBus());
+        ItemsRegister.CREATIVE_TABS.register(FMLJavaModLoadingContext.get().getModEventBus());
         BlockRegister.BLOCKS.register(FMLJavaModLoadingContext.get().getModEventBus());
         TERegister.TILE_ENTITIES.register(FMLJavaModLoadingContext.get().getModEventBus());
         EffectRegister.EFFECT.register(FMLJavaModLoadingContext.get().getModEventBus());
