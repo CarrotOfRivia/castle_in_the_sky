@@ -1,5 +1,6 @@
 package com.song.castle_in_the_sky.config;
 
+import net.minecraft.world.level.block.ChestBlock;
 import net.minecraftforge.common.ForgeConfigSpec;
 
 @Deprecated

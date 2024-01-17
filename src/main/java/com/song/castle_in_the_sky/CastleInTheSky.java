@@ -33,7 +33,7 @@ import org.apache.logging.log4j.Logger;
 @Mod(CastleInTheSky.MOD_ID)
 public class CastleInTheSky
 {
-    // TODO: 1. castle_in_the_sky advancement; 2. trading levitation stone; 3. generation
+    // TODO: /data modify block -7145 67 -15198 LootTable set value "minecraft:chests/bastion_treasure"
     // Directly reference a log4j logger.
     public static final Logger LOGGER = LogManager.getLogger();
     public static final String MOD_ID = "castle_in_the_sky";
