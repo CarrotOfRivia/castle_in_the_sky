@@ -6,19 +6,18 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.level.Level;
+import net.minecraft.world.item.component.TooltipDisplay;
 
-import javax.annotation.Nullable;
-import java.util.List;
+import java.util.function.Consumer;
 
 public class KeyItem extends Item {
-    public KeyItem() {
-        super(new Item.Properties());
+    public KeyItem(Item.Properties properties) {
+        super(properties);
     }
 
     @Override
-    public void appendHoverText(ItemStack itemStack, @Nullable Level world, List<Component> iTextComponents, TooltipFlag iTooltipFlag) {
-        super.appendHoverText(itemStack, world, iTextComponents, iTooltipFlag);
-        iTextComponents.add(Component.translatable("tooltip."+CastleInTheSky.MOD_ID+".keys").withStyle(ChatFormatting.GRAY));
+    public void appendHoverText(ItemStack itemStack, Item.TooltipContext tooltipContext, TooltipDisplay tooltipDisplay, Consumer<Component> consumer, TooltipFlag tooltipFlag) {
+        super.appendHoverText(itemStack, tooltipContext, tooltipDisplay, consumer, tooltipFlag);
+        consumer.accept(Component.translatable("tooltip." + CastleInTheSky.MOD_ID + ".keys").withStyle(ChatFormatting.GRAY));
     }
 }

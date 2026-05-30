@@ -2,7 +2,7 @@
   "parent": "castle_in_the_sky:get_levitation_stone",
   "display": {
     "icon": {
-      "item": "minecraft:mossy_cobblestone"
+      "id": "minecraft:mossy_cobblestone"
     },
     "title": {
       "translate": "advancements.castle_in_the_sky.find_castle.title"
@@ -25,7 +25,7 @@
             "entity": "this",
             "predicate": {
               "location": {
-                "structure": "castle_in_the_sky:castle_in_the_sky"
+                "structures": "castle_in_the_sky:castle_in_the_sky"
               }
             }
           }

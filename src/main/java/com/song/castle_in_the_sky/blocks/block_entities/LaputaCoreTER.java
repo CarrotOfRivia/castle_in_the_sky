@@ -1,74 +1,62 @@
 package com.song.castle_in_the_sky.blocks.block_entities;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Axis;
+import com.song.castle_in_the_sky.blocks.LaputaCore;
 import com.song.castle_in_the_sky.items.ItemsRegister;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
+import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import org.joml.Quaternionf;
+import org.jspecify.annotations.Nullable;
 
-import java.util.Objects;
-
-public class LaputaCoreTER implements BlockEntityRenderer<LaputaCoreBE> {
-    private float degrees;
-
-    public LaputaCoreTER(BlockEntityRendererProvider.Context context){
-
+public class LaputaCoreTER implements BlockEntityRenderer<LaputaCoreBE, LaputaCoreRenderState> {
+    public LaputaCoreTER(BlockEntityRendererProvider.Context context) {
     }
-
 
     @Override
-    public void render(LaputaCoreBE laputaCoreBE, float partialTicks, PoseStack poseStack, MultiBufferSource multiBufferSource, int combinedLightIn, int combinedOverlayIn) {
-        if(laputaCoreBE.isDestroying()){
-            // Core
-            poseStack.pushPose();
-            poseStack.translate(0.5D, 1.5D, 0.5D);
-            float currentTime = Objects.requireNonNull(laputaCoreBE.getLevel()).getGameTime() + partialTicks;
-            poseStack.translate(0D, 0.1D, 0D);
-            poseStack.mulPose(new Quaternionf().rotateY(degrees / 2));
-            degrees += 30;
-            renderItem(new ItemStack(ItemsRegister.LAPUTA_CORE_ORB.get()), laputaCoreBE.getLevel(), poseStack, multiBufferSource, combinedLightIn);
-            poseStack.popPose();
-
-            // levitation stone
-            double partial = 1. * (LaputaCoreBE.ANIMATION_TIME - laputaCoreBE.getDestroyProgress()) / (LaputaCoreBE.ANIMATION_TIME);
-            if (partial > 0){
-                poseStack.pushPose();
-                poseStack.translate(0.5D, 1.5D, 0.5D);
-                Vec3 basePos = new Vec3(laputaCoreBE.getBlockPos().getX(), laputaCoreBE.getBlockPos().getY(), laputaCoreBE.getBlockPos().getZ());
-                Vec3 delta = basePos.vectorTo(laputaCoreBE.getActivatedInitPos());
-                delta = delta.multiply(partial, partial, partial);
-                poseStack.translate(delta.x(), delta.y(), delta.z());
-                poseStack.mulPose(new Quaternionf().rotateY(degrees / 2));
-                renderItem(new ItemStack(ItemsRegister.LEVITATION_STONE.get()), laputaCoreBE.getLevel(), poseStack, multiBufferSource, combinedLightIn);
-                poseStack.popPose();
-            }
-        }
-        else if (laputaCoreBE.isActive()){
-            poseStack.pushPose();
-            poseStack.translate(0.5D, 1.5D, 0.5D);
-            float currentTime = Objects.requireNonNull(laputaCoreBE.getLevel()).getGameTime() + partialTicks;
-            poseStack.translate(0D, (Math.sin(Math.PI * currentTime / 16) / 4) + 0.1D, 0D);
-            poseStack.mulPose(new Quaternionf().rotateY(degrees++ / 2));
-            renderItem(new ItemStack(ItemsRegister.LAPUTA_CORE_ORB.get()), laputaCoreBE.getLevel(), poseStack, multiBufferSource, combinedLightIn);
-            poseStack.popPose();
-        }
-        else {
-            poseStack.pushPose();
-            poseStack.translate(0.5D, 1.5D, 0.5D);
-            renderItem(new ItemStack(ItemsRegister.LAPUTA_CORE_ORB.get()), laputaCoreBE.getLevel(), poseStack, multiBufferSource, combinedLightIn);
-            poseStack.popPose();
-        }
+    public LaputaCoreRenderState createRenderState() {
+        return new LaputaCoreRenderState();
     }
 
-    private void renderItem(ItemStack stack, Level level, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedLightIn) {
-        // TODO I have no idea what the last param does, so I set it to 0 and hope for the best.
-        Minecraft.getInstance().getItemRenderer().renderStatic(stack, ItemDisplayContext.FIXED, combinedLightIn, OverlayTexture.NO_OVERLAY, matrixStackIn, bufferIn, level, 0);
+    @Override
+    public void extractRenderState(LaputaCoreBE blockEntity, LaputaCoreRenderState state, float partialTicks, Vec3 cameraPosition, ModelFeatureRenderer.@Nullable CrumblingOverlay breakProgress) {
+        BlockEntityRenderer.super.extractRenderState(blockEntity, state, partialTicks, cameraPosition, breakProgress);
+        state.active = blockEntity.getBlockState().getValue(LaputaCore.POWERED);
+        state.destroying = blockEntity.getBlockState().getValue(LaputaCore.DESTROYING);
+        state.time = blockEntity.getLevel() == null ? partialTicks : blockEntity.getLevel().getGameTime() + partialTicks;
+        Minecraft.getInstance().getItemModelResolver().updateForTopItem(
+                state.orb,
+                new ItemStack(ItemsRegister.LAPUTA_CORE_ORB.get()),
+                ItemDisplayContext.FIXED,
+                blockEntity.getLevel(),
+                null,
+                (int) blockEntity.getBlockPos().asLong()
+        );
+    }
+
+    @Override
+    public void submit(LaputaCoreRenderState state, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, CameraRenderState camera) {
+        poseStack.pushPose();
+        poseStack.translate(0.5F, 1.5F, 0.5F);
+        if (state.active || state.destroying) {
+            poseStack.translate(0.0F, (float) Math.sin(Math.PI * state.time / 16.0F) / 4.0F + 0.1F, 0.0F);
+            poseStack.mulPose(Axis.YP.rotationDegrees(state.time * 9.0F));
+        }
+        state.orb.submit(poseStack, submitNodeCollector, state.lightCoords, OverlayTexture.NO_OVERLAY, 0);
+        poseStack.popPose();
+    }
+
+    @Override
+    public AABB getRenderBoundingBox(LaputaCoreBE blockEntity) {
+        var pos = blockEntity.getBlockPos();
+        return new AABB(pos.getX(), pos.getY(), pos.getZ(), pos.getX() + 1.0, pos.getY() + 2.0, pos.getZ() + 1.0);
     }
 }
