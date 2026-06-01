@@ -2,7 +2,7 @@
   "parent": "castle_in_the_sky:find_castle",
   "display": {
     "icon": {
-      "item": "castle_in_the_sky:laputa_core"
+      "id": "castle_in_the_sky:laputa_core"
     },
     "title": {
       "translate": "advancements.castle_in_the_sky.conquer_castle.title"

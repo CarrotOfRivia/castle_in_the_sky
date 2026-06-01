@@ -5,25 +5,30 @@ import com.song.castle_in_the_sky.blocks.LaputaCore;
 import com.song.castle_in_the_sky.config.ConfigCommon;
 import com.song.castle_in_the_sky.effects.EffectRegister;
 import com.song.castle_in_the_sky.items.ItemsRegister;
-import com.song.castle_in_the_sky.network.Channel;
 import com.song.castle_in_the_sky.network.LaputaTESynPkt;
+import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.fml.ModList;
-import net.minecraftforge.network.PacketDistributor;
-import net.minecraftforge.registries.ForgeRegistries;
-import org.jetbrains.annotations.NotNull;
+import net.neoforged.fml.ModList;
+import net.neoforged.neoforge.network.PacketDistributor;
 
 import java.util.*;
 
@@ -45,6 +50,10 @@ public class LaputaCoreBE extends BlockEntity {
     private static final int HEIGHT_MAX = 100;
     private static final ArrayList<ArrayList<Integer>> DESTRUCTION_PATTERN = new ArrayList<>();
     private static final int PROGRESS_EACH_TICK;
+    private static final Identifier FIND_CASTLE_ADVANCEMENT = Identifier.fromNamespaceAndPath("castle_in_the_sky", "find_castle");
+    private static final String FIND_CASTLE_CRITERION = "in_city";
+    private static final int FIND_CASTLE_CHECK_INTERVAL = 20;
+    private static final int FIND_CASTLE_RADIUS = 80;
 
     static {
         for(int dx = -RADIUS; dx<=RADIUS; dx++){
@@ -78,12 +87,15 @@ public class LaputaCoreBE extends BlockEntity {
                 laputaCoreTE.initialUpdated = true;
             }
 
+            if (level.getGameTime() % FIND_CASTLE_CHECK_INTERVAL == 0){
+                awardFindCastleAdvancement((ServerLevel) level, blockPos);
+            }
+
             if (laputaCoreTE.isDestroying){
                 boolean drops = ConfigCommon.DESTRUCTION_DROPS.get();
                 if(laputaCoreTE.destroyProgress % 3 == 0){
                     // update to client
-                    Channel.INSTANCE.send(PacketDistributor.NEAR.with(PacketDistributor.TargetPoint.p(laputaCoreTE.getBlockPos().getX(), laputaCoreTE.getBlockPos().getY(), laputaCoreTE.getBlockPos().getZ(), 20, Level.OVERWORLD)),
-                            new LaputaTESynPkt(laputaCoreTE.isDestroying, laputaCoreTE.isActive(), laputaCoreTE.getBlockPos(), laputaCoreTE.getActivatedInitPos(), laputaCoreTE.destroyProgress));
+                    PacketDistributor.sendToAllPlayers(new LaputaTESynPkt(laputaCoreTE.isDestroying, laputaCoreTE.isActive(), laputaCoreTE.getBlockPos(), laputaCoreTE.getActivatedInitPos(), laputaCoreTE.destroyProgress));
                 }
 
                 if(laputaCoreTE.destroyProgress == 0){
@@ -113,8 +125,10 @@ public class LaputaCoreBE extends BlockEntity {
                         level.addFreshEntity(new ItemEntity(level, blockPos.getX(), blockPos.getY(), blockPos.getZ(), new ItemStack(ItemsRegister.LAPUTA_MINIATURE.get())));
 
                         if (ModList.get().isLoaded("botania")) {
-                            ItemStack itemStack = new ItemStack(ForgeRegistries.ITEMS.getValue(new ResourceLocation("botania:laputa_shard")));
-                            itemStack.getOrCreateTag().putInt("level", 20);
+                            ItemStack itemStack = new ItemStack(BuiltInRegistries.ITEM.getValue(Identifier.parse("botania:laputa_shard")));
+                            CompoundTag tag = new CompoundTag();
+                            tag.putInt("level", 20);
+                            itemStack.set(DataComponents.CUSTOM_DATA, CustomData.of(tag));
                             level.addFreshEntity(new ItemEntity(level, blockPos.getX(), blockPos.getY(), blockPos.getZ(), itemStack));
                         }
                     }
@@ -135,7 +149,7 @@ public class LaputaCoreBE extends BlockEntity {
                                 }
                                 ArrayList<Integer> pos = DESTRUCTION_PATTERN.get(i);
                                 BlockPos target = blockPos.offset(pos.get(0), pos.get(1), pos.get(2));
-                                if(! DESTRUCTION_BLACKLIST.contains(ForgeRegistries.BLOCKS.getKey(level.getBlockState(target).getBlock()).toString())){
+                                if(! DESTRUCTION_BLACKLIST.contains(BuiltInRegistries.BLOCK.getKey(level.getBlockState(target).getBlock()).toString())){
                                     level.destroyBlock(target, drops);
                                 }
                             }
@@ -150,17 +164,28 @@ public class LaputaCoreBE extends BlockEntity {
                 if(laputaCoreTE.isActive()){
                     if(ConfigCommon.NO_GRIEF_IN_CASTLE.get() && level.getGameTime() % 40 == 0){
                         for (Player playerEntity: level.players()){
-                            if(playerEntity.level().dimension().location().toString().equals("minecraft:overworld") && playerEntity.blockPosition().closerThan(laputaCoreTE.getBlockPos(), ConfigCommon.LAPUTA_CORE_EFFECT_RANGE.get())){
-                                playerEntity.addEffect(new MobEffectInstance(EffectRegister.SACRED_CASTLE_EFFECT.get(), 100));
+                            if(playerEntity.level().dimension().identifier().toString().equals("minecraft:overworld") && playerEntity.blockPosition().closerThan(laputaCoreTE.getBlockPos(), ConfigCommon.LAPUTA_CORE_EFFECT_RANGE.get())){
+                                playerEntity.addEffect(new MobEffectInstance(EffectRegister.SACRED_CASTLE_EFFECT, 100));
                             }
                         }
-                        Channel.INSTANCE.send(PacketDistributor.NEAR.with(PacketDistributor.TargetPoint.p(laputaCoreTE.getBlockPos().getX(), laputaCoreTE.getBlockPos().getY(), laputaCoreTE.getBlockPos().getZ(), 20, Level.OVERWORLD)),
-                                new LaputaTESynPkt(laputaCoreTE.isDestroying, laputaCoreTE.isActive(), laputaCoreTE.getBlockPos()));
+                        PacketDistributor.sendToAllPlayers(new LaputaTESynPkt(laputaCoreTE.isDestroying, laputaCoreTE.isActive(), laputaCoreTE.getBlockPos()));
                     }
                 }
             }
         }
 
+    }
+
+    private static void awardFindCastleAdvancement(ServerLevel level, BlockPos blockPos) {
+        AdvancementHolder advancement = level.getServer().getAdvancements().get(FIND_CASTLE_ADVANCEMENT);
+        if (advancement == null) {
+            return;
+        }
+        for (Player playerEntity: level.players()) {
+            if (playerEntity instanceof ServerPlayer serverPlayer && playerEntity.blockPosition().closerThan(blockPos, FIND_CASTLE_RADIUS)) {
+                serverPlayer.getAdvancements().award(advancement, FIND_CASTLE_CRITERION);
+            }
+        }
     }
 
     public void setDestroying(boolean destroying) {
@@ -191,7 +216,7 @@ public class LaputaCoreBE extends BlockEntity {
     public void onChunkUnloaded() {
         super.onChunkUnloaded();
         if(level!=null && !level.isClientSide()){
-            Channel.INSTANCE.send(PacketDistributor.ALL.noArg(), new LaputaTESynPkt(this.isDestroying, this.isActive, this.getBlockPos()));
+            PacketDistributor.sendToAllPlayers(new LaputaTESynPkt(this.isDestroying, this.isActive, this.getBlockPos()));
         }
     }
 
@@ -199,7 +224,7 @@ public class LaputaCoreBE extends BlockEntity {
     public void onLoad() {
         super.onLoad();
         if(level!=null && !level.isClientSide()){
-            Channel.INSTANCE.send(PacketDistributor.ALL.noArg(), new LaputaTESynPkt(this.isDestroying, this.isActive, this.getBlockPos()));
+            PacketDistributor.sendToAllPlayers(new LaputaTESynPkt(this.isDestroying, this.isActive, this.getBlockPos()));
         }
     }
 
@@ -212,35 +237,18 @@ public class LaputaCoreBE extends BlockEntity {
     }
 
     @Override
-    public @NotNull CompoundTag getUpdateTag() {
-        CompoundTag nbt = new CompoundTag();
-        nbt.putBoolean("is_active", isActive());
-        nbt.putBoolean("isDestroying", isDestroying);
-        nbt.putInt("destroyProgress", destroyProgress);
-        return nbt;
+    protected void saveAdditional(ValueOutput output) {
+        super.saveAdditional(output);
+        output.putBoolean("is_active", isActive());
+        output.putBoolean("isDestroying", isDestroying);
+        output.putInt("destroyProgress", destroyProgress);
     }
 
     @Override
-    public void handleUpdateTag(CompoundTag tag) {
-        super.handleUpdateTag(tag);
-        this.setActive(tag.getBoolean("is_active"));
-        this.setDestroying(tag.getBoolean("isDestroying"));
-        this.destroyProgress = tag.getInt("destroyProgress");
-    }
-
-    @Override
-    public @NotNull void saveAdditional(@NotNull CompoundTag tag) {
-        super.saveAdditional(tag);
-        tag.putBoolean("is_active", isActive());
-        tag.putBoolean("isDestroying", isDestroying);
-        tag.putInt("destroyProgress", destroyProgress);
-    }
-
-    @Override
-    public void load(@NotNull CompoundTag tag) {
-        super.load(tag);
-        this.setActive(tag.getBoolean("is_active"));
-        this.setDestroying(tag.getBoolean("isDestroying"));
-        this.destroyProgress = tag.getInt("destroyProgress");
+    protected void loadAdditional(ValueInput input) {
+        super.loadAdditional(input);
+        this.setActive(input.getBooleanOr("is_active", false));
+        this.setDestroying(input.getBooleanOr("isDestroying", false));
+        this.destroyProgress = input.getIntOr("destroyProgress", 0);
     }
 }

@@ -1,7 +1,7 @@
 {
   "variants": {
     "": {
-      "model": "minecraft:block/beacon"
+      "model": "castle_in_the_sky:block/fake_beacon"
     }
   }
 }

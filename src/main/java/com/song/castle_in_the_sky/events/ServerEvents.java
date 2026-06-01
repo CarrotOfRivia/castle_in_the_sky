@@ -5,35 +5,30 @@ import com.song.castle_in_the_sky.config.ConfigCommon;
 import com.song.castle_in_the_sky.effects.EffectRegister;
 import com.song.castle_in_the_sky.items.ItemsRegister;
 import com.song.castle_in_the_sky.items.LevitationStone;
-import com.song.castle_in_the_sky.network.Channel;
-import com.song.castle_in_the_sky.network.ClientHandlerClass;
 import com.song.castle_in_the_sky.network.ServerToClientInfoPacket;
 import com.song.castle_in_the_sky.utils.CapabilityCastle;
 import com.song.castle_in_the_sky.utils.MyTradingRecipe;
 import com.song.castle_in_the_sky.utils.RandomTradeBuilder;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.entity.npc.VillagerTrades;
+import net.minecraft.world.entity.npc.villager.VillagerTrades;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
-import net.minecraftforge.event.AttachCapabilitiesEvent;
-import net.minecraftforge.event.ServerChatEvent;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.entity.living.LivingDropsEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.event.level.BlockEvent;
-import net.minecraftforge.event.village.VillagerTradesEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.network.PacketDistributor;
+import net.neoforged.neoforge.event.ServerChatEvent;
+import net.neoforged.neoforge.event.tick.PlayerTickEvent;
+import net.neoforged.neoforge.event.entity.living.LivingDropsEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+import net.neoforged.neoforge.event.level.BlockEvent;
+import net.neoforged.neoforge.event.village.VillagerTradesEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.network.PacketDistributor;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -55,7 +50,7 @@ public class ServerEvents {
                 return;
             }
             ServerPlayer player = event.getPlayer();
-            player.server.executeIfPossible(()->incantationSpoken(player, event));
+            player.level().getServer().executeIfPossible(()->incantationSpoken(player, event));
 
         }
     }
@@ -63,25 +58,19 @@ public class ServerEvents {
     private static void incantationSpoken(ServerPlayer player, final ServerChatEvent event){
         boolean found = false;
         AtomicBoolean warned = new AtomicBoolean(false);
-        player.getCapability(CapabilityCastle.CASTLE_CAPS).ifPresent(
-                (data -> warned.set(data.isIncantationWarned()))
-        );
+        warned.set(player.getData(CapabilityCastle.CASTLE_CAPS).isIncantationWarned());
         if (player.getMainHandItem().getItem() instanceof LevitationStone){
             for (int dy=-SEARCH_HEIGHT; !found && dy<=SEARCH_HEIGHT; dy++){
                 for (int dx=-SEARCH_RADIUS; !found && dx<+SEARCH_RADIUS; dx++){
                     for (int dz=-SEARCH_RADIUS; !found && dz<+SEARCH_RADIUS; dz++){
                         if (dx*dx+dz*dz < SEARCH_RADIUS2){
                             BlockEntity blockEntity = player.level().getBlockEntity(player.blockPosition().offset(dx, dy, dz));
-                            if (blockEntity != null){
-                                System.out.println("checkpoint");
-                            }
                             if (blockEntity instanceof LaputaCoreBE && !((LaputaCoreBE) blockEntity).isActive()){
                                 if (! warned.get()){
                                     player.sendSystemMessage(Component.translatable("info."+ MOD_ID+".destruction_warning").withStyle(ChatFormatting.RED, ChatFormatting.BOLD));
-                                    player.getCapability(CapabilityCastle.CASTLE_CAPS).ifPresent((data -> {
-                                        data.setIncantationWarned(true);
-                                        data.setWarningCD();
-                                    }));
+                                    CapabilityCastle.Data data = player.getData(CapabilityCastle.CASTLE_CAPS);
+                                    data.setIncantationWarned(true);
+                                    data.setWarningCD();
                                     if (ConfigCommon.SILENT_INCANTATION.get()){
                                         event.setCanceled(true);
                                     }
@@ -91,7 +80,7 @@ public class ServerEvents {
                                     player.getInventory().removeItem(player.getMainHandItem());
                                     ((LaputaCoreBE) blockEntity).setDestroying(true);
                                     ((LaputaCoreBE) blockEntity).setActivatedInitPos(player.getEyePosition());
-                                    player.getCapability(CapabilityCastle.CASTLE_CAPS).ifPresent((data -> data.setIncantationWarned(false)));
+                                    player.getData(CapabilityCastle.CASTLE_CAPS).setIncantationWarned(false);
                                     found = true;
                                     for (ServerPlayer playerOther: ((ServerLevel)player.level()).players()){
                                         playerOther.sendSystemMessage(Component.translatable("info."+ MOD_ID+".incantation_casted", player.getName()).withStyle(ChatFormatting.YELLOW, ChatFormatting.BOLD));
@@ -116,28 +105,19 @@ public class ServerEvents {
     }
 
     @SubscribeEvent
-    public void tickCap(final TickEvent.PlayerTickEvent event){
-        if (! event.player.level().isClientSide()){
-            event.player.getCapability(CapabilityCastle.CASTLE_CAPS).ifPresent((CapabilityCastle.Data::tick));
+    public void tickCap(final PlayerTickEvent.Post event){
+        if (! event.getEntity().level().isClientSide()){
+            event.getEntity().getData(CapabilityCastle.CASTLE_CAPS).tick();
         }
-    }
-
-    @SubscribeEvent
-    public void onAttachCapEntity(final AttachCapabilitiesEvent<Entity> event){
-        if (event.getObject() instanceof Player){
-            event.addCapability(new ResourceLocation(MOD_ID, "castle_caps"), new CapabilityCastle());
-        }
-    }
-
-    @SubscribeEvent
-    public void registerCaps(RegisterCapabilitiesEvent event) {
-        event.register(CapabilityCastle.class);
     }
 
     @SubscribeEvent
     public void onVillageTradeRegister(VillagerTradesEvent event){
         for (MyTradingRecipe recipe: ConfigCommon.MY_TRADING_RECIPES){
-            if((recipe.getItem1()!=null || recipe.getItem2() != null) && Objects.requireNonNull(event.getType().toString()).equals(recipe.getStringProfession())){
+            String profession = recipe.getStringProfession();
+            String eventProfession = event.getType().identifier().toString();
+            if((recipe.getItem1()!=null || recipe.getItem2() != null)
+                    && (eventProfession.equals(profession) || event.getType().identifier().getPath().equals(profession))){
                 int level = recipe.getLevel();
                 List<VillagerTrades.ItemListing> tmp = event.getTrades().get(level);
                 ArrayList<VillagerTrades.ItemListing> mutableTrades = new ArrayList<>(tmp);
@@ -155,10 +135,10 @@ public class ServerEvents {
     @SubscribeEvent
     public void onBlockBreak(PlayerEvent.BreakSpeed event){
         Player playerEntity = event.getEntity();
-        if(playerEntity.hasEffect(EffectRegister.SACRED_CASTLE_EFFECT.get()) && !playerEntity.isCreative()){
+        if(playerEntity.hasEffect(EffectRegister.SACRED_CASTLE_EFFECT) && !playerEntity.isCreative()){
             event.setCanceled(true);
             if(playerEntity.level().isClientSide()){
-                ClientHandlerClass.showSacredCastleInfoBreak();
+                playerEntity.displayClientMessage(Component.translatable(String.format("info.%s.sacred_castle_effect.break", MOD_ID)).withStyle(ChatFormatting.RED, ChatFormatting.BOLD), true);
             }
         }
     }
@@ -166,10 +146,10 @@ public class ServerEvents {
     @SubscribeEvent
     public void onBlockPlaced(BlockEvent.EntityPlaceEvent event){
         Entity entity = event.getEntity();
-        if(entity instanceof Player && ((Player)entity).hasEffect(EffectRegister.SACRED_CASTLE_EFFECT.get()) && !((Player) entity).isCreative()){
+        if(entity instanceof Player && ((Player)entity).hasEffect(EffectRegister.SACRED_CASTLE_EFFECT) && !((Player) entity).isCreative()){
             event.setCanceled(true);
             if(entity instanceof ServerPlayer){
-                Channel.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) entity),
+                PacketDistributor.sendToPlayer((ServerPlayer) entity,
                         new ServerToClientInfoPacket(Component.translatable(String.format("info.%s.sacred_castle_effect.place", MOD_ID)).withStyle(ChatFormatting.RED).withStyle(ChatFormatting.BOLD)));
             }
         }
@@ -180,7 +160,7 @@ public class ServerEvents {
         DamageSource damageSource = event.getSource();
         if(damageSource.is(PLAYER_ATTACK)){
             Entity killer = damageSource.getEntity();
-            if(killer instanceof LivingEntity && ((LivingEntity) killer).hasEffect(EffectRegister.SACRED_CASTLE_EFFECT.get())){
+            if(killer instanceof LivingEntity && ((LivingEntity) killer).hasEffect(EffectRegister.SACRED_CASTLE_EFFECT)){
                 LivingEntity dropper = event.getEntity();
                 if(dropper.getRandom().nextDouble()< ConfigCommon.YELLOW_KEY_DROP_RATE.get()){
                     event.getDrops().add(new ItemEntity(dropper.level(), dropper.position().x, dropper.position().y, dropper.position().z, new ItemStack(ItemsRegister.YELLOW_KEY.get())));

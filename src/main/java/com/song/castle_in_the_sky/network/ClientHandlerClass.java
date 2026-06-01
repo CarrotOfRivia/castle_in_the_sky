@@ -7,12 +7,10 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraftforge.network.NetworkEvent;
-
-import java.util.function.Supplier;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 public class ClientHandlerClass {
-    public static void handleCoreSynPacket(LaputaTESynPkt pkt, Supplier<NetworkEvent.Context> ctx) {
+    public static void handleCoreSynPacket(LaputaTESynPkt pkt, IPayloadContext ctx) {
         BlockPos pos = new BlockPos(pkt.posX, pkt.posY, pkt.posZ);
         assert Minecraft.getInstance().level != null;
         BlockEntity tileEntity = Minecraft.getInstance().level.getBlockEntity(pos);
@@ -32,7 +30,11 @@ public class ClientHandlerClass {
         Minecraft.getInstance().gui.setOverlayMessage(Component.translatable(String.format("info.%s.sacred_castle_effect.break", CastleInTheSky.MOD_ID)).withStyle(ChatFormatting.RED).withStyle(ChatFormatting.BOLD), false);
     }
 
-    public static void showInfo(Component component){
+    public static void showInfo(ServerToClientInfoPacket packet, IPayloadContext ctx) {
+        showInfo(packet.info());
+    }
+
+    public static void showInfo(Component component) {
         Minecraft.getInstance().gui.setOverlayMessage(component, false);
     }
 }

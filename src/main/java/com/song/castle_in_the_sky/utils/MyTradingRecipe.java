@@ -1,28 +1,21 @@
 package com.song.castle_in_the_sky.utils;
 
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.npc.VillagerProfession;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.common.ModConfigSpec;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-public record MyTradingRecipe(ForgeConfigSpec.ConfigValue<String> resItem1,
-                              ForgeConfigSpec.ConfigValue<String> resItem2,
-                              ForgeConfigSpec.ConfigValue<String> resOutput,
-                              ForgeConfigSpec.ConfigValue<String> resProfession,
-                              ForgeConfigSpec.IntValue price1Min,
-                              ForgeConfigSpec.IntValue price1Max,
-                              ForgeConfigSpec.IntValue price2Min,
-                              ForgeConfigSpec.IntValue price2Max,
-                              ForgeConfigSpec.IntValue outputMin,
-                              ForgeConfigSpec.IntValue outputMax,
-                              ForgeConfigSpec.IntValue level) {
+public record MyTradingRecipe(ModConfigSpec.ConfigValue<String> resItem1,
+                              ModConfigSpec.ConfigValue<String> resItem2,
+                              ModConfigSpec.ConfigValue<String> resOutput,
+                              ModConfigSpec.ConfigValue<String> resProfession,
+                              ModConfigSpec.IntValue price1Min,
+                              ModConfigSpec.IntValue price1Max,
+                              ModConfigSpec.IntValue price2Min,
+                              ModConfigSpec.IntValue price2Max,
+                              ModConfigSpec.IntValue outputMin,
+                              ModConfigSpec.IntValue outputMax,
+                              ModConfigSpec.IntValue level) {
 
     public String getStringProfession() {
         return resProfession.get();
@@ -33,21 +26,21 @@ public record MyTradingRecipe(ForgeConfigSpec.ConfigValue<String> resItem1,
         if ("null".equals(resItem1.get())) {
             return null;
         }
-        return ForgeRegistries.ITEMS.getValue(new ResourceLocation(resItem1.get()));
+        return BuiltInRegistries.ITEM.getValue(Identifier.parse(resItem1.get()));
     }
 
     public Item getItem2() {
         if ("null".equals(resItem2.get())) {
             return null;
         }
-        return ForgeRegistries.ITEMS.getValue(new ResourceLocation(resItem2.get()));
+        return BuiltInRegistries.ITEM.getValue(Identifier.parse(resItem2.get()));
     }
 
     public Item getOutput() {
         if ("null".equals(resOutput.get())) {
             return null;
         }
-        return ForgeRegistries.ITEMS.getValue(new ResourceLocation(resOutput.get()));
+        return BuiltInRegistries.ITEM.getValue(Identifier.parse(resOutput.get()));
     }
 
     public int getLevel() {
@@ -55,22 +48,22 @@ public record MyTradingRecipe(ForgeConfigSpec.ConfigValue<String> resItem1,
     }
 
     @Override
-    public ForgeConfigSpec.IntValue price1Min() {
+    public ModConfigSpec.IntValue price1Min() {
         return price1Min;
     }
 
     @Override
-    public ForgeConfigSpec.IntValue price1Max() {
+    public ModConfigSpec.IntValue price1Max() {
         return price1Max;
     }
 
     @Override
-    public ForgeConfigSpec.IntValue price2Max() {
+    public ModConfigSpec.IntValue price2Max() {
         return price2Max;
     }
 
     @Override
-    public ForgeConfigSpec.IntValue price2Min() {
+    public ModConfigSpec.IntValue price2Min() {
         return price2Min;
     }
 }

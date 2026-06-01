@@ -15,8 +15,6 @@
     "absolute": 60
   },
 
-  "adapt_noise": false,
-
   "project_start_to_heightmap": "WORLD_SURFACE_WG",
 
   "spawn_overrides": {

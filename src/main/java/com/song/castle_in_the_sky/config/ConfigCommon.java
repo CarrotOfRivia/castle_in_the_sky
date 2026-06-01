@@ -2,32 +2,32 @@ package com.song.castle_in_the_sky.config;
 
 import com.song.castle_in_the_sky.utils.MyTradingRecipe;
 import net.minecraft.world.item.Items;
-import net.minecraftforge.common.ForgeConfigSpec;
+import net.neoforged.neoforge.common.ModConfigSpec;
 
 import java.util.ArrayList;
 
 public class ConfigCommon {
-    public static ForgeConfigSpec COMMON;
-    public static ForgeConfigSpec.IntValue CASTLE_HEIGHT;
-    public static ForgeConfigSpec.IntValue CASTLE_SPAWN_PROOF;
-    public static ForgeConfigSpec.DoubleValue LEVITATION_STONE_USE_PERCENT;
-    public static ForgeConfigSpec.IntValue CASTLE_AVG_DIST_CHUNK;
-    public static ForgeConfigSpec.IntValue CASTLE_MIN_DIST_CHUNK;
-    public static ForgeConfigSpec.IntValue LAPUTA_CORE_EFFECT_RANGE;
+    public static ModConfigSpec COMMON;
+    public static ModConfigSpec.IntValue CASTLE_HEIGHT;
+    public static ModConfigSpec.IntValue CASTLE_SPAWN_PROOF;
+    public static ModConfigSpec.DoubleValue LEVITATION_STONE_USE_PERCENT;
+    public static ModConfigSpec.IntValue CASTLE_AVG_DIST_CHUNK;
+    public static ModConfigSpec.IntValue CASTLE_MIN_DIST_CHUNK;
+    public static ModConfigSpec.IntValue LAPUTA_CORE_EFFECT_RANGE;
 
-    public static ForgeConfigSpec.DoubleValue YELLOW_KEY_DROP_RATE;
-    public static ForgeConfigSpec.DoubleValue BLUE_KEY_DROP_RATE;
-    public static ForgeConfigSpec.DoubleValue RED_KEY_DROP_RATE;
-    public static ForgeConfigSpec.BooleanValue NO_GRIEF_IN_CASTLE;
+    public static ModConfigSpec.DoubleValue YELLOW_KEY_DROP_RATE;
+    public static ModConfigSpec.DoubleValue BLUE_KEY_DROP_RATE;
+    public static ModConfigSpec.DoubleValue RED_KEY_DROP_RATE;
+    public static ModConfigSpec.BooleanValue NO_GRIEF_IN_CASTLE;
 
-    public static ForgeConfigSpec.BooleanValue SILENT_INCANTATION;
-    public static ForgeConfigSpec.BooleanValue DESTRUCTION_DROPS;
-    public static ForgeConfigSpec.BooleanValue DISABLE_INCANTATION;
+    public static ModConfigSpec.BooleanValue SILENT_INCANTATION;
+    public static ModConfigSpec.BooleanValue DESTRUCTION_DROPS;
+    public static ModConfigSpec.BooleanValue DISABLE_INCANTATION;
 
     public static final ArrayList<MyTradingRecipe> MY_TRADING_RECIPES = new ArrayList<>();
 
     static {
-        ForgeConfigSpec.Builder CONFIG_BUILDER = new ForgeConfigSpec.Builder();
+        ModConfigSpec.Builder CONFIG_BUILDER = new ModConfigSpec.Builder();
         CONFIG_BUILDER.comment("NOTE: as of 1.18.2, castle_avg_dist_chunk and castle_min_dist_chunk are no longer in the config file. You need to use datapacks (https://minecraft.fandom.com/wiki/Custom_world_generation) to config them");
 
         CONFIG_BUILDER.push("behaviours");
@@ -55,7 +55,7 @@ public class ConfigCommon {
         COMMON = CONFIG_BUILDER.build();
     }
 
-    private static void addTrader(String profession, String output, int level, String price1, int price1Min, int price1Max, String price2, int price2Min, int price2Max, int outputMin, int outputMax, ForgeConfigSpec.Builder builder){
+    private static void addTrader(String profession, String output, int level, String price1, int price1Min, int price1Max, String price2, int price2Min, int price2Max, int outputMin, int outputMax, ModConfigSpec.Builder builder){
         builder.push(output);
         MY_TRADING_RECIPES.add(new MyTradingRecipe(
                 builder.define(output+"_price1", price1),

@@ -1,15 +1,14 @@
 package com.song.castle_in_the_sky.structures;
 
-import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.song.castle_in_the_sky.CastleInTheSky;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.levelgen.structure.StructureType;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.RegistryObject;
+import net.neoforged.neoforge.registries.DeferredRegister;
+import net.neoforged.neoforge.registries.DeferredHolder;
 
 /**
  * Hugely inspired from this tutorial: https://github.com/TelepathicGrunt/StructureTutorialMod
@@ -27,16 +26,16 @@ public class StructureRegister {
      * Registers the base structure itself and sets what its path is. In this case,
      * this base structure will have the resourcelocation of structure_tutorial:sky_structures.
      */
-    public static final RegistryObject<StructureType<CastleStructure>> CASTLE_IN_THE_SKY = DEFERRED_REGISTRY_STRUCTURE.register("castle_in_the_sky", () -> explicitStructureTypeTyping(CastleStructure.CODEC));
+    public static final DeferredHolder<StructureType<?>, StructureType<CastleStructure>> CASTLE_IN_THE_SKY = DEFERRED_REGISTRY_STRUCTURE.register("castle_in_the_sky", () -> explicitStructureTypeTyping(CastleStructure.CODEC));
 
     /**
-     * Originally, I had a double lambda ()->()-> for the RegistryObject line above, but it turns out that
+     * Originally, I had a double lambda ()->()-> for the deferred holder above, but it turns out that
      * some IDEs cannot resolve the typing correctly. This method explicitly states what the return type
      * is so that the IDE can put it into the DeferredRegistry properly.
      */
-    private static <T extends Structure> StructureType<T> explicitStructureTypeTyping(Codec<T> structureCodec) {
+    private static <T extends Structure> StructureType<T> explicitStructureTypeTyping(MapCodec<T> structureCodec) {
         return () -> structureCodec;
     }
 
-        public static final TagKey<Structure> CASTLE_IN_THE_SKY_LOCATED = TagKey.create(Registries.STRUCTURE, new ResourceLocation(CastleInTheSky.MOD_ID, "castle_in_the_sky_located"));
+    public static final TagKey<Structure> CASTLE_IN_THE_SKY_LOCATED = TagKey.create(Registries.STRUCTURE, Identifier.fromNamespaceAndPath(CastleInTheSky.MOD_ID, "castle_in_the_sky_located"));
 }

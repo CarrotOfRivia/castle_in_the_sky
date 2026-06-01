@@ -2,12 +2,13 @@ package com.song.castle_in_the_sky.blocks;
 
 import com.song.castle_in_the_sky.items.ItemsRegister;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.material.PushReaction;
 
 public class RedDoor extends LockedDoor {
-    protected RedDoor() {
-        super(Properties.of().mapColor(MapColor.METAL).requiresCorrectToolForDrops().strength(5.0F).noOcclusion().pushReaction(PushReaction.DESTROY));
+    protected RedDoor(BlockBehaviour.Properties properties) {
+        super(properties.mapColor(MapColor.METAL).requiresCorrectToolForDrops().strength(5.0F).noOcclusion().pushReaction(PushReaction.DESTROY));
     }
 
     @Override

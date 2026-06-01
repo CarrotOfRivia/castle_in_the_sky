@@ -1,14 +1,15 @@
 package com.song.castle_in_the_sky.utils;
 
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.entity.npc.VillagerTrades;
+import net.minecraft.world.entity.npc.villager.VillagerTrades;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.trading.ItemCost;
 import net.minecraft.world.item.trading.MerchantOffer;
 
 import java.util.ArrayList;
-import java.util.Random;
+import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -177,7 +178,15 @@ public class RandomTradeBuilder {
 
     public VillagerTrades.ItemListing build()
     {
-        return (entity, random) -> !this.canBuild() ? null : new MerchantOffer(this.price.apply(random), this.price2.apply(random), this.forSale.apply(random), this.maxTrades, this.xp, this.priceMult);
+        return (level, entity, random) -> {
+            if (!this.canBuild()) {
+                return null;
+            }
+            ItemStack firstPrice = this.price.apply(random);
+            ItemStack secondPrice = this.price2.apply(random);
+            Optional<ItemCost> secondCost = secondPrice.isEmpty() ? Optional.empty() : Optional.of(new ItemCost(secondPrice.getItem(), secondPrice.getCount()));
+            return new MerchantOffer(new ItemCost(firstPrice.getItem(), firstPrice.getCount()), secondCost, this.forSale.apply(random), this.maxTrades, this.xp, this.priceMult);
+        };
     }
 
     public static Function<RandomSource, ItemStack> createFunction(Item item, int min, int max)

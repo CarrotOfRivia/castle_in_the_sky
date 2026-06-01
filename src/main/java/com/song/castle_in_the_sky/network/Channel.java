@@ -1,17 +1,14 @@
 package com.song.castle_in_the_sky.network;
 
-import com.song.castle_in_the_sky.CastleInTheSky;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.network.NetworkRegistry;
-import net.minecraftforge.network.simple.SimpleChannel;
+import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
+import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 
 public class Channel {
     private static final String PROTOCOL_VERSION = "1";
-    public static final SimpleChannel INSTANCE = NetworkRegistry.newSimpleChannel(
-            new ResourceLocation(CastleInTheSky.MOD_ID, "main"),
-            () -> PROTOCOL_VERSION,
-            PROTOCOL_VERSION::equals,
-            PROTOCOL_VERSION::equals
-    );
 
+    public static void registerPayloads(RegisterPayloadHandlersEvent event) {
+        PayloadRegistrar registrar = event.registrar(PROTOCOL_VERSION);
+        registrar.playToClient(LaputaTESynPkt.TYPE, LaputaTESynPkt.STREAM_CODEC);
+        registrar.playToClient(ServerToClientInfoPacket.TYPE, ServerToClientInfoPacket.STREAM_CODEC);
+    }
 }

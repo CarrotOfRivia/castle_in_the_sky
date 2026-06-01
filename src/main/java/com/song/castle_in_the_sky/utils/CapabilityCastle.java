@@ -1,64 +1,42 @@
 package com.song.castle_in_the_sky.utils;
 
-import net.minecraft.core.Direction;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.CapabilityManager;
-import net.minecraftforge.common.capabilities.CapabilityToken;
-import net.minecraftforge.common.capabilities.ICapabilitySerializable;
-import net.minecraftforge.common.util.LazyOptional;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import com.song.castle_in_the_sky.CastleInTheSky;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
+import net.neoforged.neoforge.attachment.AttachmentType;
+import net.neoforged.neoforge.common.util.ValueIOSerializable;
+import net.neoforged.neoforge.registries.DeferredRegister;
+import net.neoforged.neoforge.registries.NeoForgeRegistries;
 
-public class CapabilityCastle implements ICapabilitySerializable<CompoundTag> {
-    private final Data data = new Data();
-    private final LazyOptional<Data> dataOptional = LazyOptional.of(() -> this.data);
+import java.util.function.Supplier;
 
-    public static final Capability<Data> CASTLE_CAPS = CapabilityManager.get(new CapabilityToken<>() {
-    });
+public class CapabilityCastle {
+    public static final DeferredRegister<AttachmentType<?>> ATTACHMENT_TYPES = DeferredRegister.create(NeoForgeRegistries.ATTACHMENT_TYPES, CastleInTheSky.MOD_ID);
+    public static final Supplier<AttachmentType<Data>> CASTLE_CAPS = ATTACHMENT_TYPES.register(
+            "castle_caps", () -> AttachmentType.serializable(Data::new).copyOnDeath().build()
+    );
 
-
-    @NotNull
-    @Override
-    public <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
-        return CASTLE_CAPS.orEmpty(cap, this.dataOptional);
-    }
-
-    @Override
-    public CompoundTag serializeNBT() {
-        return this.data.save();
-    }
-
-    @Override
-    public void deserializeNBT(CompoundTag nbt) {
-        this.data.load(nbt);
-    }
-
-    public void invalidate() {
-        this.dataOptional.invalidate();
-    }
-
-    public static class Data{
+    public static class Data implements ValueIOSerializable {
         private static final int INCANTATION_WARNING_CD = 200;
 
         private boolean incantationWarned;
-        private int incantationWarningCD =0;
+        private int incantationWarningCD = 0;
 
-        public void tick(){
-            if (incantationWarningCD > 0){
+        public void tick() {
+            if (incantationWarningCD > 0) {
                 incantationWarningCD--;
-                if (incantationWarningCD <= 0){
+                if (incantationWarningCD <= 0) {
                     setIncantationWarned(false);
                     incantationWarningCD = 0;
                 }
             }
         }
 
-        public void setWarningCD(){
+        public void setWarningCD() {
             this.incantationWarningCD = INCANTATION_WARNING_CD;
         }
 
-        public void setIncantationWarned(boolean incantationWarned){
+        public void setIncantationWarned(boolean incantationWarned) {
             this.incantationWarned = incantationWarned;
         }
 
@@ -66,16 +44,16 @@ public class CapabilityCastle implements ICapabilitySerializable<CompoundTag> {
             return incantationWarned;
         }
 
-        public CompoundTag save(){
-            CompoundTag tag = new CompoundTag();
-            tag.putBoolean("incantationWarned", incantationWarned);
-            tag.putInt("incantationWarningCD", incantationWarningCD);
-            return tag;
+        @Override
+        public void serialize(ValueOutput output) {
+            output.putBoolean("incantationWarned", incantationWarned);
+            output.putInt("incantationWarningCD", incantationWarningCD);
         }
 
-        public void load(CompoundTag tag){
-            this.incantationWarned = tag.getBoolean("incantationWarned");
-            this.incantationWarningCD = tag.getInt("incantationWarningCD");
+        @Override
+        public void deserialize(ValueInput input) {
+            this.incantationWarned = input.getBooleanOr("incantationWarned", false);
+            this.incantationWarningCD = input.getIntOr("incantationWarningCD", 0);
         }
     }
 }

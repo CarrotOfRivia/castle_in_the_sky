@@ -2,7 +2,7 @@
   "parent": "castle_in_the_sky:conquer_castle",
   "display": {
     "icon": {
-      "item": "castle_in_the_sky:fake_beacon"
+      "id": "castle_in_the_sky:fake_beacon"
     },
     "title": {
       "translate": "advancements.castle_in_the_sky.fake_beacon.title"
