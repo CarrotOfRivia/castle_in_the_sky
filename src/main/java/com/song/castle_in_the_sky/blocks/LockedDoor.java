@@ -5,7 +5,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -25,7 +25,7 @@ public abstract class LockedDoor extends DoorBlock {
 
 
     @Override
-    protected InteractionResult useItemOn(ItemStack itemStack, BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult) {
+    protected ItemInteractionResult useItemOn(ItemStack itemStack, BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult) {
         Item item = itemStack.getItem();
         if (isKeyItem(item)){
             blockState = blockState.cycle(OPEN);
@@ -33,7 +33,7 @@ public abstract class LockedDoor extends DoorBlock {
             this.playSound(player, level, blockPos, blockState.getValue(OPEN));
 
             itemStack.shrink(1);
-            return InteractionResult.SUCCESS;
+            return ItemInteractionResult.SUCCESS;
         }
         else {
             if(level.isClientSide()){

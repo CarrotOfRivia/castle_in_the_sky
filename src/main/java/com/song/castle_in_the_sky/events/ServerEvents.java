@@ -11,13 +11,15 @@ import com.song.castle_in_the_sky.utils.MyTradingRecipe;
 import com.song.castle_in_the_sky.utils.RandomTradeBuilder;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.entity.npc.villager.VillagerTrades;
+import net.minecraft.world.entity.npc.VillagerTrades;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -115,9 +117,10 @@ public class ServerEvents {
     public void onVillageTradeRegister(VillagerTradesEvent event){
         for (MyTradingRecipe recipe: ConfigCommon.MY_TRADING_RECIPES){
             String profession = recipe.getStringProfession();
-            String eventProfession = event.getType().identifier().toString();
+            ResourceLocation eventProfessionId = BuiltInRegistries.VILLAGER_PROFESSION.getKey(event.getType());
+            String eventProfession = eventProfessionId.toString();
             if((recipe.getItem1()!=null || recipe.getItem2() != null)
-                    && (eventProfession.equals(profession) || event.getType().identifier().getPath().equals(profession))){
+                    && (eventProfession.equals(profession) || eventProfessionId.getPath().equals(profession))){
                 int level = recipe.getLevel();
                 List<VillagerTrades.ItemListing> tmp = event.getTrades().get(level);
                 ArrayList<VillagerTrades.ItemListing> mutableTrades = new ArrayList<>(tmp);

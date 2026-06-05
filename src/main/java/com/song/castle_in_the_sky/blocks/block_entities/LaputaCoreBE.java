@@ -11,9 +11,10 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
@@ -23,8 +24,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.storage.ValueInput;
-import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.fml.ModList;
@@ -50,7 +49,7 @@ public class LaputaCoreBE extends BlockEntity {
     private static final int HEIGHT_MAX = 100;
     private static final ArrayList<ArrayList<Integer>> DESTRUCTION_PATTERN = new ArrayList<>();
     private static final int PROGRESS_EACH_TICK;
-    private static final Identifier FIND_CASTLE_ADVANCEMENT = Identifier.fromNamespaceAndPath("castle_in_the_sky", "find_castle");
+    private static final ResourceLocation FIND_CASTLE_ADVANCEMENT = ResourceLocation.fromNamespaceAndPath("castle_in_the_sky", "find_castle");
     private static final String FIND_CASTLE_CRITERION = "in_city";
     private static final int FIND_CASTLE_CHECK_INTERVAL = 20;
     private static final int FIND_CASTLE_RADIUS = 80;
@@ -125,7 +124,7 @@ public class LaputaCoreBE extends BlockEntity {
                         level.addFreshEntity(new ItemEntity(level, blockPos.getX(), blockPos.getY(), blockPos.getZ(), new ItemStack(ItemsRegister.LAPUTA_MINIATURE.get())));
 
                         if (ModList.get().isLoaded("botania")) {
-                            ItemStack itemStack = new ItemStack(BuiltInRegistries.ITEM.getValue(Identifier.parse("botania:laputa_shard")));
+                            ItemStack itemStack = new ItemStack(BuiltInRegistries.ITEM.get(ResourceLocation.parse("botania:laputa_shard")));
                             CompoundTag tag = new CompoundTag();
                             tag.putInt("level", 20);
                             itemStack.set(DataComponents.CUSTOM_DATA, CustomData.of(tag));
@@ -164,7 +163,7 @@ public class LaputaCoreBE extends BlockEntity {
                 if(laputaCoreTE.isActive()){
                     if(ConfigCommon.NO_GRIEF_IN_CASTLE.get() && level.getGameTime() % 40 == 0){
                         for (Player playerEntity: level.players()){
-                            if(playerEntity.level().dimension().identifier().toString().equals("minecraft:overworld") && playerEntity.blockPosition().closerThan(laputaCoreTE.getBlockPos(), ConfigCommon.LAPUTA_CORE_EFFECT_RANGE.get())){
+                            if(playerEntity.level().dimension().location().toString().equals("minecraft:overworld") && playerEntity.blockPosition().closerThan(laputaCoreTE.getBlockPos(), ConfigCommon.LAPUTA_CORE_EFFECT_RANGE.get())){
                                 playerEntity.addEffect(new MobEffectInstance(EffectRegister.SACRED_CASTLE_EFFECT, 100));
                             }
                         }
@@ -237,18 +236,18 @@ public class LaputaCoreBE extends BlockEntity {
     }
 
     @Override
-    protected void saveAdditional(ValueOutput output) {
-        super.saveAdditional(output);
-        output.putBoolean("is_active", isActive());
-        output.putBoolean("isDestroying", isDestroying);
-        output.putInt("destroyProgress", destroyProgress);
+    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.saveAdditional(tag, registries);
+        tag.putBoolean("is_active", isActive());
+        tag.putBoolean("isDestroying", isDestroying);
+        tag.putInt("destroyProgress", destroyProgress);
     }
 
     @Override
-    protected void loadAdditional(ValueInput input) {
-        super.loadAdditional(input);
-        this.setActive(input.getBooleanOr("is_active", false));
-        this.setDestroying(input.getBooleanOr("isDestroying", false));
-        this.destroyProgress = input.getIntOr("destroyProgress", 0);
+    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.loadAdditional(tag, registries);
+        this.setActive(tag.getBoolean("is_active"));
+        this.setDestroying(tag.getBoolean("isDestroying"));
+        this.destroyProgress = tag.getInt("destroyProgress");
     }
 }

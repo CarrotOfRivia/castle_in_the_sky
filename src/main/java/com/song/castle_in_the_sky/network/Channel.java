@@ -8,7 +8,7 @@ public class Channel {
 
     public static void registerPayloads(RegisterPayloadHandlersEvent event) {
         PayloadRegistrar registrar = event.registrar(PROTOCOL_VERSION);
-        registrar.playToClient(LaputaTESynPkt.TYPE, LaputaTESynPkt.STREAM_CODEC);
-        registrar.playToClient(ServerToClientInfoPacket.TYPE, ServerToClientInfoPacket.STREAM_CODEC);
+        registrar.playToClient(LaputaTESynPkt.TYPE, LaputaTESynPkt.STREAM_CODEC, ClientHandlerClass::handleCoreSynPacket);
+        registrar.playToClient(ServerToClientInfoPacket.TYPE, ServerToClientInfoPacket.STREAM_CODEC, ClientHandlerClass::showInfo);
     }
 }

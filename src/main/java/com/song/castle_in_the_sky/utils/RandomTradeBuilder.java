@@ -1,7 +1,7 @@
 package com.song.castle_in_the_sky.utils;
 
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.entity.npc.villager.VillagerTrades;
+import net.minecraft.world.entity.npc.VillagerTrades;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -178,7 +178,7 @@ public class RandomTradeBuilder {
 
     public VillagerTrades.ItemListing build()
     {
-        return (level, entity, random) -> {
+        return (entity, random) -> {
             if (!this.canBuild()) {
                 return null;
             }

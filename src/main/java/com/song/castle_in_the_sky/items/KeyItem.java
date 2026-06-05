@@ -6,9 +6,8 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.item.component.TooltipDisplay;
 
-import java.util.function.Consumer;
+import java.util.List;
 
 public class KeyItem extends Item {
     public KeyItem(Properties properties) {
@@ -16,8 +15,8 @@ public class KeyItem extends Item {
     }
 
     @Override
-    public void appendHoverText(ItemStack itemStack, TooltipContext context, TooltipDisplay display, Consumer<Component> tooltip, TooltipFlag iTooltipFlag) {
-        super.appendHoverText(itemStack, context, display, tooltip, iTooltipFlag);
-        tooltip.accept(Component.translatable("tooltip."+CastleInTheSky.MOD_ID+".keys").withStyle(ChatFormatting.GRAY));
+    public void appendHoverText(ItemStack itemStack, TooltipContext context, List<Component> tooltip, TooltipFlag iTooltipFlag) {
+        super.appendHoverText(itemStack, context, tooltip, iTooltipFlag);
+        tooltip.add(Component.translatable("tooltip."+CastleInTheSky.MOD_ID+".keys").withStyle(ChatFormatting.GRAY));
     }
 }

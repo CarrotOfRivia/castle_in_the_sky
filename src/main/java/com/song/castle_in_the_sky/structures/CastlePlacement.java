@@ -36,7 +36,7 @@ public class CastlePlacement {
         StructureTemplateManager structuretemplatemanager = context.structureTemplateManager();
         LevelHeightAccessor levelheightaccessor = context.heightAccessor();
         WorldgenRandom worldgenrandom = context.random();
-        Registry<StructureTemplatePool> registry = registryaccess.lookupOrThrow(Registries.TEMPLATE_POOL);
+        Registry<StructureTemplatePool> registry = registryaccess.registryOrThrow(Registries.TEMPLATE_POOL);
         Rotation rotation = Rotation.NONE;
         StructureTemplatePool structuretemplatepool = templatePoolHolder.value();
         NotSoRandom randomSource = new NotSoRandom(99, pieceId);

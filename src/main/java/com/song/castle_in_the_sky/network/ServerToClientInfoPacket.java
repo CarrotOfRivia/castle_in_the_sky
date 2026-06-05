@@ -6,10 +6,10 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 
 public record ServerToClientInfoPacket(Component info) implements CustomPacketPayload {
-    public static final Type<ServerToClientInfoPacket> TYPE = new Type<>(Identifier.fromNamespaceAndPath(CastleInTheSky.MOD_ID, "client_info"));
+    public static final Type<ServerToClientInfoPacket> TYPE = new Type<>(ResourceLocation.fromNamespaceAndPath(CastleInTheSky.MOD_ID, "client_info"));
     public static final StreamCodec<RegistryFriendlyByteBuf, ServerToClientInfoPacket> STREAM_CODEC = StreamCodec.ofMember(ServerToClientInfoPacket::encode, ServerToClientInfoPacket::decode);
 
     public void encode(RegistryFriendlyByteBuf buffer) {

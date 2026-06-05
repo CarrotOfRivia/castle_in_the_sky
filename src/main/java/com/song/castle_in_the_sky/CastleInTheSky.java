@@ -54,7 +54,7 @@ public class CastleInTheSky
 
         StructureRegister.DEFERRED_REGISTRY_STRUCTURE.register(modEventBus);
 
-        if (FMLEnvironment.getDist() == Dist.CLIENT) {
+        if (FMLEnvironment.dist == Dist.CLIENT) {
             ClientEvents.register(modEventBus);
         }
     }

@@ -1,7 +1,7 @@
 package com.song.castle_in_the_sky.utils;
 
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.neoforged.neoforge.common.ModConfigSpec;
 
@@ -26,21 +26,21 @@ public record MyTradingRecipe(ModConfigSpec.ConfigValue<String> resItem1,
         if ("null".equals(resItem1.get())) {
             return null;
         }
-        return BuiltInRegistries.ITEM.getValue(Identifier.parse(resItem1.get()));
+        return BuiltInRegistries.ITEM.get(ResourceLocation.parse(resItem1.get()));
     }
 
     public Item getItem2() {
         if ("null".equals(resItem2.get())) {
             return null;
         }
-        return BuiltInRegistries.ITEM.getValue(Identifier.parse(resItem2.get()));
+        return BuiltInRegistries.ITEM.get(ResourceLocation.parse(resItem2.get()));
     }
 
     public Item getOutput() {
         if ("null".equals(resOutput.get())) {
             return null;
         }
-        return BuiltInRegistries.ITEM.getValue(Identifier.parse(resOutput.get()));
+        return BuiltInRegistries.ITEM.get(ResourceLocation.parse(resOutput.get()));
     }
 
     public int getLevel() {

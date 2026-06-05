@@ -2,15 +2,15 @@ package com.song.castle_in_the_sky.network;
 
 import com.song.castle_in_the_sky.CastleInTheSky;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.phys.Vec3;
 
 public class LaputaTESynPkt implements CustomPacketPayload {
-    public static final Type<LaputaTESynPkt> TYPE = new Type<>(Identifier.fromNamespaceAndPath(CastleInTheSky.MOD_ID, "laputa_core_sync"));
-    public static final StreamCodec<FriendlyByteBuf, LaputaTESynPkt> STREAM_CODEC = StreamCodec.ofMember(LaputaTESynPkt::encode, LaputaTESynPkt::decode);
+    public static final Type<LaputaTESynPkt> TYPE = new Type<>(ResourceLocation.fromNamespaceAndPath(CastleInTheSky.MOD_ID, "laputa_core_sync"));
+    public static final StreamCodec<RegistryFriendlyByteBuf, LaputaTESynPkt> STREAM_CODEC = StreamCodec.ofMember(LaputaTESynPkt::encode, LaputaTESynPkt::decode);
 
     public final boolean isActive;
     public final boolean isDestroying;
@@ -38,7 +38,7 @@ public class LaputaTESynPkt implements CustomPacketPayload {
         this.destroyingProcess = destroyingProcess;
     }
 
-    public void encode(FriendlyByteBuf buffer) {
+    public void encode(RegistryFriendlyByteBuf buffer) {
         buffer.writeBoolean(this.isDestroying);
         buffer.writeBoolean(this.isActive);
         buffer.writeInt(this.posX);
@@ -50,7 +50,7 @@ public class LaputaTESynPkt implements CustomPacketPayload {
         buffer.writeInt(this.destroyingProcess);
     }
 
-    public static LaputaTESynPkt decode(FriendlyByteBuf buffer) {
+    public static LaputaTESynPkt decode(RegistryFriendlyByteBuf buffer) {
         return new LaputaTESynPkt(buffer.readBoolean(), buffer.readBoolean(), new BlockPos(buffer.readInt(), buffer.readInt(), buffer.readInt()), new Vec3(buffer.readDouble(), buffer.readDouble(), buffer.readDouble()), buffer.readInt());
     }
 

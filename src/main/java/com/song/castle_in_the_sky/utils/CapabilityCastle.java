@@ -1,10 +1,10 @@
 package com.song.castle_in_the_sky.utils;
 
 import com.song.castle_in_the_sky.CastleInTheSky;
-import net.minecraft.world.level.storage.ValueInput;
-import net.minecraft.world.level.storage.ValueOutput;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.nbt.CompoundTag;
 import net.neoforged.neoforge.attachment.AttachmentType;
-import net.neoforged.neoforge.common.util.ValueIOSerializable;
+import net.neoforged.neoforge.common.util.INBTSerializable;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
 
@@ -16,7 +16,7 @@ public class CapabilityCastle {
             "castle_caps", () -> AttachmentType.serializable(Data::new).copyOnDeath().build()
     );
 
-    public static class Data implements ValueIOSerializable {
+    public static class Data implements INBTSerializable<CompoundTag> {
         private static final int INCANTATION_WARNING_CD = 200;
 
         private boolean incantationWarned;
@@ -45,15 +45,17 @@ public class CapabilityCastle {
         }
 
         @Override
-        public void serialize(ValueOutput output) {
-            output.putBoolean("incantationWarned", incantationWarned);
-            output.putInt("incantationWarningCD", incantationWarningCD);
+        public CompoundTag serializeNBT(HolderLookup.Provider provider) {
+            CompoundTag tag = new CompoundTag();
+            tag.putBoolean("incantationWarned", incantationWarned);
+            tag.putInt("incantationWarningCD", incantationWarningCD);
+            return tag;
         }
 
         @Override
-        public void deserialize(ValueInput input) {
-            this.incantationWarned = input.getBooleanOr("incantationWarned", false);
-            this.incantationWarningCD = input.getIntOr("incantationWarningCD", 0);
+        public void deserializeNBT(HolderLookup.Provider provider, CompoundTag tag) {
+            this.incantationWarned = tag.getBoolean("incantationWarned");
+            this.incantationWarningCD = tag.getInt("incantationWarningCD");
         }
     }
 }

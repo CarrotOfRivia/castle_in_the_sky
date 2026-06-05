@@ -3,7 +3,7 @@ package com.song.castle_in_the_sky.structures;
 import com.mojang.serialization.MapCodec;
 import com.song.castle_in_the_sky.CastleInTheSky;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.levelgen.structure.StructureType;
@@ -37,5 +37,5 @@ public class StructureRegister {
         return () -> structureCodec;
     }
 
-    public static final TagKey<Structure> CASTLE_IN_THE_SKY_LOCATED = TagKey.create(Registries.STRUCTURE, Identifier.fromNamespaceAndPath(CastleInTheSky.MOD_ID, "castle_in_the_sky_located"));
+    public static final TagKey<Structure> CASTLE_IN_THE_SKY_LOCATED = TagKey.create(Registries.STRUCTURE, ResourceLocation.fromNamespaceAndPath(CastleInTheSky.MOD_ID, "castle_in_the_sky_located"));
 }

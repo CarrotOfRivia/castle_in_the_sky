@@ -20,8 +20,8 @@ public class ItemsRegister {
     public static final DeferredItem<BlockItem> RED_DOOR = ITEMS.registerSimpleBlockItem(BlockRegister.RED_DOOR);
     public static final DeferredItem<BlockItem> BLUE_DOOR = ITEMS.registerSimpleBlockItem(BlockRegister.BLUE_DOOR);
     public static final DeferredItem<BlockItem> YELLOW_DOOR = ITEMS.registerSimpleBlockItem(BlockRegister.YELLOW_DOOR);
-    public static final DeferredItem<BlockItem> FAKE_BEACON = ITEMS.registerSimpleBlockItem(BlockRegister.FAKE_BEACON, properties -> properties.rarity(Rarity.RARE));
-    public static final DeferredItem<BlockItem> LAPUTA_MINIATURE = ITEMS.registerSimpleBlockItem(BlockRegister.LAPUTA_MINIATURE, properties -> properties.rarity(Rarity.EPIC));
+    public static final DeferredItem<BlockItem> FAKE_BEACON = ITEMS.registerSimpleBlockItem(BlockRegister.FAKE_BEACON, new Item.Properties().rarity(Rarity.RARE));
+    public static final DeferredItem<BlockItem> LAPUTA_MINIATURE = ITEMS.registerSimpleBlockItem(BlockRegister.LAPUTA_MINIATURE, new Item.Properties().rarity(Rarity.EPIC));
 
     public static final DeferredItem<KeyItem> RED_KEY = ITEMS.registerItem("red_key", KeyItem::new);
     public static final DeferredItem<KeyItem> BLUE_KEY = ITEMS.registerItem("blue_key", KeyItem::new);
