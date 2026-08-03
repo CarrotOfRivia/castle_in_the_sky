@@ -1,0 +1,46 @@
+{
+"item_group.castle_in_the_sky.item_group": "Castle in the Sky",
+
+"block.castle_in_the_sky.blue_door": "Синяя дверь",
+"block.castle_in_the_sky.yellow_door": "Жёлтая дверь",
+"block.castle_in_the_sky.red_door": "Красная дверь",
+"block.castle_in_the_sky.laputa_core": "Кристалл левитации",
+"block.castle_in_the_sky.fake_beacon": "Бекон",
+"block.castle_in_the_sky.laputa_miniature": "Трофей: Небесный замок",
+
+"item.castle_in_the_sky.blue_key": "Синий ключ",
+"item.castle_in_the_sky.yellow_key": "Жёлтый ключ",
+"item.castle_in_the_sky.red_key": "Красный ключ",
+"item.castle_in_the_sky.levitation_stone": "Камень левитации",
+
+"tooltip.castle_in_the_sky.levitation_stone.line1": "Этот камень приведёт Вас к *Воздушному замку*.",
+"tooltip.castle_in_the_sky.levitation_stone.line2": "Поторгуйтесь с картографом для получения предмета.",
+"tooltip.castle_in_the_sky.keys": "Встречаются в замке посредством добычи сундуков или убийства существ.",
+"tooltip.castle_in_the_sky.levitation_stone.line3": "ПКМ — активировать/отключить.",
+"tooltip.castle_in_the_sky.laputa_miniature": "Достижим за счёт использования разрушительного чара по замку.",
+
+"advancements.castle_in_the_sky.trade.title": "Замок на облаке",
+"advancements.castle_in_the_sky.trade.description": "Согласно легенде, таинственный камень приведёт Вас к замку, полному сокровищ.",
+"advancements.castle_in_the_sky.get_levitation_stone.title": "Полёт таинственного камня",
+"advancements.castle_in_the_sky.get_levitation_stone.description": "Получите камень левитации, выторговав его у Картографа.",
+"advancements.castle_in_the_sky.find_castle.title": "Небесный замок",
+"advancements.castle_in_the_sky.find_castle.description": "Найдите *Воздушный замок*, следуя за камнем левитации.",
+"advancements.castle_in_the_sky.conquer_castle.title": "Завоевание замка",
+"advancements.castle_in_the_sky.conquer_castle.description": "Преодолейте замок-подземелье и найдите кристалл левитации.",
+"advancements.castle_in_the_sky.fake_beacon.title": "Маяк — ложь",
+"advancements.castle_in_the_sky.fake_beacon.description": "Добудьте свет маяка в замке.",
+"advancements.castle_in_the_sky.destroy_castle.title": "Пустить в землю корни",
+"advancements.castle_in_the_sky.destroy_castle.description": "Уничтожьте замок, исполнив заклинание разрушения и заполучите трофей.",
+
+"effect.castle_in_the_sky.sacred_castle_effect": "Святой замок",
+
+"info.castle_in_the_sky.sacred_castle_effect.place": "Сперва Вам нужно завоевать замок.",
+"info.castle_in_the_sky.sacred_castle_effect.break": "Сперва Вам нужно завоевать замок.",
+"info.castle_in_the_sky.locked_doors": "Отпирается ключами соответствующего цвета. Убивайте существ и грабьте сундуки для их получения.",
+"info.castle_in_the_sky.destruction_warning": "Вы сказали разрушить заклинание. Для подтверждения, скажите ещё раз.",
+"info.castle_in_the_sky.crystal_not_found": "Ничего не произошло... Вам нужно стоять близи деактивированного кристалла.",
+"info.castle_in_the_sky.item_not_hold": "Ничего не произошло... Убедитесь, что удерживаете камень левитации.",
+"info.castle_in_the_sky.incantation_casted": "%s исполнил заклинание разрушения.",
+"info.castle_in_the_sky.destruction_disabled": "Чары разрушения отключены на сервере.",
+"info.castle_in_the_sky.too_close_to_spawn": "Замка в пределах %d блоков рядом с местом возрождения нет. Вам следует пройти минимум %d блоков для того, чтобы воспользоваться этим камнем."
+}
